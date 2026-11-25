@@ -275,6 +275,28 @@
 - 대화 캡처 — 이번 세션에서는 대화 창을 촬영하지 못했다. 위 실제 요청 발췌로 대신하고 캡처는 대기 상태다.
 - 남은 일 — 파일럿 검토 후 보류된 `afghanistan-noon`과 나머지 인물의 낮·저녁 상황 이미지를 순차 확장한다. 배포는 시나리오 확정 뒤 함께 진행한다.
 
+## 2026-11-26-scene-images-group-a-part1
+
+- 실제 요청
+  - “시오네 낮 B 「보충 시험과 모래주머니」 896×1200 · 89.5KB 마당 빨랫줄 젖은 이불, 휴대전화를 쥐고 확성기 소리에 귀 기울이는 구도 이게 이미지와 설명이 맞지 않아. 재검토해줘”
+  - “다른 에이전트에게 이미지 생성을 요청할거야. 여기서 몇명의 캐릭터를 수정하면 좋은지 정하고 명단도 알려줘. 그리고 나머지 명단들도 알려줘 다른 에이전트에게 생성 요청을 할거야”
+  - “그럼 다른 에이전트에게 요청할 내용과 면담을 핸드오프md로 남겨줘. 캐릭터 분담 작업 md로 파일명을 지어서” / “그리고 a조 작업 시작해줘”
+- 한 일
+  1. **분담 핸드오프 문서 작성** — `app/design/캐릭터-분담-작업.md`에 최신 확정 시나리오(47장면) 기준 남은 31장을 A조(6명 · 15장, 이 세션)와 B조(6명 · 16장, 다른 에이전트)로 겹치지 않게 분담하고, 공통 규격·16:9 모바일 안전 구도 원칙·바로 복사해 전달할 요청문을 정리했다.
+  2. **`tuvalu-noon-b.webp` 재검토·재생성** — 기존 파일럿 이미지에 확성기·모래주머니·공책이 빠지고 모바일 16:9 크롭에서 휴대전화까지 잘리던 문제를 고쳤다. 새 이미지(896×1200 · 81.1KB)에는 고민하는 표정의 시오네, 가슴 높이 공책과 휴대전화, 왼쪽 마당 빨랫줄 이불, 오른쪽 위 전봇대 금속 확성기, 해안에서 모래주머니를 쌓는 주민들이 한 화면에 모두 들어간다.
+  3. **`tuvalu-evening-aa.webp` 신규 생성** — 시오네 저녁 AA 「빗물 탱크의 마지막 물」(896×1200 · 84.3KB). 해 질 녘 집 뒤 빗물 탱크 수도꼭지에 손을 올린 시오네와 빈 주전자를 든 펠레 할머니 구도.
+  4. `app/dist/app.js`의 `SCENE_ART`에 `빗물 탱크의 마지막 물`(`pos:'50% 42%'`)을 추가하고 `보충 시험과 모래주머니` 초점을 `50% 24%`로 조정했으며 `ART_V`를 `20261126-scene2`로 올렸다(`index.html` preload 주소도 동기화).
+- 중단 사유(서버 용량 제한) — A조 나머지 13장(`tuvalu-evening-bb`, `afghanistan-noon`, `pakistan` 3장, `bangladesh` 2장, `somalia` 3장, `gaza` 3장) 생성을 이어 시도했으나 이미지 생성 서버(`gemini-3.1-flash-image`)가 연속 `HTTP 503 UNAVAILABLE (No capacity available)`를 반환해 중단하고 1차 완료분만 먼저 검증·커밋했다.
+- 검증
+  - `node validate.cjs` → `PASS: 12 unique scenarios, 47 scenes, 94 choices, 96 complete choice paths; …`
+  - `node --check dist/app.js` 통과
+- 화면 — 로컬(127.0.0.1:4183~4184), 닉네임 `테스트`, AI 차단(`/api/`), 데스크톱 1440×900, 모바일 780×1688. 원본은 `local-assets/screenshots/2026-11-26-scene-images-group-a/`.
+  - `before-*-tuvalu-noon-b.png` → `after-*-tuvalu-noon-b.png`: 데스크톱에서는 확성기·모래주머니·공책·휴대전화가 모두 보이고, 모바일 16:9 배너에서도 빨랫줄·고민하는 얼굴·공책과 폰 상단·모래주머니 작업이 한눈에 읽힌다.
+  - `after-*-tuvalu-evening-aa.png`: 빗물 탱크·수도꼭지·시오네·주전자 손잡이가 데스크톱과 모바일 모두에서 잘림 없이 보인다.
+- 공개한 대표 화면 — [보충 시험과 모래주머니 전](screenshots/2026-11-26-scene-images-group-a/before-desktop-tuvalu-noon-b.png) · [후](screenshots/2026-11-26-scene-images-group-a/after-desktop-tuvalu-noon-b.png) · [모바일 전](screenshots/2026-11-26-scene-images-group-a/before-mobile-tuvalu-noon-b.png) · [모바일 후](screenshots/2026-11-26-scene-images-group-a/after-mobile-tuvalu-noon-b.png) · [빗물 탱크 데스크톱](screenshots/2026-11-26-scene-images-group-a/after-desktop-tuvalu-evening-aa.png) · [모바일](screenshots/2026-11-26-scene-images-group-a/after-mobile-tuvalu-evening-aa.png)
+- 대화 캡처 — 촬영하지 못했다. 위 실제 요청 발췌로 대신하고 캡처는 대기 상태다.
+- 남은 일 — 이미지 생성 서버 용량이 회복되면 A조 나머지 13장을 이어서 생성·연동한다. `CHECKLIST.md`는 다른 세션의 변경이 작업 트리에 있어 이번 커밋에서는 섞지 않았다.
+
 ## 2026-11-25-branch-redesign-apply
 
 - 실제 요청
