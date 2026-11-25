@@ -233,6 +233,48 @@
 - 대화 캡처 — 촬영하지 못했다. 위 발췌로 대신하고 캡처는 대기 상태다.
 - 배포 — 하지 않았다.
 
+## 2026-11-25-scene-images-pilot
+
+- 실제 요청
+  - “이미지 가이드라인과 현재 이미지를 확인하여 각 상황별 이미지도 생성하도록 하자. 지금은 단순히 하나의 캐릭터 이미지만 있기 때문에 상황별로 다양한 이미지가 필요해. 지금 이미지와 md를 참고해서 어떤 이미지들을 구현할지 방향을 먼저 검토해줘”
+  - “상황에 맞게 이미지는 바껴야 해. 지금은 시나리오 수정 중이니 파일럿으로 만들어 검증을 먼저 하자. 모바일은 이미지 로딩을 생각해야 해. 왜냐하면 지금 첫 화면들도 로딩을 먼저 하고 히어로섹션이 출력되기 때문에 이미지 전에 텍스트가 먼저 보이고 있어”
+- 방향 검토 및 파일럿 설계
+  - 기존 12장 실사 이미지와 가이드라인(`app/design/characters.md`, `app/design/photoreal-prompts.md`)을 대조해, 기존 12장은 대표 프로필·아침(장면 1)으로 유지하고 낮·저녁에 상황별 다큐멘터리 스틸컷을 교체하는 방향을 수립했다.
+  - 시나리오 수정 중 폐기를 막기 위해 재설계안에서도 유지되는 확정 장면 위주로 파일럿을 구성했다: 투발루 시오네 4장(낮 A 「떠날까, 남을까」, 낮 B 「보충 시험과 모래주머니」, 저녁 AB 「할머니의 빵나무」, 저녁 BA 「선생님의 추천서」) + 아프가니스탄 마리암 1장(저녁 「사촌 언니의 전화」). 마리암 낮 「이웃 언니의 귓속말」은 이미지 생성 서버 용량 제한(HTTP 503)으로 보류하고 기존 이미지 폴백을 검증했다.
+  - 시나리오 편집 작업과 충돌하지 않도록 장면별 이미지 매핑(`SCENE_ART`)은 `scenarios.js`가 아닌 `app.js`에 분리해 두었다.
+- 모바일·초기 화면 로딩 최적화
+  - `index.html`: 첫 화면 히어로 이미지에 `<link rel="preload" as="image" fetchpriority="high">`를 추가해 스크립트 해석과 병렬로 다운로드한다. 모바일(`≤900px`)은 실제 보이는 2장(`bangladesh`, `ghana`)만 선로딩하고 나머지 2장은 `media="(min-width:901px)"`로 데스크톱에만 선로딩한다.
+  - `style.css`·`app.js`: 로딩 중 거대한 첫 글자가 먼저 보이지 않도록 오류 시(`.is-error`)에만 첫 글자를 표시하고 쉬머+페이드인으로 전환했다. 이미 받은 주소는 `loadedSrc`에 기록해 대화 재렌더링 시 깜빡임을 막는다.
+  - 캐릭터 진입(`intro`) 시 해당 인물의 상황 이미지만 지연 프리로드(`preloadCaseScenes`)하고, 장면 전환(`dayPass`)이 진행되는 동안 다음 장면 이미지 디코드 완료를 최대 1.5초 한도로 기다려 전환 직후 글과 그림이 함께 뜨게 했다.
+  - 모바일(`≤900px`)에서도 상황 변화를 볼 수 있도록 `.scene-card` 본문 상단에 16:9 고정 비율 배너(`.scene-banner`, 최대 높이 220px)를 배치했다.
+- 변경 파일
+  - `app/dist/assets/scenes/` — 파일럿 WebP 5장(`tuvalu-noon-a`, `tuvalu-noon-b`, `tuvalu-evening-ab`, `tuvalu-evening-ba`, `afghanistan-evening`, 각 896×1200, 45~90KB)
+  - `app/dist/index.html` — 히어로 이미지 반응형 `<link rel="preload">`
+  - `app/dist/app.js` — `SCENE_ART` 매핑, `preloadCaseScenes`, `waitSceneImage`(전환 중 디코드 대기), `loadedSrc` 캐시, `sceneBanner`, `ART_V='20261125-scene1'`
+  - `app/dist/style.css` — `.art` 쉬머·페이드인, 모바일 `.scene-banner` 16:9 고정 레이아웃
+  - `app/validate.cjs` — 장면 이미지 파일 존재 검사 추가
+  - `app/design/scene-images-pilot.md` — 파일럿 프롬프트·로딩 설계 기록
+  - `screenshots/2026-11-25-scene-images-pilot/`, `CHECKLIST.md`, `PROMPTS.md`
+  - 원본 JPEG 5장은 Git 제외 폴더 `local-assets/scene-images-pilot/`에 보관했다.
+- 검증
+  - `node validate.cjs` → `PASS: 12 unique scenarios, 47 scenes, 94 choices, 96 complete choice paths; …` (5장 WebP 파일 존재 확인 포함)
+  - `node --check dist/app.js` 통과
+  - `node tools/branch-flow.mjs http://127.0.0.1:4179/ tuvalu` → 여덟 경로 모두 PASS (장면 전환 중 이미지 대기 포함 정상 동작)
+  - Playwright 모바일 스모크 테스트 → `<link rel="preload" as="image">` 4개, 투발루 낮 A(`tuvalu-noon-a.webp`) 및 아프가니스탄 저녁(`afghanistan-evening.webp`) 배너 이미지 로드(`.is-loaded`) 확인
+- 화면 — 로컬(127.0.0.1), 닉네임 `테스트`, AI 차단(`/api/`), 데스크톱 1440×900, 모바일 390×844(2배율, 780×1688). 원본은 `local-assets/screenshots/2026-11-25-scene-images-pilot/`.
+
+| 전 → 후 | 관찰 |
+|---|---|
+| `before-desktop.png`·`before-mobile.png` → `after-desktop.png`·`after-mobile.png` (투발루 낮 A) | 데스크톱 왼쪽 초상이 아침 물웅덩이 길에서 한낮 집 식탁 가족 논의 장면으로 바뀌었다. 모바일에도 16:9 상황 배너가 본문 위에 잘림 없이 표시된다. |
+| `after-*-tuvalu-noon-b.png` (투발루 낮 B) | 아침 B 선택 시 젖은 이불이 널린 마당에서 휴대전화를 보는 다른 이미지로 분기 전환된다. |
+| `after-*-tuvalu-evening-ab.png`, `after-desktop-tuvalu-evening-ba.png` | 저녁 AB(할머니와 빵나무 저녁 식탁), 저녁 BA(노을 진 교실 창가와 선생님)가 경로별로 다르게 보인다. |
+| `before-*-afghanistan-evening.png` → `after-*-afghanistan-evening-v2.png` | 아침과 같은 흙벽 방·창문이 어두운 밤하늘과 휴대전화 불빛 장면으로 바뀌었다. 초기 모바일 크롭에서 머리 위 여백이 좁아 `pos`를 `50% 15%`로 조정해 개선했다. |
+| `after-mobile-afghanistan-noon-v2.png` (미생성 폴백) | 전용 이미지가 없는 장면은 기본 인물 그림으로 자연스럽게 폴백되며 잘림이 없다. |
+
+- 공개한 대표 화면 — [투발루 낮 A 전(데스크톱)](screenshots/2026-11-25-scene-images-pilot/before-desktop.png) · [후(데스크톱)](screenshots/2026-11-25-scene-images-pilot/after-desktop.png) · [전(모바일)](screenshots/2026-11-25-scene-images-pilot/before-mobile.png) · [후(모바일)](screenshots/2026-11-25-scene-images-pilot/after-mobile.png) · [투발루 낮 B](screenshots/2026-11-25-scene-images-pilot/after-desktop-tuvalu-noon-b.png) · [투발루 저녁 AB](screenshots/2026-11-25-scene-images-pilot/after-desktop-tuvalu-evening-ab.png) · [투발루 저녁 AB(모바일)](screenshots/2026-11-25-scene-images-pilot/after-mobile-tuvalu-evening-ab.png) · [투발루 저녁 BA](screenshots/2026-11-25-scene-images-pilot/after-desktop-tuvalu-evening-ba.png) · [마리암 저녁 전](screenshots/2026-11-25-scene-images-pilot/before-desktop-afghanistan-evening.png) · [후](screenshots/2026-11-25-scene-images-pilot/after-desktop-afghanistan-evening.png) · [마리암 저녁 전(모바일)](screenshots/2026-11-25-scene-images-pilot/before-mobile-afghanistan-evening.png) · [후(모바일)](screenshots/2026-11-25-scene-images-pilot/after-mobile-afghanistan-evening.png)
+- 대화 캡처 — 이번 세션에서는 대화 창을 촬영하지 못했다. 위 실제 요청 발췌로 대신하고 캡처는 대기 상태다.
+- 남은 일 — 파일럿 검토 후 보류된 `afghanistan-noon`과 나머지 인물의 낮·저녁 상황 이미지를 순차 확장한다. 배포는 시나리오 확정 뒤 함께 진행한다.
+
 ## 2026-11-25-branch-redesign-apply
 
 - 실제 요청

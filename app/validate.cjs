@@ -52,6 +52,10 @@ for (const c of cases) {
   }
 }
 new vm.Script(fs.readFileSync('dist/ai.js', 'utf8'));
-new vm.Script(fs.readFileSync('dist/app.js', 'utf8'));
+const appSrc = fs.readFileSync('dist/app.js', 'utf8');
+new vm.Script(appSrc);
+for (const m of appSrc.matchAll(/img:'([a-z0-9-]+)'/g)) {
+  assert(fs.existsSync(`dist/assets/scenes/${m[1]}.webp`), `app.js SCENE_ART 장면 그림 없음 (${m[1]}.webp)`);
+}
 const tree = cases.filter(c => c.scenes.some(Array.isArray)).map(c => c.id);
 console.log(`PASS: ${cases.length} unique scenarios, ${scenes} scenes, ${scenes * 2} choices, ${paths} complete choice paths; branched slots ${branched} (${tree.join(', ') || '없음'}); precomputed matches every path; sources and JavaScript syntax valid.`);

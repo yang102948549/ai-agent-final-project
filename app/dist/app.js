@@ -79,19 +79,67 @@ async function draw(except){
 /* ---------- 공통 조각 ---------- */
 const sourceList=c=>`<ul class="sources">${c.sources.map(s=>`<li><a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.title)} ↗</a><span>${esc(s.date)}</span></li>`).join('')}</ul>`;
 const facts=c=>`<ul class="facts">${c.facts.map(f=>`<li>${esc(f)}</li>`).join('')}</ul>`;
-// 캐릭터 그림. kind가 face면 얼굴 부분, 아니면 전신 그림. 그림을 못 읽으면 이름 첫 글자가 보인다.
+// 캐릭터·장면 그림. kind가 face면 얼굴 부분, 아니면 전신/장면 그림. 그림을 못 읽으면 이름 첫 글자가 보인다.
 // 그림을 바꾸면 ART_V를 올린다. 학교 사이트는 파일을 몇 시간씩 캐시해서, 같은 이름이면 예전 그림이 보일 수 있다.
-const ART_V='20261125-photo';
+const ART_V='20261125-scene1';
+// 상황별 장면 그림 파일럿 매핑(장면 제목 기준). 등록되지 않은 장면은 기본 인물 그림으로 폴백한다.
+const SCENE_ART={
+  tuvalu:{
+    '떠날까, 남을까':{img:'tuvalu-noon-a',pos:'50% 38%'},
+    '보충 시험과 모래주머니':{img:'tuvalu-noon-b',pos:'50% 22%'},
+    '할머니의 빵나무':{img:'tuvalu-evening-ab',pos:'50% 42%'},
+    '선생님의 추천서':{img:'tuvalu-evening-ba',pos:'50% 38%'},
+  },
+  afghanistan:{
+    '사촌 언니의 전화':{img:'afghanistan-evening',pos:'50% 15%'},
+  },
+};
 const artSrc=(id,kind)=>`assets/characters/${id}${kind==='face'?'-face':''}.webp?v=${ART_V}`;
-function art(c,kind='card',extra=''){
-  return `<div class="art art-${kind} ${extra}" style="--tone:${TONE[c.id]||DEFAULT_TONE}" aria-hidden="true"><span class="art-initial">${esc([...c.name][0])}</span><img src="${artSrc(esc(c.id),kind)}" alt="" decoding="async" onerror="this.remove()"></div>`;
+const sceneMeta=(c,step)=>{const s=c.scenes[step];return s?.img?s:SCENE_ART[c.id]?.[s?.title]||null;};
+const sceneSrc=(c,step)=>{const m=sceneMeta(c,step);return m?.img?`assets/scenes/${m.img}.webp?v=${ART_V}`:artSrc(c.id,'card');};
+const scenePos=(c,step)=>sceneMeta(c,step)?.pos||'';
+const loadedSrc=new Set(),imgPromises=new Map();
+function preloadUrl(src,priority=''){
+  if(!src)return Promise.resolve();
+  if(imgPromises.has(src))return imgPromises.get(src);
+  const p=new Promise(res=>{
+    const img=new Image();
+    img.decoding='async';
+    if(priority&&'fetchPriority' in img)img.fetchPriority=priority;
+    const ok=()=>{loadedSrc.add(src);(img.decode?img.decode().catch(()=>{}):Promise.resolve()).then(res);};
+    img.onload=ok;img.onerror=res;
+    img.src=src;
+    if(img.complete&&img.naturalWidth)ok();
+  });
+  imgPromises.set(src,p);
+  return p;
 }
-// 서버가 멀어 그림 한 장마다 1초 가까이 걸리므로, 첫 화면 뒤에 모든 그림(약 1.4MB)을 미리 받아 둔다.
-// 이후 화면에서는 브라우저 저장본이 바로 쓰인다.
+function preloadCaseScenes(id){
+  const raw=cases.find(x=>x.id===id);
+  if(!raw)return;
+  preloadUrl(artSrc(id,'card'));
+  const all=raw.scenes.flatMap(s=>Array.isArray(s)?s:[s]);
+  for(const s of all){const img=s.img||SCENE_ART[id]?.[s.title]?.img;if(img)preloadUrl(`assets/scenes/${img}.webp?v=${ART_V}`);}
+}
+function waitSceneImage(c,step,cap=1500){
+  return Promise.race([preloadUrl(sceneSrc(c,step),'high'),wait(cap)]);
+}
+function artHtml(src,initial,kind='card',extra='',opts={}){
+  const ready=loadedSrc.has(src);
+  const pos=opts.pos?` style="object-position:${esc(opts.pos)}"`:'';
+  const prio=opts.priority?` fetchpriority="${opts.priority}"`:'';
+  return `<div class="art art-${kind}${ready?' is-loaded':''}${extra?' '+extra:''}" style="--tone:${opts.tone||DEFAULT_TONE}" aria-hidden="true"><span class="art-initial">${esc(initial)}</span><img src="${esc(src)}" alt="" decoding="async"${prio}${pos}></div>`;
+}
+function art(c,kind='card',extra='',opts={}){
+  return artHtml(artSrc(c.id,kind),[...c.name][0],kind,extra,{tone:TONE[c.id]||DEFAULT_TONE,...opts});
+}
+function sceneArt(c,step,kind='card',extra='',opts={}){
+  return artHtml(sceneSrc(c,step),[...c.name][0],kind,extra,{tone:TONE[c.id]||DEFAULT_TONE,pos:scenePos(c,step),...opts});
+}
+// 서버가 멀어 그림 한 장마다 1초 가까이 걸리므로, 첫 화면 뒤에 기본 인물 그림을 미리 받아 둔다.
+// 상황별 장면 그림은 캐릭터를 고른 시점에 해당 인물 것만 먼저 받는다.
 function preloadArt(){
-  const keep=[];
-  for(const kind of ['face','card'])for(const c of cases){const img=new Image();img.src=artSrc(c.id,kind);keep.push(img);}
-  preloadArt.keep=keep;
+  for(const kind of ['face','card'])for(const c of cases)preloadUrl(artSrc(c.id,kind));
 }
 function field(name,label,placeholder='',required=false,help=''){return `<label class="field"><span>${esc(label)}${required?' <em>필수</em>':''}</span>${help?`<small>${esc(help)}</small>`:''}<textarea data-field="${name}" name="${name}" maxlength="4000" ${required?'required':''} placeholder="${esc(placeholder)}">${esc(fields()[name]||'')}</textarea></label>`;}
 function tile(c){const i=cases.indexOf(c),done=state.completed.includes(c.id);return `<button class="tile" data-start="${c.id}" style="--tone:${TONE[c.id]}">${art(c,'card')}<span class="tile-body"><span class="tile-meta">${esc(c.theme)}${done?' · 완료':''}</span><strong>${esc(c.name)}</strong><span class="tile-title">${esc(c.title)}</span><span class="tile-desc">${esc(c.summary)}</span></span></button>`;}
@@ -102,7 +150,7 @@ function tile(c){const i=cases.indexOf(c),done=state.completed.includes(c.id);re
 // 첫 화면 모자이크: 캐릭터 4명과 색 칸 3개. 색은 캐릭터 그림에서 뽑은 키 컬러(TONE) 가운데 밝고 따뜻한 것(호단 호박색·시오네 청록·그라스 다홍)
 const MOSAIC=[['p','bangladesh','p1'],['t','somalia','t1'],['p','tuvalu','p2'],['t','congo','t2'],['t','tuvalu','t3'],['p','ghana','p4'],['p','gaza','p5']];
 function home(){const r=state.run,c=current();return `<section class="title-screen">
-  <div class="mosaic" aria-hidden="true">${MOSAIC.map(([k,id,area])=>k==='p'?`<div class="m-cell a-${area}" style="grid-area:${area}">${art(cases.find(x=>x.id===id),'card')}</div>`:`<div class="m-cell m-tile a-${area}" style="grid-area:${area};background:${TONE[id]}"></div>`).join('')}</div>
+  <div class="mosaic" aria-hidden="true">${MOSAIC.map(([k,id,area])=>k==='p'?`<div class="m-cell a-${area}" style="grid-area:${area}">${art(cases.find(x=>x.id===id),'card','',{priority:area==='p1'||area==='p4'?'high':''})}</div>`:`<div class="m-cell m-tile a-${area}" style="grid-area:${area};background:${TONE[id]}"></div>`).join('')}</div>
   <div class="title-body">
     <h1><span class="line"><span>다른 곳의</span></span><span class="line"><span>하루</span></span></h1>
     <p class="title-sub">같은 하늘 아래, 전혀 다른 하루.<br>지구 어딘가에 사는 누군가의 아침과 저녁을 <span class="keep">함께 걸어 봅니다.</span></p>
@@ -290,6 +338,7 @@ const DAY_FALLBACK={
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 async function dayPass(c,from,to){
   const fromT=c.scenes[from].time,toT=to<3?c.scenes[to].time:'밤';
+  const imgWait=to<3?waitSceneImage(c,to,1500):Promise.resolve();
   const got=chatOf(from).brief?.between;
   const items=got?.length?got:(DAY_FALLBACK[toT]||[]).map(([when,text])=>({when,text}));
   const step=1100,lead=500,dur=lead+items.length*step;
@@ -307,8 +356,9 @@ async function dayPass(c,from,to){
   window.scrollTo({top:0});
   requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('go')));
   await wait(reduceMotion?1500:dur+lead+900);
-  // 다음 장면 첫머리를 아직 쓰는 중이면 마지막 줄을 띄운 채 기다린다.
+  // 다음 장면 첫머리와 상황 그림이 아직 준비 중이면 잠깐 더 기다려 글과 그림이 함께 뜨게 한다.
   while(opening)await wait(200);
+  await imgWait;
   el.classList.add('out');await wait(450);el.remove();
 }
 // *행동* 표기를 기울임으로 보여 준다.
@@ -324,11 +374,13 @@ function entry(e,c,s){
   if(e.k==='error')return `<p class="msg error">${esc(e.text)}</p>`;
   return '';// 예전 기록의 scene·result 항목은 카드 머리말과 결과 카드가 대신 보여 준다.
 }
-// 장면 화면 왼쪽: 캐릭터 그림, 이름표, 아침·낮·저녁 진행
+// 장면 화면 왼쪽: 상황에 맞는 장면 그림(없으면 기본 인물 그림), 이름표, 아침·낮·저녁 진행
 function stageArt(c,step,decided){return `<aside class="stage-art">
-  <figure class="portrait">${art(c,'card')}<figcaption><strong>${esc(c.name)}</strong>${esc(c.country)} · ${esc(c.region)}${playerTag()}</figcaption></figure>
+  <figure class="portrait">${sceneArt(c,step,'card','',{priority:'high'})}<figcaption><strong>${esc(c.name)}</strong>${esc(c.country)} · ${esc(c.region)}${playerTag()}</figcaption></figure>
   <ol class="pips" aria-label="장면 진행">${c.scenes.map((x,i)=>`<li class="${i<step||(i===step&&decided)?'done':i===step?'now':''}">${esc(x.time)}</li>`).join('')}</ol>
 </aside>`;}
+// 휴대폰 장면 카드 상단: 16:9 고정 비율로 자리만 먼저 잡아 두고, 미리 받은 상황 그림이 글과 함께 보이게 한다.
+const sceneBanner=(c,step)=>`<figure class="scene-banner">${sceneArt(c,step,'banner','',{priority:'high'})}</figure>`;
 // 장면 머리말: 휴대폰에서는 왼쪽 그림 영역 대신 작은 얼굴이 제목 왼쪽에 붙는다(넓은 화면에서는 숨김).
 const cardHead=(c,label,title)=>`<header class="card-head"><div class="head-face">${art(c,'face')}</div><div class="head-text"><p class="label">${label}</p><h1>${esc(title)}</h1></div></header>`;
 // 학생이 아직 말하지 않은 장면이면 글을 처음부터 읽도록 맨 위를 보여 준다.
@@ -355,7 +407,7 @@ function chat(c){
   return `<div class="game play">${stageArt(c,step,false)}<div class="stage-main">
   <article class="scene-card">
     ${cardHead(c,`${esc(s.time)} · 장면 ${step+1}/3`,s.title)}
-    <div class="card-body" id="log" aria-live="polite">${ch.log.map(e=>entry(e,c,s)).join('')}${pending?passing(c,step,opening):''}</div>
+    <div class="card-body" id="log" aria-live="polite">${sceneBanner(c,step)}${ch.log.map(e=>entry(e,c,s)).join('')}${pending?passing(c,step,opening):''}</div>
     <footer class="card-foot${AI.ready?' talk':''}">
       ${AI.ready?talkFoot(c,s,ch):`<p class="ask">${esc(josa(c.name,'이라면','라면'))}, 어떻게 할까요?</p>${choiceRow(s)}
       <p class="hint">오른쪽 위 <b>AI 연결</b>을 하면 고르기 전에 주변 사람과 자유롭게 대화할 수 있어요.</p>`}
@@ -780,6 +832,8 @@ function render(){
   if(view==='report'&&!FORMATS[fields().format])view='plan';
   const pages={home,atlas,guide,select,gallery:galleryView,intro:()=>intro(c),chat:()=>chat(c),reflect:()=>reflect(c),lab:()=>lab(c),plan:()=>plan(c),report:()=>report(c)};
   app.innerHTML=(pages[view]||home)();
+  app.querySelectorAll('.art img').forEach(img=>{if(img.complete&&img.naturalWidth){loadedSrc.add(img.getAttribute('src'));img.closest('.art')?.classList.add('is-loaded');}});
+  if(c&&(view==='intro'||view==='chat'))preloadCaseScenes(c.id);
   document.body.classList.toggle('is-game',['home','select','intro','chat','reflect','lab','plan','report'].includes(view));
   document.querySelector('#resume').hidden=!state.run||RUN_VIEWS.includes(view)||view==='select';
   document.querySelectorAll('nav [data-nav]').forEach(b=>{if(b.dataset.nav===view)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
@@ -850,7 +904,7 @@ document.addEventListener('click',async e=>{
   if(a==='next-scene'){
     if(state.run.choices[state.run.step]===null||document.querySelector('.daypass'))return;
     const from=state.run.step;
-    if(from<2){state.run.step++;save();navigate('chat');dayPass(c,from,from+1);}
+    if(from<2){state.run.step++;save();navigate('chat');dayPass(current(),from,from+1);}
     else{navigate('reflect');dayPass(c,from,3);}
   }
   if(a==='prev-scene'){state.run.step=Math.max(0,state.run.step-1);save();navigate('chat');}
@@ -890,8 +944,11 @@ document.addEventListener('keydown',e=>{
   if(e.target.id==='say'&&e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();say(current(),e.target.value);}
   if(e.key==='Escape'&&!document.querySelector('#modal').hidden)closeModal();
 });
+document.addEventListener('load',e=>{const img=e.target;if(img?.tagName==='IMG'&&img.closest('.art')){loadedSrc.add(img.getAttribute('src'));img.closest('.art').classList.add('is-loaded');}},true);
+document.addEventListener('error',e=>{const img=e.target;if(img?.tagName==='IMG'&&img.closest('.art')){img.closest('.art').classList.add('is-error');img.remove();}},true);
 document.querySelector('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();});
 renderStatus();
 render();
-if(document.readyState==='complete')setTimeout(preloadArt,0);else addEventListener('load',preloadArt,{once:true});
+const startPreload=()=>setTimeout(preloadArt,400);
+if(document.readyState==='complete')startPreload();else addEventListener('load',startPreload,{once:true});
 })();
