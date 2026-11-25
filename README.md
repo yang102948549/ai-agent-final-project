@@ -6,8 +6,10 @@
 |---|---|
 | [app/](app/) | 수업도구 웹앱의 소스와 실행 방법. 배포가 끝나면 이 README 상단에 실제 사용 주소를 추가한다. |
 | [PROMPTS.md](PROMPTS.md)와 커밋 이력 | 실제 요청, 선택한 이유, 구현 내용, 검증 결과를 작업 순서대로 읽을 수 있다. |
-| [screenshots/](screenshots/)와 [CHECKLIST.md](CHECKLIST.md) | 최초 화면과 개선 전후 화면을 작업 ID로 연결해 무엇을 왜 바꿨는지 확인한다. |
-| [video/](video/) | 과정 영상(2~3분)과 트레일러(30~60초)의 제작 코드와 완성 영상. 완성 후 이 README에 두 편의 재생 링크를 추가한다. |
+| [screenshots/](screenshots/)와 [CHECKLIST.md](CHECKLIST.md) | 포트폴리오에서 확인할 대표 화면과 개선 전후 비교를 작업 ID로 연결한다. |
+| [video/](video/) | 과정 영상(2~3분)과 트레일러(30~60초)의 제작 코드. 완성 후 이 README에 두 편의 재생 링크를 추가한다. |
+
+영상 편집에 사용할 원본 캡처와 중간 산출물은 이 작업 폴더의 `local-assets/`에 저장한다. 이 폴더는 Git에서 제외된다. 제출 근거로 필요한 대표 이미지는 `screenshots/`에 선별해 넣고, 완성 영상의 제출 위치와 링크는 README에 기록한다.
 
 - [개발 가이드](DEVELOPMENT.md) — 평가 기준, 일정, 작업 완료 절차
 - [Claude Code 작업 지침](CLAUDE.md) — 새 세션에서도 적용할 기록·커밋 규칙
