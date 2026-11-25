@@ -1,0 +1,13 @@
+{
+  "name": "anotherday-branching",
+  "private": true,
+  "description": "다른 곳의 하루 · 선택별 장면 분기 수정 개발",
+  "scripts": {
+    "serve": "python -m http.server 4173 --directory dist --bind 127.0.0.1",
+    "validate": "node validate.cjs",
+    "capture": "node tools/capture.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.52.0"
+  }
+}
