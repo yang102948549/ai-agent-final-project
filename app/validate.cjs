@@ -11,6 +11,7 @@ assert.equal(new Set(cases.map(x => x.id)).size, 12);
 let paths = 0, scenes = 0, branched = 0;
 const checkScene = (s, where) => {
   assert(s && s.time && s.title && s.story && s.barrier, `${where}: 장면 항목이 비어 있음`);
+  if (s.img) assert(fs.existsSync(`dist/assets/scenes/${s.img}.webp`), `${where}: 장면 그림 없음 (${s.img}.webp)`);
   assert.equal(s.options.length, 2, `${where}: 선택지는 두 개`);
   assert.notEqual(s.options[0].result, s.options[1].result, `${where}: 두 결과가 같음`);
   for (const o of s.options) assert(o.text && o.result, `${where}: 선택지 문장 또는 결과 없음`);
@@ -28,8 +29,10 @@ for (const c of cases) {
       assert(i > 0, `${c.id}: 아침은 갈라지지 않는다`);
       assert([2, 2 ** i].includes(slot.length), `${c.id}: ${i}번 칸의 갈래 수`);
       branched++;
-      slot.forEach((s, k) => { checkScene(s, `${c.id} ${i}-${k}`); scenes++; });
-      assert.equal(new Set(slot.map(s => s.title)).size, slot.length, `${c.id}: ${i}번 칸의 갈래 제목이 겹침`);
+      // 같은 장면 객체를 여러 갈래가 함께 쓸 수 있다([X, X, Y, Y]는 아침 선택으로만, [X, X, X, X]는 첫머리만 갈래별). 서로 다른 장면끼리는 제목이 달라야 한다.
+      const uniq = [...new Set(slot)];
+      uniq.forEach((s, k) => { checkScene(s, `${c.id} ${i}-${k}`); scenes++; });
+      assert.equal(new Set(uniq.map(s => s.title)).size, uniq.length, `${c.id}: ${i}번 칸의 갈래 제목이 겹침`);
     } else { checkScene(slot, `${c.id} ${i}`); scenes++; }
   });
   const pre = PRE[c.id];
