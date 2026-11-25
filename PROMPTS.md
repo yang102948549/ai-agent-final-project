@@ -144,3 +144,40 @@
   - `01-decision.png`(1920×1080, 15:05)는 오른쪽에 업무 메신저(실명·쪽지 제목)가 함께 찍혔다. **비공개**로 둔다.
   - 메신저를 뺀 `01-decision-terminal.png`(1350×1080)만 [공개본](screenshots/conversations/2026-11-25-photoreal-characters/01-decision-terminal.png)으로 올렸다.
 - 남은 일 — 배포 전이다. onischool.net 반영과 배포 화면 확인은 사용자 승인 뒤에 한다.
+
+## 2026-11-25-branch-dialogue-review
+
+- 실제 요청
+  - “시나리오 분기별 md를 다시 검토하자. 장면들이 바꼈기 때문에 그에 해당하는 대화와 칩들또한 변경되어야 해”
+  - “"[로컬 경로 가림]" 시나리오 수정본 md를 다시 검토해줘”
+  - “투발루뿐만이 아니라 전체 캐릭터들을 확인해야해.”
+  - “지금은 시나리오 분기를 다시 살펴봐야하니까 md정리를 우선해줘 바로 배포하지 않을거야”
+- 확인한 사실 — 저장소에 시나리오 분기 md 파일은 없었다. 장면별 대화(첫머리 나레이션·인물 대사)와 답 칩, 전환 일과는 `app/dist/precomputed.js`, 장면 대본은 `app/dist/scenarios.js`에 있고, 사람이 읽는 검토본은 `app/검토용-미리만든-내용.html`뿐이었다. 그래서 두 파일에서 그대로 옮겨 쓰는 md 정리 문서를 새로 만들었다.
+- 한 일
+  1. 12명 전체의 장면 대본·선택 결과·첫머리·대사·답 칩·일과를 경로별로 출력해 모두 읽고 대조했다. 갈래가 있는 인물은 투발루 하나이고, 나머지 11명은 장면이 고정이다.
+  2. 어긋난 다섯 곳을 고쳤다(전후 문장은 [검토 메모](app/design/scenario-review-notes.md) 표).
+     - 시오네 인물 소개 「상황」: B 경로에는 없는 “이주, 세상에 할 말” 대신 네 흐름을 모두 담는 문장
+     - 시오네 아침 B 뒤 일과: 다음 장면에 나오지 않는 아빠 대신 선생님 문자로 이어지게
+     - 시오네 낮 A 뒤 일과: 「카메라 앞 30초」 첫머리 장소(마을 어귀)와 맞춤
+     - 나데주 저녁 A 뒤 일과: 아침 배급과 헷갈리던 “배급받은 쌀과 콩”을 “식량 꾸러미”로. 처음 고친 문장은 데스크톱에서 두 줄로 넘어가 더 짧게 다시 고쳤다.
+     - 마리암 낮 첫머리 답 칩: 별표 행동으로 적힌 질문을 말로
+  3. `app/tools/scenario-md.cjs` → `app/design/scenario-branches.md` 생성. 한눈에 보기 표, 인물별·갈래별 장면, 첫머리와 대사, 답 칩, 선택 결과와 다음 일과를 담는다. 맨 위에는 손으로 쓴 `app/design/scenario-review-notes.md`(현재 구조, 고친 곳, 그대로 둔 것과 결정할 일)를 붙인다.
+  4. `node precompute.cjs --review`로 검토용 HTML도 다시 만들었다(Gemini 호출 없음).
+  5. `app/tools/capture-daypass.mjs` — 장면 전환 일과와 인물 소개 화면을 찍는 도구. 이 컴퓨터의 Playwright 1169 전용 브라우저가 없어 실패해서, `PW_CHROME`으로 설치된 chrome-headless-shell(1234)을 지정해 촬영했다. 같은 방식으로 `tools/branch-flow.mjs`도 `PW_CHROME`을 받게 했다.
+- 그대로 둔 것 — 결과 문장이 다음 장면보다 시간을 앞질러 가는 대본 원문(루파·코피·나데주·누르), 코피 저녁 첫머리의 대본에 없는 소품, 다른 11명에 갈래를 넣을지 여부. 검토 메모의 “결정 필요”에 적었다.
+- 검증
+  - `node validate.cjs` 통과(인물 12, 장면 40, 선택지 80, 경로 96, 미리 만든 내용이 모든 경로와 맞음).
+  - `node tools/branch-flow.mjs` 여덟 경로 PASS(장면 흐름 4가지).
+- 화면 — 로컬 http://127.0.0.1:4173/, 닉네임 `테스트`, AI 없음(`/api/` 차단), 데스크톱 1440×900, 모바일 390×844(2배율, 780×1688). 전 화면은 고친 두 파일을 `git stash`로 되돌린 상태에서 찍었다. 원본은 `local-assets/screenshots/2026-11-25-branch-dialogue-review/`.
+
+| 전 → 후 | 관찰 |
+|---|---|
+| `before-*-tuvalu-pass-morning-b.png` → `after-*` | 낮 12시 줄이 “아빠를 기다린다”에서 “울리는 휴대전화를 꺼낸다”로. 모바일은 두 줄로 넘어가지만 카드 안에 다 보인다. |
+| `before-*-tuvalu-pass-noon-aa.png` → `after-*` | 해 질 무렵 줄이 “마을 어귀로 나간다”로 |
+| `before-*-haiti-pass-evening-a.png` → `after-*` | 첫 줄이 “식량 꾸러미를 교실 구석에 둔다”로, 데스크톱 한 줄 |
+| `before-*-tuvalu-profile.png` → `after-*` | 「상황」 문구가 바뀌어 데스크톱에서 두 줄. 버튼 가림 없음. 모바일은 「상황」이 첫 화면 아래에 있어 그림과 표만 보인다(전후 같음). |
+
+- 마리암 답 칩은 AI가 연결된 대화 화면에서만 보여, AI를 막은 촬영에서는 확인하지 못했다. 문서와 데이터로만 확인했다.
+- 공개한 대표 화면 — [일과 전](screenshots/2026-11-25-branch-dialogue-review/before-desktop-tuvalu-pass-morning-b.png) · [일과 후](screenshots/2026-11-25-branch-dialogue-review/after-desktop-tuvalu-pass-morning-b.png) · [소개 전](screenshots/2026-11-25-branch-dialogue-review/before-desktop-tuvalu-profile.png) · [소개 후](screenshots/2026-11-25-branch-dialogue-review/after-desktop-tuvalu-profile.png)
+- 대화 캡처 — 이번 세션에서는 대화 창을 촬영하지 못했다. 위 실제 요청 발췌로 대신하고 캡처는 대기 상태다.
+- 배포 — 사용자 요청대로 하지 않았다. 로컬 커밋만 한다.

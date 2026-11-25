@@ -11,7 +11,8 @@ vm.runInNewContext(fs.readFileSync(new URL('../dist/scenarios.js', import.meta.u
 const c = ctx.window.SCENARIOS.find(x => x.id === id);
 const KEY = 'global-life-lab-v1';
 
-const browser = await chromium.launch();
+// Playwright 전용 브라우저가 없으면 PW_CHROME에 다른 Chromium 실행 파일 경로를 준다.
+const browser = await chromium.launch(process.env.PW_CHROME ? { executablePath: process.env.PW_CHROME } : {});
 const masks = process.env.ONLY ? process.env.ONLY.split(',').map(Number) : [...Array(8).keys()];
 // 로컬 python 서버는 동시에 많은 요청을 받으면 일부를 놓친다. 두 경로씩 진행한다.
 const runPath = async mask => {

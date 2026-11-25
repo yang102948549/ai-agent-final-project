@@ -17,6 +17,7 @@
 | `precompute.cjs` | 선택별 브리핑과 첫머리를 onischool 서버의 Gemini로 미리 생성 |
 | `sync-onischool.cjs` | `dist/`를 onischool 사이트 저장소의 `anotherday/`로 복사 |
 | `relay/` | 학교망용 Gemini 중계 Cloudflare Worker |
+| `design/scenario-branches.md` | 시나리오 분기 정리 문서(맨 위 검토 메모는 `design/scenario-review-notes.md`) |
 | `tools/capture.mjs` | 데스크톱(1440×900)·모바일(390×844, 2배율) 화면 증거 촬영 |
 
 ## 로컬 실행과 검증
@@ -27,6 +28,8 @@ npm install                 # 화면 촬영 도구(Playwright)
 npm run validate            # 시나리오·문법 검사
 npm run serve               # http://127.0.0.1:4173
 node tools/branch-flow.mjs  # 실제 화면에서 여덟 경로를 눌러 보며 장면 갈래 확인
+node tools/scenario-md.cjs   # 12명의 장면 갈래·첫머리·답 칩·일과를 design/scenario-branches.md로 정리
+node tools/capture-daypass.mjs --url http://127.0.0.1:4173/ --out ../local-assets/screenshots/<작업ID> --name after  # 장면 전환 일과·인물 소개 촬영
 node tools/capture.mjs --url http://127.0.0.1:4173/ --out ../local-assets/screenshots/<작업ID> --name after \
   --run '{"id":"tuvalu","step":1,"choices":[0,null,null]}'
 ```
