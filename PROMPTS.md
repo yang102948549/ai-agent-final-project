@@ -297,6 +297,37 @@
 - 대화 캡처 — 촬영하지 못했다. 위 실제 요청 발췌로 대신하고 캡처는 대기 상태다.
 - 남은 일 — 이미지 생성 서버 용량이 회복되면 A조 나머지 13장을 이어서 생성·연동한다. `CHECKLIST.md`는 다른 세션의 변경이 작업 트리에 있어 이번 커밋에서는 섞지 않았다.
 
+## 2026-11-26-scene-images-group-a-complete
+
+- 실제 요청
+  - “제미나이 api key는?” / “env 문서를 만들어서 넣는게 좋지 않을까?”
+  - “저장했어 이어서 작업진행해줘. 그리고 이미지 생성만 지금 api를 이용하는 거지 다른 작업은 api를 이용하지 않을 거야.”
+  - “작업이 완료되면 커밋 후 md 정리 후 백그라운드도 작업종료”
+- 한 일
+  1. 루트에 `.env`(Git 제외)와 `.env.example` 템플릿을 만들고, `.env`의 `GEMINI_API_KEY`로 호출 가능한 이미지 모델을 조회해 `gemini-3-pro-image-preview`(Nano Banana Pro)를 확인했다.
+  2. 기존 캐릭터 원본(`local-assets/photoreal-characters/<id>.png`)을 참조 이미지로 첨부해 **A조 남은 13장 전량을 생성**하고 원본은 `local-assets/scene-images/`(Git 제외), 앱용 896×1200 WebP(품질 76, 44~144KB)는 `app/dist/assets/scenes/`에 저장했다:
+     - 투발루 시오네: `tuvalu-evening-bb` 「밤 밀물」
+     - 아프가니스탄 마리암: `afghanistan-noon` 「이웃 언니의 귓속말」
+     - 파키스탄 아시프: `pakistan-noon` 「멈춰 버린 선풍기」, `pakistan-evening-a` 「오늘 일당 1,200루피」, `pakistan-evening-b` 「밤 교대 자리」
+     - 방글라데시 루파: `bangladesh-noon` 「동아리 지원금 투표」, `bangladesh-evening` 「열쇠는 누가 가질까」
+     - 소말리아 호단: `somalia-noon` 「시장에 염소를 팔까」, `somalia-evening-a` 「옆집 아샤의 빈 그릇」, `somalia-evening-b` 「먼 우물로 가는 길」
+     - 팔레스타인 라마: `gaza-noon` 「급수차가 왔다」, `gaza-evening-a` 「빵 두 장과 물 한 통」, `gaza-evening-b` 「할아버지 텐트 앞」
+  3. 13장을 모두 직접 열어 인물 일관성·직관적 상황 표현·모바일 16:9 안전 구도·금지 요소(글자·로고·잔해·무기·상처 없음)를 검수했다.
+  4. `app/dist/app.js`의 `SCENE_ART`에 A조 6명 전량(19개 장면)을 반영(B조 에이전트가 넣은 6명 항목은 그대로 유지)하고 `ART_V`를 `20261126-scene-all`로 갱신(`index.html` preload 동기화)했다. 이로써 **12명 전체 낮·저녁 49개 장면 슬롯 누락 0건**을 달성했다.
+  5. `app/design/캐릭터-분담-작업.md`의 A조 상태를 완료로 갱신했다.
+- 검증
+  - `node validate.cjs` → `PASS: 12 unique scenarios, 47 scenes, 94 choices, 96 complete choice paths; …` (전 장면 WebP 파일 존재 확인 포함)
+  - `node --check dist/app.js` 통과
+  - 전체 12명 낮·저녁 제목 매핑 검사 → `covered=49, missing=0`
+- 화면 — 로컬(127.0.0.1:4185), 닉네임 `테스트`, AI 차단(`/api/`), 데스크톱 1440×900, 모바일 780×1688. 원본은 `local-assets/screenshots/2026-11-26-scene-images-group-a/`.
+  - `before-*-pakistan-noon.png` → `after-*-pakistan-noon.png`: 뙤약볕 공사장 사진에서 정전 실내 멈춘 선풍기와 부채질하는 노모 곁의 아시프로 교체.
+  - `before-*-somalia-evening-a.png` → `after-*-somalia-evening-a.png`: 한낮 염소 초상에서 노을 진 문간, 쌀자루와 빈 그릇을 든 아샤 구도로 교체.
+  - `before-*-gaza-noon.png` → `after-*-gaza-noon.png`: 텐트 정면 초상에서 급수차 줄·물통 든 할아버지·옷자락 잡은 동생들 구도로 교체.
+  - `after-*-bangladesh-evening.png`, `after-*-afghanistan-noon.png`, `after-*-tuvalu-evening-bb.png`: 데스크톱 3:4와 모바일 16:9 배너 모두 얼굴·핵심 소품이 잘림 없이 직관적으로 표시됨을 확인.
+- 공개한 대표 화면 — [아시프 낮 전](screenshots/2026-11-26-scene-images-group-a/before-desktop-pakistan-noon.png) · [후](screenshots/2026-11-26-scene-images-group-a/after-desktop-pakistan-noon.png) · [모바일 후](screenshots/2026-11-26-scene-images-group-a/after-mobile-pakistan-noon.png) · [호단 저녁 A 전](screenshots/2026-11-26-scene-images-group-a/before-desktop-somalia-evening-a.png) · [후](screenshots/2026-11-26-scene-images-group-a/after-desktop-somalia-evening-a.png) · [모바일 후](screenshots/2026-11-26-scene-images-group-a/after-mobile-somalia-evening-a.png) · [라마 낮 전](screenshots/2026-11-26-scene-images-group-a/before-desktop-gaza-noon.png) · [후](screenshots/2026-11-26-scene-images-group-a/after-desktop-gaza-noon.png) · [모바일 후](screenshots/2026-11-26-scene-images-group-a/after-mobile-gaza-noon.png) · [루파 저녁](screenshots/2026-11-26-scene-images-group-a/after-desktop-bangladesh-evening.png) · [마리암 낮](screenshots/2026-11-26-scene-images-group-a/after-desktop-afghanistan-noon.png) · [시오네 저녁 BB](screenshots/2026-11-26-scene-images-group-a/after-desktop-tuvalu-evening-bb.png)
+- 대화 캡처 — 촬영하지 못했다. 위 실제 요청 발췌로 대신하고 캡처는 대기 상태다.
+- 남은 일 — B조 에이전트 커밋 완료 후 배포 전 최종 점검을 거쳐 원격 푸시·배포 여부를 결정한다.
+
 ## 2026-11-25-branch-redesign-apply
 
 - 실제 요청
