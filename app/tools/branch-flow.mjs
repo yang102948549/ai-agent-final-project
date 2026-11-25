@@ -13,7 +13,8 @@ const KEY = 'global-life-lab-v1';
 
 const browser = await chromium.launch();
 const masks = process.env.ONLY ? process.env.ONLY.split(',').map(Number) : [...Array(8).keys()];
-const results = await Promise.all(masks.map(async mask => {
+// 로컬 python 서버는 동시에 많은 요청을 받으면 일부를 놓친다. 두 경로씩 진행한다.
+const runPath = async mask => {
   const choices = [0, 1, 2].map(i => (mask >> (2 - i)) & 1);
   const expected = ctx.window.resolveCase(c, choices).scenes.map(s => s.title);
   const page = await (await browser.newContext({ viewport: { width: 1440, height: 900 } })).newPage();
@@ -36,7 +37,9 @@ const results = await Promise.all(masks.map(async mask => {
   const want = ctx.window.resolveCase(c, choices).scenes.map((s, i) => s.options[choices[i]].text);
   const ok = JSON.stringify(seen) === JSON.stringify(expected) && JSON.stringify(recap) === JSON.stringify(want);
   return { path: choices.map(n => 'AB'[n]).join(''), ok, seen };
-}));
+};
+const results = [];
+for (let i = 0; i < masks.length; i += 2) results.push(...await Promise.all(masks.slice(i, i + 2).map(runPath)));
 await browser.close();
 for (const r of results) console.log(`${r.ok ? 'PASS' : 'FAIL'} ${r.path}: ${r.seen.join(' → ')}`);
 const distinct = new Set(results.map(r => r.seen.slice(0, 2).join('|'))).size;

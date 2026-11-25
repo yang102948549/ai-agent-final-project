@@ -106,3 +106,41 @@
 - 대화 원본 — local-assets/conversations/2026-11-25-photoreal-characters/01-decision.png 및 01-decision-full.png가 있다. 이번 기록에서 대화 이미지 내용 검토는 보류했다.
 - 디자인 개선 — CHECKLIST.md에 하나의 개선 항목으로 추가했다. 전후 화면 링크로 비교할 수 있다.
 - 남은 검증 — 배포 URL에서 이미지와 모바일 동작 확인. 이번 작업은 로컬 커밋으로 기록한다.
+
+### 2026-11-25-photoreal-characters · Claude Code 작업분(얼굴 다시 자르기, 콩고 X, 배경 재검토)
+
+- 앞 기록과의 관계 — 위 기록과 커밋 `574ea46`은 다른 세션(코덱스)이 남겼다. 그 커밋에는 이 세션이 작업 중이던 얼굴 크롭, 콩고 X, 이미지 재압축, 캐시 버전, 안내 문구 변경이 함께 들어갔다. 이 절은 이 세션에서 실제로 한 일과 검증을 따로 적는다.
+- 실제 요청
+  - “이미지 수정본들도 확인해줘”
+  - “사진풍으로 확정, 얼굴 다시 자르고 콩고 X 넣어서 반영해줘. 그리고 배경들도 안맞는게 있다면 재검토해줘”
+- 확인한 문제
+  - 새 `-face.webp`는 전신을 정사각형으로 줄인 것이었다. 휴대폰 장면 머리말 같은 작은 원에서 얼굴을 알아볼 수 없었다.
+  - 콩고 그림에는 첫 장면 「벽에 그려진 빨간 X」의 X가 없었다.
+- 한 일
+  1. `app/tools/make-faces.py` — 전신 12장의 얼굴 위치 표로 360×360 얼굴 그림을 다시 잘랐다. 아이티는 너무 꽉 차고 가나는 아래로 치우쳐 좌표를 고쳤다. OpenCV 5에 Haar 검출기가 없어 표 방식을 썼다.
+  2. `app/tools/paint-congo-x.py` — 문 왼쪽 회벽에 곱하기 합성으로 붓 자국 X를 칠했다. 벽 질감이 비치게 했고, 흘러내린 자국은 한 줄기로 줄였다.
+  3. 전신 12장을 WebP 품질 78로 다시 저장했다(2,352KB → 1,153KB). 앱이 첫 화면 뒤에 모든 그림을 미리 받기 때문이다. 확대 비교에서 차이를 확인하지 못했다.
+  4. `ART_V` 캐시 버전을 넣고, 기사 사진 설명과 바닥글에 “AI로 만든 가상 인물(실제 사진이 아님)”을 넣었다. 사진처럼 보여 실존 인물·실제 보도 사진으로 오해될 수 있어서다.
+  5. 배경 재검토 — 설계서 2절과 12장을 대조해 `app/design/characters.md` 4절에 표로 남겼다.
+     - 콩고 X 누락 외에 고칠 것은 없었다.
+     - 방글라데시는 설계의 새벽빛이 아니라 한낮 빛이다.
+     - 가자의 먼 회색 건물은 확대해도 잔해로 보이지 않았다.
+     - 아이티 칠판에는 지운 자국만 있다.
+  6. `app/tools/branch-flow.mjs` — 여덟 경로를 동시에 돌리면 로컬 python 서버가 요청을 놓쳐 실패했다(단독 실행은 통과). 두 경로씩 진행하도록 바꿨다.
+- 검증
+  - `node validate.cjs` 통과(장면 40, 경로 96).
+  - `node tools/branch-flow.mjs` 여덟 경로 PASS.
+  - 얼굴 12장과 콩고 X 확대본을 직접 열어 확인했다.
+- 화면 — 로컬 http://127.0.0.1:4173/, 테스트 닉네임, AI 없음, 데스크톱 1440×900, 모바일 780×1688. 원본은 `local-assets/screenshots/2026-11-25-photoreal-characters/`에 있다.
+
+| 전 → 후 | 관찰 |
+|---|---|
+| `before-mobile-tuvalu-noon.png` → `after-mobile-tuvalu-noon.png` | 머리말 원 안의 얼굴이 수채화에서 사진 얼굴로 바뀌고 크게 보인다. 글자와 버튼 가림은 없다. |
+| `before-desktop-congo.png` → `after-desktop-congo.png` | 전신 그림 왼쪽 집 벽에 빨간 X가 보여 장면 제목과 맞는다. |
+| `before-*-atlas.png` → `after-*-atlas.png` | 캐릭터 목록 카드가 사진으로 바뀌었고 잘림이 없다. |
+
+- 공개한 대표 화면 — [얼굴 전](screenshots/2026-11-25-photoreal-characters/before-mobile-tuvalu-noon.png) · [얼굴 후](screenshots/2026-11-25-photoreal-characters/after-mobile-tuvalu-noon.png) · [콩고 전](screenshots/2026-11-25-photoreal-characters/before-desktop-congo.png) · [콩고 후](screenshots/2026-11-25-photoreal-characters/after-desktop-congo.png)
+- 대화 캡처
+  - `01-decision.png`(1920×1080, 15:05)는 오른쪽에 업무 메신저(실명·쪽지 제목)가 함께 찍혔다. **비공개**로 둔다.
+  - 메신저를 뺀 `01-decision-terminal.png`(1350×1080)만 [공개본](screenshots/conversations/2026-11-25-photoreal-characters/01-decision-terminal.png)으로 올렸다.
+- 남은 일 — 배포 전이다. onischool.net 반영과 배포 화면 확인은 사용자 승인 뒤에 한다.
