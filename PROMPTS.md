@@ -349,3 +349,19 @@
 - 화면 — 수정 전만 촬영(`local-assets/screenshots/2026-11-25-branch-redesign-apply/before-*`, 1440×900 / 780×1688). 수정 후 촬영과 이미지 확인은 남은 일이다.
 - 대화 캡처 — 하지 못했다(대기).
 - 배포 — 하지 않았다.
+
+## 2026-11-26-scene-images-group-b
+
+- 실제 요청
+  - “app/design/캐릭터-분담-작업.md 문서를 읽고, 그중 B조(아이티·가나·수단·로힝야·콩고·카타르 6명, 총 16장) 상황별 장면 이미지 생성 및 앱 연동을 진행해 줘.”
+  - (후속 통합) “작업이 완료되면 커밋 후 md 정리 후 백그라운드도 작업종료”
+- 한 일
+  1. B조 6명 16장(`haiti` 2, `ghana` 3, `sudan` 3, `rohingya` 3, `congo` 3, `qatar` 2)을 참조 이미지 기반으로 생성·검수하고 900×1200 WebP(품질 76, 78~236KiB)로 `app/dist/assets/scenes/`에 저장했다. 콩고 그라스 낮 A·B에는 기존 앱 캐릭터 이미지의 문 왼쪽 회벽 빨간 X를 일관되게 유지했다. 상세 프롬프트와 크롭 위치는 [B조 결과 문서](app/design/scene-images-group-b.md).
+  2. `app/dist/app.js`의 `SCENE_ART`에 B조 6명 16개 장면이 등록되어 A조 19개와 합쳐 **전체 12명·35장 WebP·49개 낮/저녁 슬롯 100% 반영**을 완료했다.
+  3. `app/design/캐릭터-분담-작업.md`의 B조 상태를 완료로 갱신하고 `CHECKLIST.md`에 전체 12명 상황별 장면 이미지 완료 행을 추가했다.
+- 검증
+  - `node validate.cjs` → `PASS: 12 unique scenarios, 47 scenes, 94 choices, 96 complete choice paths` 및 전 장면 WebP 존재 확인.
+  - B조 16/16 모바일 브라우저 검사 PASS(900×1200 로드, 가로 넘침 없음, 양쪽 선택 버튼 클릭 가능).
+- 화면 — 데스크톱 1440×900, 모바일 780×1688, AI 차단(`/api/`), 닉네임 `테스트`. 원본은 `local-assets/screenshots/2026-11-26-scene-images-group-b/`.
+- 공개한 대표 화면 — [아이티 전](screenshots/2026-11-26-scene-images-group-b/before-desktop-haiti.png) · [후](screenshots/2026-11-26-scene-images-group-b/after-desktop-haiti.png) · [가나 전](screenshots/2026-11-26-scene-images-group-b/before-desktop-ghana.png) · [후](screenshots/2026-11-26-scene-images-group-b/after-desktop-ghana.png) · [가나 모바일 후](screenshots/2026-11-26-scene-images-group-b/after-mobile-ghana.png) · [수단 후](screenshots/2026-11-26-scene-images-group-b/after-desktop-sudan.png) · [로힝야 후](screenshots/2026-11-26-scene-images-group-b/after-desktop-rohingya.png) · [콩고 전](screenshots/2026-11-26-scene-images-group-b/before-desktop-congo.png) · [후](screenshots/2026-11-26-scene-images-group-b/after-desktop-congo.png) · [콩고 낮 A 배너](screenshots/2026-11-26-scene-images-group-b/banner-congo-noon-a.png) · [콩고 낮 B 배너](screenshots/2026-11-26-scene-images-group-b/banner-congo-noon-b.png) · [카타르 후](screenshots/2026-11-26-scene-images-group-b/after-desktop-qatar.png)
+- 대화 캡처 — 촬영하지 못했다(대기). 위 실제 요청 발췌로 대신한다.
