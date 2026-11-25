@@ -34,7 +34,8 @@ for (const [kind, opts] of Object.entries(VIEWPORTS)) {
   await page.goto(url, { waitUntil: 'networkidle' });
   if (seed) {
     const resume = page.locator('#resume');
-    if (await resume.isVisible().catch(() => false)) await resume.click();
+    await resume.waitFor({ state: 'visible', timeout: 15000 });
+    await resume.click();
   }
   if (args.click) await page.locator(args.click).first().click();
   await page.waitForTimeout(1500);

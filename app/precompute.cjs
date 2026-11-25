@@ -43,8 +43,12 @@ const cleanLife = x => { if (!x || !LIFE_KEYS.every(k => typeof x[k] === 'string
 const cleanAfter = arr => { const a = (Array.isArray(arr) ? arr : []).map(x => ({ when: String(x?.when || '').trim(), text: String(x?.text || '').trim() })).filter(x => x.text).slice(0, 3); if (a.length < 2) throw new Error('bad after'); return a; };
 
 // 한 장면의 두 삶과 그 뒤 일과를 한 번에 쓴다(두 삶의 결이 맞도록).
-function scenePrompt(c, step) {
-  const s = c.scenes[step], next = c.scenes[step + 1], prev = c.scenes[step - 1], [A, B] = s.options;
+// raw는 원래 인물, choices는 이 장면에 이르는 선택(갈래를 정한다). 길 A·B 뒤에 다른 장면이 이어지면 둘 다 알려 준다.
+function scenePrompt(raw, step, choices) {
+  const c = window.resolveCase(raw, choices), s = c.scenes[step], prev = c.scenes[step - 1], [A, B] = s.options;
+  const nexts = [0, 1].map(n => window.resolveCase(raw, choices.map((x, i) => i === step ? n : x)).scenes[step + 1]);
+  const next = nexts[0], split = next && nexts[0] !== nexts[1];
+  const prevKnown = step > 0 && window.branchIndex(raw, step, choices) !== null;
   return `${G.PROMPT_HEAD}. 지금은 한 장면이 끝난 뒤의 브리핑을 미리 쓴다. 주인공은 ${c.name}(${c.role})이다. 학생은 길 A와 B 가운데 하나를 고르고, 브리핑에는 고른 길의 삶과 고르지 않은 길의 삶이 나란히 나온다.
 
 ${G.background(c)}
@@ -59,7 +63,10 @@ ${s.story}
 [길 B] ${B.text}
 대본의 결과: ${B.result}
 
-${prev ? `[앞 장면: 같은 날 ${prev.time} 「${prev.title}」]
+${prev && prevKnown ? `[앞 장면: 같은 날 ${prev.time} 「${prev.title}」]
+학생은 앞 장면에서 "${prev.options[choices[step - 1]].text}"를 골랐다: ${prev.options[choices[step - 1]].result}
+
+` : ''}${prev && !prevKnown ? `[앞 장면: 같은 날 ${prev.time} 「${prev.title}」]
 학생은 앞 장면에서 다음 둘 중 하나를 골랐다. 어느 쪽인지는 알 수 없다.
 - ${prev.options[0].text}: ${prev.options[0].result}
 - ${prev.options[1].text}: ${prev.options[1].result}
@@ -74,11 +81,12 @@ ${prev ? `[앞 장면: 같은 날 ${prev.time} 「${prev.title}」]
 5. 주인공의 마음은 대본에 드러난 만큼만 써라.
 6. 한국어로, 중학생이 읽기 쉬운 짧은 문장으로 써라.
 7. afterA와 afterB에는 각 길을 간 뒤 ${next ? `다음 장면(${next.time} 「${next.title}」)이 시작되기 직전까지` : '잠들 때까지'} ${c.name}의 일과를 시간 순서로 3개 써라. 그 길의 결과에 이어지게 하고, 이 지역의 평범한 생활(오가는 길, 집안일, 수업, 식사 등)을 담아라.${next ? `
-   다음 장면은 이렇게 시작한다: ${next.story}
+   ${split ? `길 A 뒤에는 「${nexts[0].title}」, 길 B 뒤에는 「${nexts[1].title}」가 이어진다. afterA는 다음에서 시작하는 장면으로 이어지게 하라: ${nexts[0].story}
+   afterB는 다음에서 시작하는 장면으로 이어지게 하라: ${nexts[1].story}` : `다음 장면은 이렇게 시작한다: ${next.story}`}
    일과는 이 상황과 어긋나면 안 되고, 다음 장면의 고민거리를 미리 풀거나 정하지 마라.
    다음 장면은 같은 날 ${next.time}이다. 시간은 같은 날 안에서만 흘러가게 하고, "다음 날"이나 "며칠 뒤"로 넘기지 마라.
    대본 결과 가운데 다음 장면보다 나중에 일어나는 일(몇 달 뒤, 계절이 바뀐 뒤 등)은 일과에 쓰지 마라.` : `
-   일과는 이 장면이 끝난 그날 저녁부터 잠들 때까지, 같은 날 밤의 일만 써라. 대본 결과에 나오는 나중 일(다음 날, 며칠·몇 달 뒤, 방송이 나간 뒤, 답장, 다른 사람들의 반응 등)은 아직 일어나지 않았으니 일과에 쓰지 마라.`}${prev ? `
+   일과는 이 장면이 끝난 그날 저녁부터 잠들 때까지, 같은 날 밤의 일만 써라. 대본 결과에 나오는 나중 일(다음 날, 며칠·몇 달 뒤, 방송이 나간 뒤, 답장, 다른 사람들의 반응 등)은 아직 일어나지 않았으니 일과에 쓰지 마라.`}${prev && !prevKnown ? `
    학생이 앞 장면에서 어느 길을 골랐는지 모르므로, 일과에 앞 장면의 한쪽 결과에만 맞는 일(예: 일하러 간 경우에만 맞는 일, 시험을 본 경우에만 맞는 일)을 쓰지 마라. 앞 장면의 두 결과 모두와 어긋나지 않게 써라.` : ''}
    when은 "오전 8시쯤", "점심 무렵"처럼 대략적인 때로 쓰고, text는 "${c.name}은(는) …한다"처럼 3인칭 현재형으로 25자 안팎으로 써라.
 
@@ -86,27 +94,38 @@ ${G.SAFETY_RULES}`;
 }
 const SCENE_SCHEMA = { type: 'object', properties: { a: G.LIFE, b: G.LIFE, afterA: G.BETWEEN, afterB: G.BETWEEN }, required: ['a', 'b', 'afterA', 'afterB'] };
 
+// i번 칸의 갈래마다 그 갈래에 이르는 선택 하나씩. 갈라지지 않는 칸은 [0,0,0] 하나.
+function forks(c, i) {
+  const slot = c.scenes[i];
+  if (!Array.isArray(slot)) return [[0, 0, 0]];
+  return slot.map((_, k) => { const ch = [0, 0, 0]; if (slot.length === 2 ** i) for (let j = 0; j < i; j++) ch[j] = (k >> (i - 1 - j)) & 1; else ch[i - 1] = k; return ch; });
+}
 async function makeCharacter(c) {
   // 1) 첫 장면 칩과 세 장면의 두 삶을 함께 만든다.
-  const [first, ...scenes] = await Promise.all([
-    ask(G.openingPrompt(c, 0, [], true), G.OPENING_SCHEMA),
-    ...c.scenes.map((_, i) => ask(scenePrompt(c, i), SCENE_SCHEMA)),
-  ]);
+  // 칸이 배열이면 갈래마다 따로 만든다. 갈래 k에 이르는 선택은 forks(c, i)가 알려 준다.
+  const first = await ask(G.openingPrompt(window.resolveCase(c, [0, 0, 0]), 0, [], true), G.OPENING_SCHEMA);
+  const made = await Promise.all(c.scenes.map((slot, i) => Promise.all(forks(c, i).map(ch => ask(scenePrompt(c, i, ch), SCENE_SCHEMA)))));
   const chips0 = G.cleanChips(first.chips, 1);
   if (chips0.length < 2) throw new Error(c.id + ': 첫 장면 칩이 모자람');
-  const sceneData = scenes.map(x => ({ lives: [cleanLife(x.a), cleanLife(x.b)], after: [cleanAfter(x.afterA), cleanAfter(x.afterB)] }));
-  // 2) 낮·저녁 첫머리: 앞 장면에서 고른 길별로. 앞 장면의 결과는 방금 만든 '그 길의 삶'을 넘긴다.
+  const pack = x => ({ lives: [cleanLife(x.a), cleanLife(x.b)], after: [cleanAfter(x.afterA), cleanAfter(x.afterB)] });
+  const sceneData = made.map((xs, i) => Array.isArray(c.scenes[i]) ? xs.map(pack) : pack(xs[0]));
+  const dataAt = (i, ch) => { const k = window.branchIndex(c, i, ch); return k === null ? sceneData[i] : sceneData[i][k]; };
+  // 2) 낮·저녁 첫머리. 원본 칸은 앞 장면에서 고른 길(A·B)별, 갈라지는 칸은 갈래별로 만든다.
   const openings = {};
-  await Promise.all([1, 2].flatMap(step => [0, 1].map(async p => {
-    const prev = c.scenes[step - 1];
-    const past = [{ time: prev.time, title: prev.title, choice: prev.options[p].text, result: sceneData[step - 1].lives[p].story, said: [] }];
-    const o = await ask(G.openingPrompt(c, step, past, false), G.OPENING_SCHEMA);
+  await Promise.all([1, 2].flatMap(step => {
+    const branched = Array.isArray(c.scenes[step]);
+    const jobs = branched ? forks(c, step).map((ch, k) => [k, ch]) : [0, 1].map(p => [p, [0, 0, 0].map((x, i) => i === step - 1 ? p : x)]);
+    return jobs.map(async ([slot, ch]) => {
+    const rc = window.resolveCase(c, ch), prev = rc.scenes[step - 1], p = ch[step - 1];
+    const past = [{ time: prev.time, title: prev.title, choice: prev.options[p].text, result: dataAt(step - 1, ch).lives[p].story, said: [] }];
+    const o = await ask(G.openingPrompt(rc, step, past, false), G.OPENING_SCHEMA);
     if (!o?.narration?.trim()) throw new Error(c.id + ': 첫머리 없음');
-    (openings[step] ||= [])[p] = {
+    (openings[step] ||= [])[slot] = {
       narration: o.narration.trim(), speaker: (o.speaker || '').trim(),
       dialogue: (o.dialogue || '').trim().replace(/^["“]|["”]$/g, ''), chips: G.cleanChips(o.chips, 1),
     };
-  })));
+    });
+  }));
   return { chips0, scenes: sceneData, openings };
 }
 
@@ -132,9 +151,9 @@ function writeReview(data) {
     const d = data[c.id];
     return `<section><h2>${esc(c.name)} · ${esc(c.country)}</h2>
 <h3>첫 장면 시작 칩</h3>${chips(d.chips0)}
-${c.scenes.map((s, i) => `<h3>${esc(s.time)} 「${esc(s.title)}」</h3>
-${i > 0 ? [0, 1].map(p => { const o = d.openings[i][p]; return `<div class="open"><p class="path">앞 장면에서 "${esc(c.scenes[i - 1].options[p].text)}"를 고른 경우의 첫머리</p><p>${esc(o.narration)}</p>${o.dialogue ? `<p><b>${esc(o.speaker)}</b> “${esc(o.dialogue)}”</p>` : ''}${chips(o.chips)}</div>`; }).join('') : ''}
-<div class="pair">${[0, 1].map(n => `<div>${life(d.scenes[i].lives[n], `길 ${'AB'[n]} · ${s.options[n].text}`)}<p class="path">그 뒤 일과(전환 화면)</p>${after(d.scenes[i].after[n])}</div>`).join('')}</div>`).join('')}
+${c.scenes.flatMap((slot, i) => forks(c, i).map((ch, k) => [window.resolveCase(c, ch).scenes[i], i, ch, Array.isArray(slot) ? k : null])).map(([s, i, ch, k]) => `<h3>${esc(s.time)} 「${esc(s.title)}」${k !== null ? ` <small>(갈래 ${'AB'[ch[0]]}${i > 1 ? 'AB'[ch[1]] : ''} 뒤)</small>` : ''}</h3>
+${i > 0 ? (k !== null ? [k] : [0, 1]).map(p => { const o = d.openings[i][p], pc = k !== null ? ch[i - 1] : p, prevS = window.resolveCase(c, k !== null ? ch : [0, 0, 0].map((x, j) => j === i - 1 ? p : x)).scenes[i - 1]; return `<div class="open"><p class="path">앞 장면에서 "${esc(prevS.options[pc].text)}"를 고른 경우의 첫머리</p><p>${esc(o.narration)}</p>${o.dialogue ? `<p><b>${esc(o.speaker)}</b> “${esc(o.dialogue)}”</p>` : ''}${chips(o.chips)}</div>`; }).join('') : ''}
+<div class="pair">${[0, 1].map(n => `<div>${life((k !== null ? d.scenes[i][k] : d.scenes[i]).lives[n], `길 ${'AB'[n]} · ${s.options[n].text}`)}<p class="path">그 뒤 일과(전환 화면)</p>${after((k !== null ? d.scenes[i][k] : d.scenes[i]).after[n])}</div>`).join('')}</div>`).join('')}
 </section>`;
   }).join('');
   fs.writeFileSync(REVIEW, `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>미리 만든 내용 검토</title>

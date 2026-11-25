@@ -27,7 +27,8 @@ try{
   }
 }catch{storageOK=false;}
 
-const current=()=>cases.find(c=>c.id===state.run?.id);
+// 진행 중인 인물. 낮·저녁 장면은 지금까지 고른 길에 맞는 갈래로 정해 돌려준다(scenarios.js의 resolveCase).
+const current=()=>{const c=cases.find(c=>c.id===state.run?.id);return c&&window.resolveCase(c,state.run.choices);};
 const fields=()=>state.run?.fields||{};
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch{if(storageOK)dialog({title:'자동 저장을 쓸 수 없어요',body:'이 브라우저에서는 기록이 저장되지 않아요. 활동이 끝나면 탐구 기록을 꼭 내려받아 주세요.'});storageOK=false;}}
 // 테마에 맞춘 알림·확인 팝업. 브라우저 기본 alert·confirm 대신 쓴다. 확인을 누르면 true.
@@ -199,10 +200,14 @@ function pastScenes(c){
 let briefing=false;
 // 미리 만든 내용(precomputed.js): A·B 선택으로 정해지는 부분은 AI를 부르지 않고 여기서 꺼낸다.
 const PRE=window.PRECOMPUTED||{};
+// 갈라지는 장면이면 미리 만든 내용도 갈래별 배열이다. 그 갈래의 것을 꺼낸다.
+function preScene(c,step){const p=PRE[c.id]?.scenes?.[step],k=window.branchIndex(cases.find(x=>x.id===c.id),step,state.run.choices);return k===null?(Array.isArray(p)?null:p):(Array.isArray(p)?p[k]:null);}
+// 첫머리: 원본은 바로 앞 선택(A·B)별, 갈라지는 장면은 갈래 번호별로 저장한다.
+function preOpening(c,step){const k=window.branchIndex(cases.find(x=>x.id===c.id),step,state.run.choices);return PRE[c.id]?.openings?.[step]?.[k===null?state.run.choices[step-1]:k];}
 function ensureBrief(c){
   const r=state.run,step=r.step,ch=chatOf(step),n=r.choices[step];
   if(n===null||ch.brief!==undefined||briefing)return;
-  const pre=PRE[c.id]?.scenes?.[step];
+  const pre=preScene(c,step);
   if(pre){ch.brief={mine:pre.lives[n],other:pre.lives[1-n],between:pre.after[n]};save();return;}
   if(!AI.ready){ch.brief=null;save();return;}
   briefing=true;
@@ -242,7 +247,7 @@ function openScene(c){
   const r=state.run,step=r.step,ch=chatOf(step),s=c.scenes[step];
   if(ch.log.length||opening)return;
   // 낮·저녁 첫머리: 앞 장면에서 고른 길에 맞춰 미리 만든 글
-  const pre=step>0&&PRE[c.id]?.openings?.[step]?.[r.choices[step-1]];
+  const pre=step>0&&preOpening(c,step);
   if(pre){
     ch.opening=pre.narration;ch.chips=pre.chips;
     ch.log.push({k:'story',text:pre.narration});

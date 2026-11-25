@@ -3,6 +3,7 @@
 - **대상 사용자** — 중학교 도덕 「지구촌 문제」 수업에서 휴대폰·태블릿으로 참여하는 학생과 수업을 진행하는 교사
 - **해결할 수업 문제** — 원본은 아침·낮·저녁 세 장면이 고정되어 있어 어떤 선택을 해도 같은 다음 장면으로 넘어간다. 학생의 선택이 이후의 삶을 실제로 바꾸는 경험이 약하다.
 - **시연할 핵심 동작** — 같은 인물의 아침에서 서로 다른 선택을 하면 서로 다른 낮 장면과 저녁 장면이 이어진다.
+- **장면 갈래** — `dist/scenarios.js`에서 낮 칸을 `[아침 A 뒤, 아침 B 뒤]`, 저녁 칸을 `[AA, AB, BA, BB]` 배열로 쓰면 선택에 따라 다른 장면이 나온다. 배열이 아닌 인물은 원본처럼 동작한다. 지금은 투발루 시오네가 나뉘어 있다.
 - **배포 주소** — 기존 수업용 사이트 https://onischool.net/anotherday/ 를 그대로 사용한다.
 
 ## 출처
@@ -25,6 +26,7 @@ cd app
 npm install                 # 화면 촬영 도구(Playwright)
 npm run validate            # 시나리오·문법 검사
 npm run serve               # http://127.0.0.1:4173
+node tools/branch-flow.mjs  # 실제 화면에서 여덟 경로를 눌러 보며 장면 갈래 확인
 node tools/capture.mjs --url http://127.0.0.1:4173/ --out ../local-assets/screenshots/<작업ID> --name after \
   --run '{"id":"tuvalu","step":1,"choices":[0,null,null]}'
 ```
