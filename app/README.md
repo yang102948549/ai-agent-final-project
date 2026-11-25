@@ -16,6 +16,7 @@
 | `validate.cjs` | 시나리오와 문법 검사 |
 | `precompute.cjs` | 선택별 브리핑과 첫머리를 onischool 서버의 Gemini로 미리 생성 |
 | `sync-onischool.cjs` | `dist/`를 onischool 사이트 저장소의 `anotherday/`로 복사 |
+| `tools/deploy-images-only.cjs` | 시나리오는 배포본 그대로 두고 캐릭터 그림과 그림 안내 문장만 반영 |
 | `relay/` | 학교망용 Gemini 중계 Cloudflare Worker |
 | `design/scenario-branches.md` | 시나리오 분기 정리 문서(맨 위 검토 메모는 `design/scenario-review-notes.md`) |
 | `tools/capture.mjs` | 데스크톱(1440×900)·모바일(390×844, 2배율) 화면 증거 촬영 |
@@ -43,3 +44,5 @@ npm run validate
 node sync-onischool.cjs     # ../../OniSchool/onischool-release/anotherday 로 복사
 # onischool-release 저장소에서 커밋·푸시하면 Cloudflare Pages가 자동 배포
 ```
+
+시나리오는 그대로 두고 캐릭터 이미지만 배포할 때는 `node tools/deploy-images-only.cjs`를 쓴다. 이 스크립트는 그림 24장과 `app.js`·`index.html`의 그림 관련 문장만 배포본에 반영한다. 2026-11-25 배포에 이 방식을 썼다.

@@ -181,3 +181,38 @@
 - 공개한 대표 화면 — [일과 전](screenshots/2026-11-25-branch-dialogue-review/before-desktop-tuvalu-pass-morning-b.png) · [일과 후](screenshots/2026-11-25-branch-dialogue-review/after-desktop-tuvalu-pass-morning-b.png) · [소개 전](screenshots/2026-11-25-branch-dialogue-review/before-desktop-tuvalu-profile.png) · [소개 후](screenshots/2026-11-25-branch-dialogue-review/after-desktop-tuvalu-profile.png)
 - 대화 캡처 — 이번 세션에서는 대화 창을 촬영하지 못했다. 위 실제 요청 발췌로 대신하고 캡처는 대기 상태다.
 - 배포 — 사용자 요청대로 하지 않았다. 로컬 커밋만 한다.
+
+## 2026-11-25-deploy-photoreal-images
+
+- 실제 요청 — “수정된 이미지를 확인하여 사이트 수정 배포해줘. 또 가이드라인을 확인하여 작업기록들은 https://github.com/yang102948549/ai-agent-final-project 커밋 기록 및 체크리스트 및 작업기록에 관련한md에 잘 정리하면서 수정해야 해”
+- 작업 중 추가 요청
+  - “지금 배포는 수정된 시나리오를 같이 배포하는게 아니라 이미지 수정만 하는거야”
+  - “시나리오를 확정하지 않았기 때문에 기존 시나리오를 유지하고 이미지만 교체해”
+- 판단 — `sync-onischool.cjs`는 `dist/` 전체를 복사하므로 장면 갈래(투발루)까지 배포된다. 그래서 쓰지 않았다. 배포본과 `dist/`를 비교해 이미지 관련 변경만 골랐다. 그림 24장, `app.js`의 그림 주소 캐시 버전(`ART_V`)과 기사 사진 설명, `index.html` 바닥글의 AI 이미지 안내가 그 대상이다. 이 내용을 `app/tools/deploy-images-only.cjs`로 만들어 배포본에 적용했다. 바꿀 문장이 정확히 한 곳에 있을 때만 고치고, 아니면 멈춘다. `app.js`의 `?v=` 해시만 새로 매겼다.
+- 배포 전 확인한 수정 이미지 — `screenshots/2026-11-25-photoreal-characters/after-desktop-congo.png`(문 왼쪽 벽 빨간 X), `after-mobile-tuvalu-noon.png`(머리말 원 안 얼굴)를 다시 열어 확인했다.
+- 변경 파일
+  - 이 저장소: `app/tools/deploy-images-only.cjs`(새 파일), `app/tools/capture.mjs`(`PW_CHROME` 환경 변수로 다른 Chromium 실행 파일 사용), `app/README.md`, `README.md`(배포 주소), `CHECKLIST.md`(배포 확인 칸), `PROMPTS.md`, `screenshots/2026-11-25-deploy-photoreal-images/`
+  - 사이트 저장소 onischool-release: 커밋 `f40818c` “anotherday: 캐릭터 이미지를 사진풍으로 교체(시나리오는 기존 유지)”. 26개 파일(`app.js` 7줄·`index.html` 2줄·WebP 24장)을 바꿔 `main`에 푸시했다. 약 20초 뒤 Cloudflare Pages 배포본에서 새 `app.js?v=09ef1001f5`가 확인됐다.
+- 검증
+  - `node validate.cjs`(개발본) → `PASS: 12 unique scenarios, 40 scenes, 80 choices, 96 complete choice paths; …`
+  - 배포본 `git diff --quiet -- anotherday/scenarios.js anotherday/precomputed.js` → 변경 없음. `node --check anotherday/app.js` 통과.
+  - 푸시 전 배포본을 로컬(127.0.0.1:4190)로 띄웠다. 투발루 낮 화면에서 사진풍 그림과 원본 장면이 함께 나오는 것을 확인했다(`local-assets/screenshots/2026-11-25-deploy-photoreal-images/precheck/`).
+  - 배포 후 그림 24장을 `?v=20261125-photo` 주소로 내려받았다. `dist/`의 파일과 SHA-1이 모두 같았다. 바닥글에 “캐릭터 이미지는 AI로 만든 가상 인물입니다(실제 사진이 아님)”가 보였다.
+- 화면 — 배포 주소 https://onischool.net/anotherday/, 닉네임 `테스트`, AI 호출 차단(`/api/`), 데스크톱 1440×900, 모바일 390×844(2배율, 780×1688)
+  - 촬영 도구의 Playwright 1.52용 브라우저(1169)가 없어 설치를 시도했다. 내려받기가 10분 넘게 끝나지 않아 중단했다. 대신 이미 설치된 Playwright Chromium 1234(`chrome-win64/chrome.exe`)를 `PW_CHROME`으로 지정해 촬영했다.
+
+| 원본(`local-assets/screenshots/2026-11-25-deploy-photoreal-images/`) | 관찰 |
+|---|---|
+| `before-desktop.png`·`before-mobile.png` → `after-desktop.png`·`after-mobile.png` (홈) | 2D 삽화가 사진풍으로 바뀌었다. 제목·시작 버튼·메뉴의 잘림이나 가림은 없다. |
+| `before-*-congo.png` → `after-*-congo.png` (콩고 아침) | 배포 후 전신 그림 왼쪽 벽에 빨간 X가 보이고, 모바일 머리말 원에 얼굴이 보인다. 장면 글은 그대로다. |
+| `before-*-tuvalu-noon.png` → `after-*-tuvalu-noon.png` (투발루 아침 A 뒤 낮) | 그림만 바뀌었다. 장면 「떠날까, 남을까」와 선택지가 같다. |
+| `after-*-tuvalu-noon-b.png` (투발루 아침 B 뒤 낮) | 배포본은 여전히 원본 「떠날까, 남을까」다. 개발본의 「보충 시험과 모래주머니」 갈래가 배포되지 않았음을 확인했다. |
+
+- 공개한 대표 화면 — [홈 전](screenshots/2026-11-25-deploy-photoreal-images/before-desktop.png) · [홈 후](screenshots/2026-11-25-deploy-photoreal-images/after-desktop.png) · [모바일 전](screenshots/2026-11-25-deploy-photoreal-images/before-mobile.png) · [모바일 후](screenshots/2026-11-25-deploy-photoreal-images/after-mobile.png) · [콩고 전](screenshots/2026-11-25-deploy-photoreal-images/before-desktop-congo.png) · [콩고 후](screenshots/2026-11-25-deploy-photoreal-images/after-desktop-congo.png) · [투발루 얼굴 전](screenshots/2026-11-25-deploy-photoreal-images/before-mobile-tuvalu-noon.png) · [투발루 얼굴 후](screenshots/2026-11-25-deploy-photoreal-images/after-mobile-tuvalu-noon.png) · [B 경로 원본 장면 유지](screenshots/2026-11-25-deploy-photoreal-images/after-desktop-tuvalu-noon-b.png)
+- 대화 캡처 — 2026-11-25 22:57 촬영
+  - `local-assets/conversations/2026-11-25-deploy-photoreal-images/01-images-only-full.png`(4480×1080 전체 원본)
+  - `01-images-only.png`(1920×1080). 이번에는 대화 앱이 오른쪽 주 모니터(DISPLAY1)에 있어 그 영역을 잘랐다.
+  - 화면에는 배포본 검증 이미지가 보인다. 사용자의 “이미지만 교체” 발화는 스크롤 위로 올라가 캡처에 없다. 위 발췌가 실제 발화다.
+  - 오른쪽 창에 같은 저장소에서 시나리오 분기를 정리하는 다른 세션이 함께 보이므로 공개하지 않는다.
+- 커밋 범위 — 같은 작업 폴더에서 다른 세션이 시나리오 분기 정리(`app/dist/scenarios.js`·`precomputed.js`, `app/tools/scenario-md.cjs` 등)를 진행 중이다. 이번 커밋에는 넣지 않았다. `app/README.md`도 이번 작업에서 고친 두 곳만 스테이징했다.
+- 남은 일 — 장면 갈래는 시나리오 확정 뒤 별도 작업으로 배포한다.

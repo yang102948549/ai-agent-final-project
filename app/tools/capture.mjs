@@ -22,7 +22,8 @@ if (args.run) {
 }
 
 fs.mkdirSync(out, { recursive: true });
-const browser = await chromium.launch();
+// Playwright 전용 브라우저가 아직 없을 때는 PW_CHROME에 다른 Chromium 실행 파일 경로를 줄 수 있다.
+const browser = await chromium.launch(process.env.PW_CHROME ? { executablePath: process.env.PW_CHROME } : {});
 for (const [kind, opts] of Object.entries(VIEWPORTS)) {
   const file = path.join(out, `${name}-${kind}${suffix}.png`);
   if (fs.existsSync(file)) { console.error(`이미 있음, 건너뜀: ${file}`); continue; }
