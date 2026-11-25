@@ -4,7 +4,7 @@
 
 ## 상태 한 줄
 
-[재설계안](scenario-branch-plan.md)의 장면을 대본과 미리 만든 내용에 **넣었다**. `node validate.cjs` 통과. 화면 경로 테스트는 기존 6명에 이어 누르·그라스 각 8개 경로도 PASS. 수정 후 화면과 문서 정리를 완료했다. **배포하지 않았다.**
+[재설계안](scenario-branch-plan.md)의 장면을 대본과 미리 만든 내용에 **넣었다**. `node validate.cjs` 통과. 화면 경로 테스트는 기존 6명에 이어 누르·그라스 각 8개 경로도 PASS. 수정 후 화면과 문서 정리, 12명 상황별 장면 이미지 35장 연동까지 마치고 **2026-11-26 `https://onischool.net/anotherday/` 배포(`onischool-release` `e80cc7a`) 및 라이브 데스크톱·모바일 검증까지 완료했다.**
 
 ## 후속 작업 완료 (2026-11-25)
 
@@ -57,6 +57,6 @@ node tools/capture.mjs --url http://127.0.0.1:4173/ --out $O --name after --suff
 3. `scenario-branch-plan.md`를 “적용됨”으로 표시, `scenario-review-notes.md`의 “결정 필요” 정리
 4. CHECKLIST.md 행, 대표 화면 `screenshots/2026-11-25-branch-redesign-apply/` 선별
 5. 그대로 둔 결정: 루파·코피·나데주·누르 원본 결과 문장의 시간 앞지름(검토 메모)
-6. 배포는 사용자 승인 뒤(`sync-onischool.cjs`). 지금 onischool.net은 이미지만 바뀐 원래 대본이다.
+6. 배포 완료(2026-11-26, 사용자 승인 후 `node sync-onischool.cjs` → `onischool-release` `e80cc7a` 푸시 → `https://onischool.net/anotherday/` 데스크톱·모바일 라이브 검증 PASS).
 
-현재 남은 것은 5번 원본 결과 문장의 후속 편집 여부와 6번 배포 승인이다. 운영 사이트는 이번 세션에서 변경하지 않았으며 현재 운영본을 다시 조회하지 않았다.
+현재 6번 배포까지 완료되었으며, 5번 원본 결과 문장의 후속 편집 여부만 선택 사항으로 남아 있다.

@@ -365,3 +365,25 @@
 - 화면 — 데스크톱 1440×900, 모바일 780×1688, AI 차단(`/api/`), 닉네임 `테스트`. 원본은 `local-assets/screenshots/2026-11-26-scene-images-group-b/`.
 - 공개한 대표 화면 — [아이티 전](screenshots/2026-11-26-scene-images-group-b/before-desktop-haiti.png) · [후](screenshots/2026-11-26-scene-images-group-b/after-desktop-haiti.png) · [가나 전](screenshots/2026-11-26-scene-images-group-b/before-desktop-ghana.png) · [후](screenshots/2026-11-26-scene-images-group-b/after-desktop-ghana.png) · [가나 모바일 후](screenshots/2026-11-26-scene-images-group-b/after-mobile-ghana.png) · [수단 후](screenshots/2026-11-26-scene-images-group-b/after-desktop-sudan.png) · [로힝야 후](screenshots/2026-11-26-scene-images-group-b/after-desktop-rohingya.png) · [콩고 전](screenshots/2026-11-26-scene-images-group-b/before-desktop-congo.png) · [후](screenshots/2026-11-26-scene-images-group-b/after-desktop-congo.png) · [콩고 낮 A 배너](screenshots/2026-11-26-scene-images-group-b/banner-congo-noon-a.png) · [콩고 낮 B 배너](screenshots/2026-11-26-scene-images-group-b/banner-congo-noon-b.png) · [카타르 후](screenshots/2026-11-26-scene-images-group-b/after-desktop-qatar.png)
 - 대화 캡처 — 촬영하지 못했다(대기). 위 실제 요청 발췌로 대신한다.
+
+## 2026-11-26-deploy-branches-and-scenes
+
+- 실제 요청
+  - “작업이 완료되면 커밋 후 md 정리 후 백그라운드도 작업종료”
+  - “또, 푸시 및 사이트 배포까지 완료해줘야해.”
+  - “커밋 후 md정리 및 푸시, 사이트 배포는 api가 아닌 에이전트 모델로 실행”
+- 한 일
+  1. 배포 전 `https://onischool.net/anotherday/` 기준 화면 10장(홈·투발루 낮 B·파키스탄 낮·콩고 저녁·가나 낮 A 각 데스크톱/모바일)을 먼저 촬영해 기존 미분기 대본·아침 초상 고정·모바일 장면 배너 미적용 상태를 확보했다.
+  2. `app/`에서 `node sync-onischool.cjs`를 실행해 배포본 66개 파일(상황별 장면 WebP 35장 포함)을 `onischool-release/anotherday/`에 동기화하고 `node --check` 문법 검사를 통과시켰다.
+  3. `onischool-release` `main`에 커밋(`e80cc7a`) 및 푸시해 Cloudflare Pages로 `https://onischool.net/anotherday/`에 배포했다(외부 AI API 미사용).
+  4. `CHECKLIST.md`, `app/design/HANDOFF-scenario-branches.md`, `app/design/scenario-branch-plan.md`, `PROMPTS.md`의 배포 상태를 갱신하고, 과제 저장소 `origin main`까지 푸시했다.
+- 검증
+  - 라이브 HTML 캐시 해시 확인: `app.js?v=c5b4a543ab` 반영 확인.
+  - 라이브 상황별 장면 WebP HTTP HEAD 확인: `tuvalu-noon-b.webp`(200, 83,078B), `pakistan-noon.webp`(200, 84,470B), `congo-evening.webp`(200, 110,056B), `ghana-noon-a.webp`(200, 190,058B) 모두 `image/webp` 정상 응답.
+- 화면 — 배포 주소 `https://onischool.net/anotherday/`, 닉네임 `테스트`, AI 차단(`/api/`), 데스크톱 1440×900, 모바일 780×1688. 원본 22장은 `local-assets/screenshots/2026-11-26-deploy-branches-and-scenes/`에 보관.
+  - `before-*-tuvalu-noon-b.png` → `after-*-tuvalu-noon-b.png`: 기존 「떠날까, 남을까」·아침 초상에서 갈래 분기 「보충 시험과 모래주머니」와 확성기·모래주머니·공책·빨랫줄이 담긴 장면 이미지로 교체. 모바일 16:9 배너도 잘림 없이 표시.
+  - `before-*-pakistan-noon.png` → `after-*-pakistan-noon.png`: 공사장 초상에서 정전 실내 멈춘 선풍기·부채질하는 어머니 장면으로 교체, 모바일 16:9 배너 정상 표시.
+  - `before-*-congo-evening.png` → `after-*-congo-evening.png`: 기존 「“전기차, 지구를 위한 선택”」에서 재설계된 「할머니의 무덤」과 밤 실내 가족·목사님 대화 장면으로 교체.
+  - `before-*-ghana-noon-a.png` → `after-*-ghana-noon-a-v2.png`: 기존 「친구의 비밀」에서 재설계된 「밭에서 만난 아마」와 카카오 밭길 대화 장면으로 교체(초회 `after-*-ghana-noon-a.png`는 최초 원격 다운로드 페이드인 도중 촬영되어 `-v2`로 재촬영해 완전 로드 확인).
+- 공개한 대표 화면 — [홈 데스크톱](screenshots/2026-11-26-deploy-branches-and-scenes/after-desktop.png) · [홈 모바일](screenshots/2026-11-26-deploy-branches-and-scenes/after-mobile.png) · [투발루 낮 B 전](screenshots/2026-11-26-deploy-branches-and-scenes/before-desktop-tuvalu-noon-b.png) · [후](screenshots/2026-11-26-deploy-branches-and-scenes/after-desktop-tuvalu-noon-b.png) · [모바일 후](screenshots/2026-11-26-deploy-branches-and-scenes/after-mobile-tuvalu-noon-b.png) · [파키스탄 낮 전](screenshots/2026-11-26-deploy-branches-and-scenes/before-desktop-pakistan-noon.png) · [후](screenshots/2026-11-26-deploy-branches-and-scenes/after-desktop-pakistan-noon.png) · [모바일 후](screenshots/2026-11-26-deploy-branches-and-scenes/after-mobile-pakistan-noon.png) · [콩고 저녁 전](screenshots/2026-11-26-deploy-branches-and-scenes/before-desktop-congo-evening.png) · [후](screenshots/2026-11-26-deploy-branches-and-scenes/after-desktop-congo-evening.png) · [모바일 후](screenshots/2026-11-26-deploy-branches-and-scenes/after-mobile-congo-evening.png) · [가나 낮 A 전](screenshots/2026-11-26-deploy-branches-and-scenes/before-desktop-ghana-noon-a.png) · [후](screenshots/2026-11-26-deploy-branches-and-scenes/after-desktop-ghana-noon-a.png) · [모바일 후](screenshots/2026-11-26-deploy-branches-and-scenes/after-mobile-ghana-noon-a.png)
+- 대화 캡처 — 촬영하지 못했다(대기). 위 실제 요청 발췌로 대신한다.
