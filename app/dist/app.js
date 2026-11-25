@@ -80,11 +80,13 @@ async function draw(except){
 const sourceList=c=>`<ul class="sources">${c.sources.map(s=>`<li><a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.title)} ↗</a><span>${esc(s.date)}</span></li>`).join('')}</ul>`;
 const facts=c=>`<ul class="facts">${c.facts.map(f=>`<li>${esc(f)}</li>`).join('')}</ul>`;
 // 캐릭터 그림. kind가 face면 얼굴 부분, 아니면 전신 그림. 그림을 못 읽으면 이름 첫 글자가 보인다.
-const artSrc=(id,kind)=>`assets/characters/${id}${kind==='face'?'-face':''}.webp`;
+// 그림을 바꾸면 ART_V를 올린다. 학교 사이트는 파일을 몇 시간씩 캐시해서, 같은 이름이면 예전 그림이 보일 수 있다.
+const ART_V='20261125-photo';
+const artSrc=(id,kind)=>`assets/characters/${id}${kind==='face'?'-face':''}.webp?v=${ART_V}`;
 function art(c,kind='card',extra=''){
   return `<div class="art art-${kind} ${extra}" style="--tone:${TONE[c.id]||DEFAULT_TONE}" aria-hidden="true"><span class="art-initial">${esc([...c.name][0])}</span><img src="${artSrc(esc(c.id),kind)}" alt="" decoding="async" onerror="this.remove()"></div>`;
 }
-// 서버가 멀어 그림 한 장마다 1초 가까이 걸리므로, 첫 화면 뒤에 모든 그림(약 1.2MB)을 미리 받아 둔다.
+// 서버가 멀어 그림 한 장마다 1초 가까이 걸리므로, 첫 화면 뒤에 모든 그림(약 1.4MB)을 미리 받아 둔다.
 // 이후 화면에서는 브라우저 저장본이 바로 쓰인다.
 function preloadArt(){
   const keep=[];
@@ -631,7 +633,7 @@ function docArticle(c,f){return `<article class="doc doc-article">
   <p class="np-byline"><b>${esc(f.nickname||'익명')} 기자</b><span>${esc(c.region)}</span></p>
   <div class="np-lead">${paras(f.a_lead)}</div>
   <div class="np-cols">
-    <figure class="np-photo"><img src="${artSrc(c.id)}" alt="" loading="lazy"><figcaption>이야기 속 인물 ${esc(c.name)}(${esc(c.role)}). 실제 자료를 바탕으로 만든 가상 인물의 일러스트다.</figcaption></figure>
+    <figure class="np-photo"><img src="${artSrc(c.id)}" alt="" loading="lazy"><figcaption>이야기 속 인물 ${esc(c.name)}(${esc(c.role)}). 실제 자료를 바탕으로 꾸민 가상 인물이며, 이미지는 AI로 만들었다(실제 사진이 아님).</figcaption></figure>
     ${paras(f.a_body)}
     <blockquote class="np-quote">“${esc(c.wish)}”<cite>— ${esc(c.name)}(가상 인물)의 바람</cite></blockquote>
     <section class="np-opinion"><h3>함께 생각해 볼 것</h3>${paras(f.a_end)}</section>

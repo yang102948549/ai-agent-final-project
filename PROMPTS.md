@@ -91,3 +91,18 @@
   - 후: [B 뒤 낮](screenshots/2026-11-25-branching-scenes/after-desktop-noon-after-b.png) · [모바일](screenshots/2026-11-25-branching-scenes/after-mobile-noon-after-b.png) · [AB 저녁](screenshots/2026-11-25-branching-scenes/after-desktop-evening-ab.png) · [BA 저녁](screenshots/2026-11-25-branching-scenes/after-desktop-evening-ba.png) · [BB 저녁](screenshots/2026-11-25-branching-scenes/after-desktop-evening-bb.png)
 - 대화 캡처 — `local-assets/conversations/2026-11-25-branching-scenes/01-request.png`(1920×1080, 주제 결정), `02-eight-paths-pass.png`(1920×1080, 로컬 원본 지정과 여덟 경로 통과). 2026-11-25 촬영. 공개본: [주제 결정](screenshots/conversations/2026-11-25-branching-scenes/01-request.png)
 - 배포 — 아직 하지 않았다. onischool.net 반영은 사용자 승인 뒤 `sync-onischool.cjs`로 한다.
+
+## 2026-11-25-photoreal-characters
+
+- 실제 요청 — “지금은 2d그래픽으로 되어있는데 이 이미지와 각 캐릭터별 상황을 고려해서 캐릭터 이미지들을 재생성해줘”
+- 기록 요청 — “작업기록 저장해줘. 그리고 수정내용은 수정내용에 커밋. 디자인 수정 내역에도 들어가야해.”
+- 변경 이유 — 국가별 생활환경과 각 인물이 마주한 상황을 구체적으로 보여 주기 위해 실사풍으로 전환했다.
+- 제작 — 내장 image_gen으로 기존 삽화를 각각 참조해 12명을 생성했다. 의복·소품·연령과 시나리오 배경을 지시했다. 원본 PNG와 인물별 지시문은 local-assets/photoreal-characters/에 보관했다. 공통 지시문은 app/design/photoreal-prompts.md에 공개한다.
+- 제출용 변경 — app/dist/assets/characters/의 WebP 24개, app/dist/app.js의 이미지 캐시 버전과 기사 이미지 설명, app/dist/index.html의 AI 생성 안내. app/tools/make-faces.py는 얼굴 크롭, app/tools/paint-congo-x.py는 그라스의 집 벽 X 표시 보완에 사용되는 코드다. 현재 작업 폴더에 있던 관련 변경을 함께 검토해 기록한다.
+- 원본 저장소 이미지 커밋 — 985770f. 기존 삽화는 원본 art-source/characters-before-photoreal-20261125-144447/에 보관했다. 제출용 저장소는 얼굴 크롭과 배경 보완을 포함하므로 원본 저장소 이미지와 일부 차이가 있다.
+- 검증 — app/에서 node validate.cjs 통과. 인물 12명, 장면 40개, 선택지 80개, 전체 경로 96개, 분기와 사전 결과 및 JavaScript 문법 검증 성공.
+- 화면 증거 — 기존에 저장되어 있던 local-assets/screenshots/2026-11-25-photoreal-characters/의 before/after-desktop.png(1440×900) 및 before/after-mobile.png(780×1688)를 이번 기록 작업에서 각각 열어 확인했다. 같은 홈 화면에서 삽화가 실사풍으로 바뀌며 제목·내비게이션·시작 버튼이 표시되는 것을 확인했다. 네 장을 screenshots/2026-11-25-photoreal-characters/에 선별했다.
+- 추가 촬영 시도 — 샌드박스 브라우저 실행 경로 오류 후 외부 실행을 재시도했으나 로컬 4185 서버 연결이 시간 초과됐다. 이번 기록에서는 보관된 화면을 검토했으며 새 촬영 성공으로 기재하지 않는다.
+- 대화 원본 — local-assets/conversations/2026-11-25-photoreal-characters/01-decision.png 및 01-decision-full.png가 있다. 이번 기록에서 대화 이미지 내용 검토는 보류했다.
+- 디자인 개선 — CHECKLIST.md에 하나의 개선 항목으로 추가했다. 전후 화면 링크로 비교할 수 있다.
+- 남은 검증 — 배포 URL에서 이미지와 모바일 동작 확인. 이번 작업은 로컬 커밋으로 기록한다.
