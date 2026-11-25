@@ -328,6 +328,17 @@
 - 대화 캡처 — 촬영하지 못했다. 위 실제 요청 발췌로 대신하고 캡처는 대기 상태다.
 - 남은 일 — B조 에이전트 커밋 완료 후 배포 전 최종 점검을 거쳐 원격 푸시·배포 여부를 결정한다.
 
+## 2026-11-25-branch-redesign-apply (후속 검증·문서 정리 완료)
+
+- 실제 요청
+  - “app/design/HANDOFF-scenario-branches.md 에서 작업하던게 지금 중단이 되었어. 작업현황을 확인한 뒤 이어서 작업해줘”
+  - “작업이 완료되면 커밋 후 md 정리 후 백그라운드도 작업종료”
+- 확인한 현황 — 직전 세션(`6c6a5e1` 이후)이 `HANDOFF-scenario-branches.md`의 후속 항목 1~4(누르·그라스 각 8경로 PASS, 코피 낮 A·암나 낮 B·시오네 저녁 AA·라마 저녁 B 수정 후 데스크톱/모바일·스크롤 화면 12장 촬영, `tools/scenario-md.cjs` 객체 동일성 묶기 및 `scenario-branches.md` 재생성, `scenario-branch-plan.md`·`scenario-review-notes.md`·`CHECKLIST.md` 갱신, `scenarios.js` 임시 `img/pos` 제거)까지 마친 뒤 `PROMPTS.md` 기록과 로컬 커밋 직전에서 중단되어 있었다.
+- 마무리 작업 — `node validate.cjs`(12명·47장면·94선택지·96경로 PASS)와 `node tools/scenario-md.cjs` 재생성 일치 여부를 재확인하고, `screenshots/2026-11-25-branch-redesign-apply/`의 대표 전후·스크롤 화면을 직접 열어 글자 잘림·버튼 가림 없음을 확인한 뒤 `PROMPTS.md`에 기록하고 커밋했다.
+- 변경 파일 — `app/dist/scenarios.js`, `app/tools/scenario-md.cjs`, `app/design/scenario-branches.md`, `app/design/scenario-branch-plan.md`, `app/design/scenario-review-notes.md`, `app/design/HANDOFF-scenario-branches.md`, `screenshots/2026-11-25-branch-redesign-apply/`(20장), `CHECKLIST.md`, `PROMPTS.md`.
+- 공개한 대표 화면 — [코피 낮 A 전](screenshots/2026-11-25-branch-redesign-apply/before-desktop-ghana-noon-a.png) · [후](screenshots/2026-11-25-branch-redesign-apply/after-desktop-ghana-noon-a.png) · [암나 낮 B 모바일](screenshots/2026-11-25-branch-redesign-apply/after-mobile-sudan-noon-b.png) · [스크롤 후](screenshots/2026-11-25-branch-redesign-apply/after-mobile-scrolled-sudan-noon-b.png) · [시오네 저녁 AA](screenshots/2026-11-25-branch-redesign-apply/after-desktop-tuvalu-evening-aa.png) · [라마 저녁 B](screenshots/2026-11-25-branch-redesign-apply/after-desktop-gaza-evening-b.png).
+- 대화 캡처 — 촬영하지 못했다(대기). 위 실제 요청 발췌로 대신한다.
+
 ## 2026-11-25-branch-redesign-apply
 
 - 실제 요청
