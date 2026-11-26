@@ -903,4 +903,17 @@
 - 공개한 대표 화면 — [모바일 전](screenshots/2026-11-26-chip-align/before-mobile-long.png) · [모바일 후](screenshots/2026-11-26-chip-align/after-mobile-long.png) · [데스크톱 전](screenshots/2026-11-26-chip-align/before-desktop-long.png) · [데스크톱 후](screenshots/2026-11-26-chip-align/after-desktop-long.png)
 - 대화 캡처 — 찍지 않았다(캡처 대기). 위 실제 요청 발췌로 대신한다.
 - 변경 파일 — `app/dist/app.js`, `app/dist/style.css`, `app/tools/capture-chat-chips.mjs`(새로), `app/tools/check-opening-chips.mjs`, `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-chip-align/`.
-- 배포 — 아직 하지 않았다.
+- 배포 — 2026-11-26 `2026-11-26-deploy-chip-align`에서 배포했다(사이트 `c0c1023`).
+
+## 2026-11-26-deploy-chip-align
+
+- 실제 요청 — “커밋 푸시 배포해줘”
+- 진행 기록
+  1. 배포 전 라이브 촬영 — `capture-chat-chips.mjs --ids pakistan --url https://onischool.net/anotherday/`로 `before-*` 4장을 찍었다(데스크톱 1440×900·모바일 780×1688).
+  2. 배포 — `npm run validate` PASS 후 `node sync-onischool.cjs`를 돌렸다. 사이트 저장소에 다른 세션의 `bb106a7`(캐릭터 기록 초기화 버튼 복원)이 먼저 있었다. 같은 변경이 과제 저장소 `ce579c2`에 있어 동기화 차이가 칩 변경(`app.js` 1줄, `style.css` 3줄, `index.html` 버전 해시)뿐임을 확인했다. 되돌린 것은 없다. `node --check` 통과 후 `c0c1023` 커밋·푸시, 새 해시 `app.js?v=66ddee7e27`가 약 30초 뒤 반영됐다.
+  3. 라이브 검증 — 라이브 `style.css`에 `chip-t` 규칙이 있다. `check-feedback-edit`·`check-ask-record`·`check-doc-layout` ALL PASS. `check-opening-chips`는 처음 두 번이 라이브 페이지 로딩 대기(`networkidle` 30초) 시간 초과로 중간에 멈췄다(16/24 통과 후, 그리고 첫 새로고침에서). 세 번째 실행에서 24/24 PASS였다. 칩 내용 오류는 없었다.
+  4. 배포 후 촬영 — 같은 조건으로 `after-*` 4장을 찍었다. before-mobile-long과 after-mobile-long을 직접 열어 봤다. 배포 전에는 “고개를 / 끄덕이며”, “잠시 / 망설이다 / 가”가 왼쪽 좁은 칸에 따로 떨어져 있었다. 배포 후에는 행동 표시와 말이 한 문단으로 왼쪽 정렬되고 →만 오른쪽에 있다. 칩마다 조각 수는 글 1 + 화살표 1이다.
+- 원본 — `local-assets/screenshots/2026-11-26-deploy-chip-align/`
+- 공개한 대표 화면 — [배포 전 모바일](screenshots/2026-11-26-deploy-chip-align/before-mobile-long.png) · [배포 후 모바일](screenshots/2026-11-26-deploy-chip-align/after-mobile-long.png)
+- 대화 캡처 — 찍지 않았다(캡처 대기). 위 실제 요청 발췌로 대신한다.
+- 변경 파일 — `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-deploy-chip-align/`. 사이트 저장소 `c0c1023`.
