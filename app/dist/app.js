@@ -593,20 +593,25 @@ function epiArt(c,active,extra=''){return `<aside class="stage-art">
 function recap(c){return `<div class="recap">${c.scenes.map((s,i)=>{const o=s.options[state.run.choices[i]];return `<div class="recap-item"><span class="label">${esc(s.time)}</span><strong>${esc(o?.text||'고르지 않음')}</strong><details><summary>선택을 넘어</summary><p>${esc(s.barrier)}</p></details></div>`;}).join('')}</div>`;}
 function sec(title,body,note=''){return `<section class="sec"><h2>${title}</h2>${note?`<p class="sec-note">${note}</p>`:''}${body}</section>`;}
 
-// 돌아보기 두 번째 칸: 막연하지 않도록 원인 갈래별 문장 틀을 준다. 누르면 칸에 들어가고 첫 빈칸이 선택된다.
+// 돌아보기 두 번째 칸: 막연하지 않도록 원인 갈래별 완성된 예시 문장을 준다. 누르면 칸에 들어가고 학생이 내 말로 고친다.
 const STARTERS=[
-  ['시설','마을에 ____이(가) 없어서, 어떤 선택을 해도 ____할 수 없었다.'],
-  ['돈','집에 돈이 부족해서, ____ 대신 ____할 수밖에 없었다.'],
-  ['제도','____(법·규칙·차별) 때문에, 원해도 ____할 수 없었다.'],
-  ['안전','____이(가) 위험해서, ____을(를) 포기해야 했다.'],
-  ['자연','____(날씨·바다·땅) 때문에, 노력해도 ____은(는) 달라지지 않았다.'],
+  ['시설',c=>`마을에 꼭 필요한 시설이 부족해서, ${josa(c.name,'은','는')} 어떤 선택을 해도 어려움을 피할 수 없었다.`],
+  ['돈',c=>`집에 돈이 부족해서, ${josa(c.name,'은','는')} 하고 싶은 일 대신 당장 필요한 일을 할 수밖에 없었다.`],
+  ['제도',c=>`법과 규칙이 ${c.name} 같은 사람을 지켜 주지 못해서, 원해도 상황을 바꿀 수 없었다.`],
+  ['안전',c=>`오가는 길과 사는 곳이 위험해서, ${josa(c.name,'은','는')} 하고 싶은 일을 포기해야 했다.`],
+  ['자연',c=>`날씨와 땅의 변화 때문에, ${josa(c.name,'이','가')} 노력해도 상황은 달라지지 않았다.`],
 ];
+// 문장 틀에 넣는 주제 낱말
+const THEME_WORD={환경:'기후 변화',물:'깨끗한 물',빈곤:'가난',난민:'피난 생활',인권:'권리 침해'};
+const tw=c=>THEME_WORD[c.theme]||c.theme;
+const srcName=c=>String(c.sources[0]?.title||'유엔').split(/\s*·\s*/)[0]+' 자료';
+const actorOf=c=>{const a=String(c.actors||'').split('·').map(s=>s.trim());return a.find(s=>/정부|당국/.test(s))||a.find(s=>/기구|기관/.test(s))||'정부';};
 function reflect(c){return `<div class="game">${epiArt(c,0)}<div class="stage-main"><article class="paper-card">
   <header class="card-head"><p class="label">마무리 1/4 · 돌아보기</p><h1>어려웠던 건, 선택만의 문제였을까요?</h1></header>
   <form id="reflection-form" novalidate>
     <div class="card-body">
       ${sec('나의 하루',recap(c),'세 장면에서 내가 고른 것입니다. ‘선택을 넘어’를 펼쳐 다시 읽어 보세요.')}
-      ${sec('생각해 보기',field('feeling',`${c.name}에게 가장 중요했던 것은?`,'예: 친구와 함께 학교에 다니는 평범한 하루가 가장 중요했다. 시험을 보러 가는 길에서도 그 마음이 느껴졌다.',true,'무엇이, 왜 중요했는지 함께 써 보세요.')+field('constraint',`${josa(c.name,'이','가')} 무엇을 골라도 그대로였던 어려움은?`,'예: 마을에 정수 시설이 없어서, 어떤 선택을 해도 깨끗한 물을 마시기 어려웠다.',true,`위 ‘선택을 넘어’를 펼쳐 보세요. 아래 문장 틀 하나를 눌러 빈칸(____)을 채우면 돼요.`)+`<div class="frames starters" role="group" aria-label="문장 틀">${STARTERS.map(([k,t],i)=>`<button type="button" class="chip" data-starter="${i}"><b>${k}</b> ${esc(t)}</button>`).join('')}</div>`)}
+      ${sec('생각해 보기',field('feeling',`${c.name}에게 가장 중요했던 것은?`,'예: 친구와 함께 학교에 다니는 평범한 하루가 가장 중요했다. 시험을 보러 가는 길에서도 그 마음이 느껴졌다.',true,'무엇이, 왜 중요했는지 함께 써 보세요.')+field('constraint',`${josa(c.name,'이','가')} 무엇을 골라도 그대로였던 어려움은?`,'예: 마을에 정수 시설이 없어서, 어떤 선택을 해도 깨끗한 물을 마시기 어려웠다.',true,`위 ‘선택을 넘어’를 펼쳐 보세요. 아래 예시 문장 하나를 눌러 넣고, 내 생각에 맞게 고쳐도 돼요.`)+`<div class="frames starters" role="group" aria-label="문장 틀">${STARTERS.map(([k,t],i)=>`<button type="button" class="chip" data-starter="${i}"><b>${k}</b> ${esc(t(c))}</button>`).join('')}</div>`)}
     </div>
     <footer class="card-foot step-nav"><button class="btn ghost back" type="button" data-nav="chat">← 대화로</button><button class="btn big" type="submit">질문 만들고 조사하기 →</button></footer>
   </form>
@@ -637,12 +642,12 @@ function sourcesPanel(c){
     <div class="src-grid">${all.map(card).join('')}</div></details>`;
 }
 
-// 질문을 처음부터 쓰기 막막하지 않게: 출발 질문과 빈칸 틀을 눌러서 시작한다.
-// 먼저 고른 글의 종류에 따라, 그 글에 필요한 것을 찾는 질문 틀을 준다.
+// 질문을 처음부터 쓰기 막막하지 않게: 이야기의 질문과 완성된 예시 질문을 눌러서 시작한다.
+// 먼저 고른 글의 종류에 따라, 그 글에 필요한 것을 찾는 질문을 준다.
 const frames=c=>{const k=fields().format;return [c.question,...(
-  k==='article'?[`${c.region}의 ____에 대해 사람들이 꼭 알아야 할 사실은 무엇일까?`,`왜 ${c.region}에서는 ____이(가) 어려울까?`,`____ 문제는 얼마나 많은 사람에게 일어나고 있을까?`]
-  :k==='policy'?[`${c.name} 같은 사람이 ____하려면 누가 무엇을 해야 할까?`,`이미 ____을(를) 위해 어떤 정책이나 노력이 있고, 무엇이 부족할까?`,`____을(를) 돕는 방법에는 어떤 비용이나 부작용이 있을까?`]
-  :[`____(받을 사람)은(는) ${c.name}의 어려움을 줄이려고 무엇을 할 수 있을까?`,`____(받을 사람)이(가) 꼭 알아야 할 ${c.region}의 사실은 무엇일까?`,`왜 ${c.region}에서는 ____이(가) 어려울까?`])];};
+  k==='article'?[`${c.region}의 ${tw(c)} 문제에 대해 사람들이 꼭 알아야 할 사실은 무엇일까?`,`왜 ${c.region}에서는 ${tw(c)} 문제가 쉽게 해결되지 않을까?`,`${c.name} 같은 어려움을 겪는 사람은 얼마나 많을까?`]
+  :k==='policy'?[`${c.name} 같은 사람을 돕기 위해 ${josa(actorOf(c),'은','는')} 무엇을 해야 할까?`,`${c.region}의 ${tw(c)} 문제를 줄이기 위해 이미 어떤 정책이나 노력이 있고, 무엇이 부족할까?`,`${c.region} 사람들을 돕는 방법에는 어떤 비용이나 부작용이 있을까?`]
+  :[`${actorOf(c)}에서 ${c.name}의 어려움을 줄이려고 할 수 있는 일은 무엇일까?`,`편지를 받는 사람이 꼭 알아야 할 ${c.region}의 사실은 무엇일까?`,`왜 ${c.region}에서는 ${tw(c)} 문제가 쉽게 해결되지 않을까?`])];};
 // 결과물 형식 고르기. 질문·조사 맨 앞에서 고르고, 결과물 단계에서 바꿀 수도 있다.
 const formatPicker=f=>`<div class="formats" role="radiogroup" aria-label="결과물 형식">${Object.entries(FORMATS).map(([k,x])=>`<button type="button" class="format${f.format===k?' on':''}" role="radio" aria-checked="${f.format===k}" data-format="${k}"><span class="thumb thumb-${k}" aria-hidden="true"><i></i><i></i><i></i><i></i></span><strong>${x.name}</strong><span>${x.desc}</span><span class="format-reader">읽는 사람 · ${x.reader}</span></button>`).join('')}</div>`;
 const QUICK=[['내 질문에 답해 줘','mine'],['왜 이런 일이 생기는지 쉽게 설명해 줘'],['이미 누가 어떤 노력을 하고 있어?'],['정부·기업·국제사회는 각각 어떻게 볼까?']];
@@ -678,10 +683,9 @@ function lab(c){const f=fields(),fm=fmtOf();return `<div class="game">${epiArt(c
   <header class="card-head"><p class="label">마무리 2/4 · 질문·조사</p><h1>무엇을 쓸지 정하고, 깊이 알아봐요.</h1></header>
   <div class="card-body">
     ${sec('① 어떤 글로 세상에 내놓을까',formatPicker(f),'먼저 정해요. 글의 종류에 따라 찾아야 할 것과 쓰는 법이 달라져요.')}
-    ${fm?`${sec('② 나의 질문',`<div class="frames">${frames(c).map((t,i)=>`<button class="chip" data-frame="${i}">${i===0?'출발 질문 · ':''}${esc(t)}</button>`).join('')}</div>`+field('question','내가 알아볼 질문','위의 틀을 누르고 빈칸을 채우거나, 직접 써 보세요.',true),`${esc(josa(fm.name,'을','를'))} 쓰려면 무엇을 알아야 할까요? 하나만 정하고 내 말로 고쳐 보세요.`)}
-    ${sec('③ 알아보기',`${sourcesPanel(c)}<div id="ask-panel" class="ask-panel">${askPanel()}</div>`,'AI에게 묻고, 자료에서 직접 확인해 보세요.')}
-    ${sec('④ 알게 된 것',field('notes','알게 된 것과 근거','예: 해안 지역은 지하수에 바닷물이 섞여 마시기 어렵다 (유니세프 자료)',true,fm.notesHelp+' 어디서 확인했는지 괄호에 적어 주세요.'))}`
-    :'<p class="pick-first">글의 종류를 고르면 질문 틀과 조사 칸이 나와요.</p>'}
+    ${fm?`${sec('② 질문하고 알아보기',`<div class="frames">${frames(c).map((t,i)=>`<button class="chip" data-frame="${i}">${esc(t)}</button>`).join('')}</div>`+field('question','내가 알아볼 질문','위의 질문을 눌러 고르거나, 직접 써 보세요.',true)+`${sourcesPanel(c)}<div id="ask-panel" class="ask-panel">${askPanel()}</div>`,`${esc(josa(fm.name,'을','를'))} 쓰려면 무엇을 알아야 할까요? 질문 하나를 정하고, 바로 AI에게 묻고 자료에서 직접 확인해 보세요.`)}
+    ${sec('③ 알게 된 것',field('notes','알게 된 것과 근거','예: 해안 지역은 지하수에 바닷물이 섞여 마시기 어렵다 (유니세프 자료)',true,fm.notesHelp+' 어디서 확인했는지 괄호에 적어 주세요.'))}`
+    :'<p class="pick-first">글의 종류를 고르면 질문과 조사 칸이 나와요.</p>'}
   </div>
   <footer class="card-foot step-nav"><button class="btn ghost back" data-nav="reflect">← 돌아보기</button><button class="btn big" data-action="to-plan">결과물 만들기 →</button></footer>
 </article></div></div>`;}
@@ -700,13 +704,13 @@ const FORMATS={
     voice:'기자는 ‘나’를 드러내지 않고, 확인한 사실을 ‘~했다’, ‘~이다’로 끝나는 문장으로 전해요.',
     notesHelp:'기사에 쓸 사실과 숫자, 그 출처를 모아요. 인물이 한 말도 메모해 두면 기사에 옮길 수 있어요.',
     fields:[
-    ['a_title','제목','예: 바닷물에 잠기는 섬, 학교 가는 길도 사라진다','기사 전체를 한 줄로. 무슨 일인지 사실이 보이게 짧게 써요.',c=>[`${c.region}, ____ 때문에 ____`]],
-    ['a_lead','리드 · 첫 문단','예: 남태평양의 섬나라 투발루에서 바닷물이 마을 땅으로 스며들고 있다.','첫 문단만 읽어도 알 수 있게, 누가·어디서·무엇을 겪는지 두세 문장에 담아요.',c=>[`${placeWords(c)[0]}의 ${c.region}에서 ${c.name} 씨는 ____ 때문에 ____하고 있다.`]],
-    ['a_body','본문 · 원인과 근거','예: 유엔 자료에 따르면 ~. 시오네 씨는 “~”라고 말했다.','왜 이런 일이 생기는지 알게 된 사실로 설명해요. ‘~에 따르면’으로 출처를 밝히고, 인물의 말을 따옴표로 옮겨 보세요.',c=>[`____(기관·자료)에 따르면, ____.`,`${c.name} 씨는 “____”라고 말했다.`,`이런 일이 생기는 까닭은 ____ 때문이다.`]],
-    ['a_end','맺음','예: 이 섬의 아이들이 학교에 계속 다니려면 ~이 필요하다.','기자의 감상 대신, 해결을 위해 필요한 것이나 독자가 함께 생각할 질문으로 끝내요.',c=>[`____을(를) 해결하려면 ____이(가) 필요하다.`,`우리는 ____에 대해 어떻게 생각해야 할까.`]],
+    ['a_title','제목','예: 바닷물에 잠기는 섬, 학교 가는 길도 사라진다','기사 전체를 한 줄로. 무슨 일인지 사실이 보이게 짧게 써요.',c=>[`${c.region}, ${tw(c)} 문제로 흔들리는 하루`]],
+    ['a_lead','첫 문단','예: 남태평양의 섬나라 투발루에서 바닷물이 마을 땅으로 스며들고 있다.','첫 문단만 읽어도 알 수 있게, 누가·어디서·무엇을 겪는지 두세 문장에 담아요.',c=>[`${placeWords(c)[0]}의 ${c.region}에서 ${c.name} 씨는 날마다 ${tw(c)} 문제를 겪고 있다.`]],
+    ['a_body','원인과 근거','예: 유엔 자료에 따르면 ~. 시오네 씨는 “~”라고 말했다.','왜 이런 일이 생기는지 알게 된 사실로 설명해요. ‘~에 따르면’으로 출처를 밝히고, 인물의 말을 따옴표로 옮겨 보세요.',c=>[`${srcName(c)}에 따르면, 이 지역에서 같은 어려움을 겪는 사람이 많다.`,`${c.name} 씨는 “${String(c.wish).replace(/[.。]+$/,'')}”라고 말했다.`,`이런 일이 생기는 까닭은 한 사람의 노력만으로는 바꿀 수 없는 조건 때문이다.`]],
+    ['a_end','마무리 문단','예: 이 섬의 아이들이 학교에 계속 다니려면 ~이 필요하다.','기자의 감상 대신, 해결을 위해 필요한 것이나 독자가 함께 생각할 질문으로 끝내요.',c=>[`${c.region}의 ${tw(c)} 문제를 해결하려면 정부와 국제사회의 지원이 필요하다.`,`우리는 멀리 떨어진 ${c.region}의 일을 어떻게 바라봐야 할까.`]],
   ],checks:[
     ['제목이 짧다 (30자 이내)',f=>lenOf(f.a_title)>0&&lenOf(f.a_title)<=30],
-    ['리드에 어디서 일어난 일인지 나온다',(f,c)=>placeWords(c).some(w=>String(f.a_lead||'').includes(w))||has(f.a_lead,/에서/)],
+    ['첫 문단에 어디서 일어난 일인지 나온다',(f,c)=>placeWords(c).some(w=>String(f.a_lead||'').includes(w))||has(f.a_lead,/에서/)],
     ['‘~다.’로 끝나는 기사 문장이다',f=>endShare([f.a_lead,f.a_body,f.a_end].join('\n'),/다[.!?]?$/)>=0.7],
     ['본문에 출처를 밝혔다 (‘~에 따르면’, 괄호)',f=>has(f.a_body,/따르면|\(.+\)|자료|보고서|발표|조사/)],
     ['인물이나 전문가의 말을 따옴표로 옮겼다',f=>has(f.a_body,/["“][^"”]{4,}["”]/)],
@@ -716,11 +720,11 @@ const FORMATS={
     voice:'근거를 들어 문제를 밝히고, 누가 무엇을 할지 ‘~해야 한다’, ‘~을 제안한다’처럼 분명하게 써요.',
     notesHelp:'문제의 크기를 보여 줄 숫자와 출처, 이미 하고 있는 노력과 그 한계를 모아요.',
     fields:[
-    ['p_to','수신 · 누구에게 제안하나','예: 투발루 정부 / 유엔 기후변화 담당 기구 / 대한민국 외교부','이 제안을 실제로 실행할 수 있는 기관을 적어요.',c=>[]],
-    ['p_title','제안 이름','예: 높은 지대 학교 이전 예산 지원','무엇을 하자는 제안인지 한 줄로 써요.',c=>[`${c.region} ____을(를) 위한 ____ 지원`]],
-    ['p_problem','현황과 문제','예: 투발루에서는 바닷물이 차올라 ~. 유엔 자료에 따르면 ~.','누가 어떤 권리를 누리지 못하는지, 숫자나 자료로 근거를 들어 써요.',c=>[`${c.region}에서는 ____이(가) ____을(를) 누리지 못하고 있다.`,`____ 자료에 따르면, ____.`]],
-    ['p_plan','제안 내용','예: 투발루 정부는 ~해야 한다. 첫째, ~. 둘째, ~.','누가(정부·기업·국제기구·주민) 무엇을 어떻게 할지 차례대로 써요.',c=>[`____(기관)은(는) ____을(를) 해야 한다.`,`이를 위해 첫째, ____. 둘째, ____.`]],
-    ['p_limit','예상되는 어려움과 보완','예: 비용이 많이 든다는 문제가 있다. 그래서 ~. 주민 의견은 ~로 듣는다.','비용·부작용 같은 어려움을 솔직히 쓰고, 어떻게 보완할지와 현지 사람들의 의견을 들을 방법을 써요.',c=>[`이 제안은 ____(비용·부작용)이(가) 생길 수 있다. 그래서 ____.`,`현지 주민의 의견은 ____ 방법으로 듣는다.`]],
+    ['p_to','누구에게 제안하나','예: 투발루 정부 / 유엔 기후변화 담당 기구 / 대한민국 외교부','이 제안을 실제로 실행할 수 있는 기관을 적어요.',c=>[]],
+    ['p_title','제안 이름','예: 높은 지대 학교 이전 예산 지원','무엇을 하자는 제안인지 한 줄로 써요.',c=>[`${c.region} 주민의 ${tw(c)} 문제 해결을 위한 지원`]],
+    ['p_problem','현황과 문제','예: 투발루에서는 바닷물이 차올라 ~. 유엔 자료에 따르면 ~.','누가 어떤 권리를 누리지 못하는지, 숫자나 자료로 근거를 들어 써요.',c=>[`${c.region}에서는 ${c.name} 같은 사람들이 기본적인 권리를 누리지 못하고 있다.`,`${srcName(c)}에 따르면, 이 지역의 많은 사람이 같은 어려움을 겪고 있다.`]],
+    ['p_plan','제안 내용','예: 투발루 정부는 ~해야 한다. 첫째, ~. 둘째, ~.','누가(정부·기업·국제기구·주민) 무엇을 어떻게 할지 차례대로 써요.',c=>[`${josa(actorOf(c),'은','는')} ${c.region} 주민을 위한 지원을 늘려야 한다.`,`이를 위해 첫째, 현지 상황을 조사한다. 둘째, 필요한 예산을 마련한다.`]],
+    ['p_limit','예상되는 어려움과 보완','예: 비용이 많이 든다는 문제가 있다. 그래서 ~. 주민 의견은 ~로 듣는다.','비용·부작용 같은 어려움을 솔직히 쓰고, 어떻게 보완할지와 현지 사람들의 의견을 들을 방법을 써요.',c=>[`이 제안은 비용이 많이 들 수 있다. 그래서 여러 나라와 국제기구가 비용을 나누어 부담한다.`,`현지 주민의 의견은 마을 설명회와 설문으로 듣는다.`]],
   ],checks:[
     ['문제에 근거가 있다 (숫자·자료·출처)',f=>has(f.p_problem,/\d|따르면|자료|보고서|조사|통계/)],
     ['제안에 실행할 주체가 나온다',f=>has(f.p_plan,/정부|기업|회사|국제|유엔|UN|유니세프|기구|단체|학교|주민|시민|의회|부|청/)],
@@ -733,12 +737,12 @@ const FORMATS={
     voice:'받는 사람에게 말하듯 존댓말로, 내가 누구이고 왜 쓰는지 밝힌 뒤 부탁과 다짐을 전해요.',
     notesHelp:'편지 받을 사람이 꼭 알아야 할 사실과 그 출처, 그 사람이 실제로 할 수 있는 일을 모아요.',
     fields:[
-    ['l_to','받는 사람 · 부르는 말','예: 투발루 정부 담당자님께 / 초콜릿 회사 대표님께 / 코피에게','누구에게 쓰는지에 따라 부탁도 달라져요. ‘~님께’, ‘~에게’로 불러요.',c=>[`____ 담당자님께`]],
-    ['l_open','첫인사 · 나를 소개하고 쓰는 까닭','예: 안녕하세요. 저는 한국의 중학생입니다. 수업에서 ~을 알게 되어 편지를 씁니다.','처음 만나는 사람에게 하듯 인사하고, 내가 누구인지, 왜 이 편지를 쓰는지 밝혀요.',c=>[`안녕하세요. 저는 한국에 사는 중학생입니다. 수업에서 ${c.name}의 하루를 살아 보고 이 편지를 씁니다.`]],
-    ['l_learned','내가 알게 된 것','예: 자료를 찾아보니 ~. 그래서 ~은 어떤 선택을 해도 ~할 수 없었습니다.','받는 사람이 꼭 알아야 할 사실을 근거와 함께 전해요.',c=>[`제가 알아보니, ____ 자료에 따르면 ____.`,`그래서 ${c.name} 같은 사람들은 ____할 수 없습니다.`]],
-    ['l_ask','부탁하는 것','예: ~님께서 ~해 주시면 좋겠습니다. 그러면 ~.','받는 사람이 실제로 할 수 있는 일을 하나, 구체적으로 부탁해요. 그러면 무엇이 달라지는지도요.',c=>[`____님께서 ____해 주시면 좋겠습니다. 그러면 ____.`]],
-    ['l_me','나의 다짐과 끝인사','예: 저도 ~하겠습니다. 바쁘신 중에 읽어 주셔서 감사합니다.','나도 할 수 있는 작은 행동 하나를 약속하고, 고마움을 전하며 마무리해요.',c=>[`저도 ____하겠습니다. 읽어 주셔서 감사합니다.`]],
-    ['l_from','보내는 사람 · 작성자 이름','예: 코피 / 2학년 3반 김○○','편지 맨 끝에 “○○ 드림”으로 들어가요. 이름만 적으면 돼요.',c=>[]],
+    ['l_to','받는 사람','예: 투발루 정부 담당자님께 / 초콜릿 회사 대표님께 / 코피에게','누구에게 쓰는지에 따라 부탁도 달라져요. ‘~님께’, ‘~에게’로 불러요.',c=>[`${actorOf(c)} 담당자님께`]],
+    ['l_open','첫인사와 쓰는 까닭','예: 안녕하세요. 저는 한국의 중학생입니다. 수업에서 ~을 알게 되어 편지를 씁니다.','처음 만나는 사람에게 하듯 인사하고, 내가 누구인지, 왜 이 편지를 쓰는지 밝혀요.',c=>[`안녕하세요. 저는 한국에 사는 중학생입니다. 수업에서 ${c.name}의 하루를 살아 보고 이 편지를 씁니다.`]],
+    ['l_learned','내가 알게 된 것','예: 자료를 찾아보니 ~. 그래서 ~은 어떤 선택을 해도 ~할 수 없었습니다.','받는 사람이 꼭 알아야 할 사실을 근거와 함께 전해요.',c=>[`제가 알아보니, ${srcName(c)}에 따르면 ${c.region}에서는 많은 사람이 같은 어려움을 겪고 있습니다.`,`그래서 ${c.name} 같은 사람들은 노력해도 상황을 바꾸기 어렵습니다.`]],
+    ['l_ask','부탁하는 것','예: ~님께서 ~해 주시면 좋겠습니다. 그러면 ~.','받는 사람이 실제로 할 수 있는 일을 하나, 구체적으로 부탁해요. 그러면 무엇이 달라지는지도요.',c=>[`담당자님께서 ${c.region} 주민의 목소리를 직접 들어 주시면 좋겠습니다. 그러면 꼭 필요한 지원이 무엇인지 알 수 있습니다.`]],
+    ['l_me','나의 다짐과 끝인사','예: 저도 ~하겠습니다. 바쁘신 중에 읽어 주셔서 감사합니다.','나도 할 수 있는 작은 행동 하나를 약속하고, 고마움을 전하며 마무리해요.',c=>[`저도 이 문제를 친구들에게 알리겠습니다. 읽어 주셔서 감사합니다.`]],
+    ['l_from','보내는 사람','예: 코피 / 2학년 3반 김○○','편지 맨 끝에 “○○ 드림”으로 들어가요. 이름만 적으면 돼요.',c=>[]],
   ],checks:[
     ['받는 사람을 ‘~님께’, ‘~에게’로 불렀다',f=>has(f.l_to,/님|께|에게|한테/)],
     ['첫인사와 쓰는 까닭이 있다',f=>has(f.l_open,/안녕|처음|저는|제가/)&&has(f.l_open,/쓰|씁|써|전하|전해|알리|말씀/)],
@@ -785,7 +789,7 @@ function plan(c){const f=fields(),fm=fmtOf();return `<div class="game">${epiArt(
     <div class="card-body">
       ${fm?`<div class="genre-head"><div><p class="label">내가 쓰는 글</p><strong>${esc(fm.name)}</strong><p>${esc(fm.voice)}</p></div><button type="button" class="btn ghost small" data-action="format-change">다른 글로 바꾸기</button></div>`
         :sec('① 어떤 글로 만들까',formatPicker(f),'완성하면 고른 형식의 서식으로 갤러리에 올라가요.')}
-      ${fm?sec(`${esc(fm.name)} 쓰기 · 차례대로`,`<div class="my-research"><p><strong>나의 질문</strong>${esc(f.question||'')}</p><p><strong>알게 된 것</strong>${esc(f.notes||'')}</p></div><div class="desk desk-${f.format}">`+fm.fields.map(([n,l,p,h,st],i)=>{const ts=st(c);return `<div class="part"><span class="part-no" aria-hidden="true">${i+1}</span>${field(n,l,p,true,h||'')}${ts.length?`<div class="frames starters" role="group" aria-label="${esc(l)} 문장 틀">${ts.map((t,j)=>`<button type="button" class="chip" data-gstarter="${n}:${j}"><b>틀</b> ${esc(t)}</button>`).join('')}</div>`:''}</div>`;}).join('')+'</div>','칸마다 그 부분을 쓰는 법이 있어요. 문장 틀을 누르면 칸 끝에 들어가고, 빈칸(____)을 내 말로 채우면 돼요.'):''}
+      ${fm?sec(`${esc(fm.name)} 쓰기 · 차례대로`,`<div class="my-research"><p><strong>나의 질문</strong>${esc(f.question||'')}</p><p><strong>알게 된 것</strong>${esc(f.notes||'')}</p></div><div class="desk desk-${f.format}">`+fm.fields.map(([n,l,p,h,st],i)=>{const ts=st(c);return `<div class="part"><span class="part-no" aria-hidden="true">${i+1}</span>${field(n,l,p,true,h||'')}${ts.length?`<div class="frames starters" role="group" aria-label="${esc(l)} 예시 문장">${ts.map((t,j)=>`<button type="button" class="chip" data-gstarter="${n}:${j}"><b>예시</b> ${esc(t)}</button>`).join('')}</div>`:''}</div>`;}).join('')+'</div>','칸마다 그 부분을 쓰는 법이 있어요. 예시 문장을 누르면 칸 끝에 들어가고, 내가 알게 된 것에 맞게 고치면 돼요.'):''}
       ${fm?sec('글의 성격 체크',`<div id="genre-check" class="genre-check" aria-live="polite">${genreChecks(c)}</div>`,`${esc(josa(fm.name,'으로','로'))} 읽히는지 보는 기준이에요. 선생님도 이 기준으로 읽어요. 다 갖추지 않아도 완성할 수 있어요.`):''}
       ${fm?sec('피드백 대화',`<div id="rv-panel" class="rv-panel">${reviewPanel(c)}</div>`,'AI는 글을 대신 써 주지 않아요. 대화를 보고 고칠지는 내가 정해요.'):''}
     </div>
@@ -1040,12 +1044,12 @@ document.addEventListener('click',async e=>{
     chatOf(state.run.step).log.push({k:'me',text:o.text});lock(c,n);
     return;
   }
-  if(el.dataset.starter!==undefined){const t=STARTERS[Number(el.dataset.starter)]?.[1],box=document.querySelector('[data-field="constraint"]');if(t&&box){box.value=t;state.run.fields.constraint=t;save();updateCount('constraint');box.focus();const i=t.indexOf('____');if(i>=0)box.setSelectionRange(i,i+4);}return;}
-  if(el.dataset.frame!==undefined){const t=frames(c)[Number(el.dataset.frame)],box=document.querySelector('[data-field="question"]');if(t&&box){box.value=t;state.run.fields.question=t;save();updateCount('question');box.focus();const i=t.indexOf('____');if(i>=0)box.setSelectionRange(i,i+4);}return;}
+  if(el.dataset.starter!==undefined){const t=STARTERS[Number(el.dataset.starter)]?.[1]?.(c),box=document.querySelector('[data-field="constraint"]');if(t&&box){box.value=t;state.run.fields.constraint=t;save();updateCount('constraint');box.focus();}return;}
+  if(el.dataset.frame!==undefined){const t=frames(c)[Number(el.dataset.frame)],box=document.querySelector('[data-field="question"]');if(t&&box){box.value=t;state.run.fields.question=t;save();updateCount('question');box.focus();}return;}
   if(el.dataset.ask!==undefined){const k=el.dataset.ask;if(k==='mine'){const q=fields().question?.trim();if(!q){dialog({title:'질문을 먼저 써 주세요',body:'"내가 알아볼 질문" 칸을 채우면 AI에게 물어볼 수 있어요.'}).then(()=>focusEmpty(['question']));return;}ask(c,'내 질문: '+q);}else ask(c,k);return;}
   if(el.dataset.take!==undefined){const e=labOf().log[Number(el.dataset.take)];if(!e?.point)return;const line='• '+e.point+(e.check?' (확인: '+e.check+')':'');const box=document.querySelector('[data-field="notes"]');const v=(fields().notes||'').trim();state.run.fields.notes=(v?v+'\n':'')+line;if(box)box.value=state.run.fields.notes;updateCount('notes');e.taken=true;save();renderAsk();toast('메모에 담았어요. 내 말로 고쳐 써 보세요.');return;}
-  // 결과물 문장 틀: 칸이 비었으면 넣고, 쓰던 글이 있으면 끝에 이어 붙인다. 이어 붙인 틀의 첫 빈칸이 선택된다.
-  if(el.dataset.gstarter){const [n,j]=el.dataset.gstarter.split(':'),it=fmtOf()?.fields.find(x=>x[0]===n),t=it?.[4](c)[Number(j)],box=document.querySelector(`[data-field="${n}"]`);if(t&&box){const cur=box.value.trimEnd(),v=cur?cur+' '+t:t;box.value=v;state.run.fields[n]=v;save();updateCount(n);updateChecks();box.focus();const i=v.indexOf('____',cur.length);if(i>=0)box.setSelectionRange(i,i+4);}return;}
+  // 결과물 문장 틀: 칸이 비었으면 넣고, 쓰던 글이 있으면 끝에 이어 붙인다.
+  if(el.dataset.gstarter){const [n,j]=el.dataset.gstarter.split(':'),it=fmtOf()?.fields.find(x=>x[0]===n),t=it?.[4](c)[Number(j)],box=document.querySelector(`[data-field="${n}"]`);if(t&&box){const cur=box.value.trimEnd(),v=cur?cur+' '+t:t;box.value=v;state.run.fields[n]=v;save();updateCount(n);updateChecks();box.focus();box.setSelectionRange(v.length,v.length);}return;}
   if(el.dataset.action==='format-change'){state.run.fields.format='';save();render();document.querySelector('.formats')?.scrollIntoView({block:'start',behavior:'smooth'});return;}
   if(el.dataset.format){state.run.fields.format=el.dataset.format;save();render();document.querySelector('.formats')?.scrollIntoView({block:'start',behavior:'smooth'});return;}
   if(el.dataset.rv!==undefined){const last=[...reviewOf().log].reverse().find(x=>x.k==='say');const t=last?.chips?.[Number(el.dataset.rv)];if(t)reviewSay(c,t);return;}
