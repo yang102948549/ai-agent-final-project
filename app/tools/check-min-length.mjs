@@ -53,9 +53,13 @@ await page.fill('[data-field=l_learned]', '바닷물이 땅으로 들어와요.'
 await page.fill('[data-field=l_ask]', '높은 땅에 학교와 집을 지을 수 있도록 예산을 늘려 주세요.');
 await page.fill('[data-field=l_me]', '친구들에게 알리기');
 await page.click('#plan-form button[type=submit]');
-ok((await dialogShown()).includes('2칸') && await view() === 'plan', '편지 두 칸이 부족하면 완성 안 됨');
+ok((await dialogShown()).includes('3칸') && await view() === 'plan', '편지 세 칸(두 칸 20자 미만 + 보내는 사람 빈칸)이 부족하면 완성 안 됨');
 await page.fill('[data-field=l_learned]', '해발이 낮은 섬이라 바닷물이 땅으로 들어와 농사와 식수가 어려워요.');
 await page.fill('[data-field=l_me]', '우리 반 친구들에게 투발루의 상황을 알리는 글을 쓰겠습니다.');
+await page.click('#plan-form button[type=submit]');
+const t = await dialogShown(); console.log('  dialog:', t.replace(/\s+/g, ' ')); ok(t.length > 0 && await view() === 'plan', '보내는 사람이 비면 완성 안 됨');
+await page.fill('[data-field=l_from]', '코피');
+ok(await page.locator('[data-count=l_from].ok').count() === 1, '보내는 사람은 2자 기준');
 await page.click('#plan-form button[type=submit]'); await page.waitForTimeout(600);
 ok(await view() === 'report', '모든 칸 기준 충족 시 완성 화면으로 이동');
 ok(!errors.length, 'JS 오류 없음 ' + errors.join(' | '));

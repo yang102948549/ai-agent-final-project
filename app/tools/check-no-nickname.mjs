@@ -34,12 +34,16 @@ const fields = { format: 'letter', question: long, notes: long, feeling: long, c
 const done = { ...base, step: 2, choices: [0, 0, 0], view: 'report', fields };
 {
   const { page } = await open(done, {});
-  ok((await page.locator('.lt-from').innerText()).trim() === '코피 드림', '편지는 인물 이름으로 “코피 드림”');
+  ok((await page.locator('.lt-from').innerText()).trim() === '코피 드림', '보내는 사람 칸이 없던 예전 편지는 인물 이름 “코피 드림”');
 }
 {
   const { page, errors } = await open(done, { grade: '2', cls: '3', num: '7', name: '홍길동' });
   ok((await page.locator('.lt-from').innerText()).trim() === '코피 드림', '제출 칸을 채워도 편지 서명은 “코피 드림”');
   ok(await page.locator('#submit-form [data-me=name]').inputValue() === '홍길동', '갤러리 제출 칸은 그대로 유지');
+}
+{
+  const { page, errors } = await open({ ...done, fields: { ...fields, l_from: '2학년 3반 김하늘 드림' } }, {});
+  ok((await page.locator('.lt-from').innerText()).trim() === '2학년 3반 김하늘 드림', '보내는 사람 칸을 쓰면 그 이름으로, “드림”은 한 번만');
   ok(!errors.length, 'JS 오류 없음 ' + errors.join(' | '));
 }
 await browser.close();

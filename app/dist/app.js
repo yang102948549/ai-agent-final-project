@@ -46,8 +46,8 @@ function dialog({title,body='',ok='확인',cancel='',icon='!'}){
 }
 // 비어 있는 첫 칸으로 데려간다.
 // 돌아보기부터 학생이 쓰는 칸은 최소 글자 수를 채워야 다음으로 넘어간다. 공백은 몇 칸이든 한 칸으로 센다.
-// 제목·받는 사람처럼 짧아야 자연스러운 칸만 기준을 낮춘다. ____ 빈칸이 남아 있으면 아직 덜 쓴 것으로 본다.
-const MIN_LEN=20,MIN_SHORT={a_title:10,p_title:10,l_to:10};
+// 제목·받는 사람·보내는 사람처럼 짧아야 자연스러운 칸만 기준을 낮춘다. ____ 빈칸이 남아 있으면 아직 덜 쓴 것으로 본다.
+const MIN_LEN=20,MIN_SHORT={a_title:10,p_title:10,l_to:10,l_from:2};
 const minOf=k=>MIN_SHORT[k]||MIN_LEN;
 const lenOf=v=>String(v||'').replace(/s+/g,' ').trim().length;
 const hasBlank=v=>String(v||'').includes('____');
@@ -603,7 +603,7 @@ const STARTERS=[
 ];
 function reflect(c){return `<div class="game">${epiArt(c,0)}<div class="stage-main"><article class="paper-card">
   <header class="card-head"><p class="label">마무리 1/4 · 돌아보기</p><h1>어려웠던 건, 선택만의 문제였을까요?</h1></header>
-  <form id="reflection-form">
+  <form id="reflection-form" novalidate>
     <div class="card-body">
       ${sec('나의 하루',recap(c),'세 장면에서 내가 고른 것입니다. ‘선택을 넘어’를 펼쳐 다시 읽어 보세요.')}
       ${sec('생각해 보기',field('feeling',`${c.name}에게 가장 중요했던 것은?`,'예: 친구와 함께 학교에 다니는 평범한 하루가 가장 중요했다. 시험을 보러 가는 길에서도 그 마음이 느껴졌다.',true,'무엇이, 왜 중요했는지 함께 써 보세요.')+field('constraint',`${josa(c.name,'이','가')} 무엇을 골라도 그대로였던 어려움은?`,'예: 마을에 정수 시설이 없어서, 어떤 선택을 해도 깨끗한 물을 마시기 어려웠다.',true,`위 ‘선택을 넘어’를 펼쳐 보세요. 아래 문장 틀 하나를 눌러 빈칸(____)을 채우면 돼요.`)+`<div class="frames starters" role="group" aria-label="문장 틀">${STARTERS.map(([k,t],i)=>`<button type="button" class="chip" data-starter="${i}"><b>${k}</b> ${esc(t)}</button>`).join('')}</div>`)}
@@ -683,7 +683,7 @@ function lab(c){return `<div class="game">${epiArt(c,1)}<div class="stage-main">
   <footer class="card-foot step-nav"><button class="btn ghost back" data-nav="reflect">← 돌아보기</button><button class="btn big" data-action="to-plan">결과물 만들기 →</button></footer>
 </article></div></div>`;}
 
-// 결과물: 조사한 것을 어떤 글로 내놓을지 고르고, 그 형식에 맞는 네 칸을 채운다. 완성 화면과 갤러리는 이 형식의 서식으로 나온다.
+// 결과물: 조사한 것을 어떤 글로 내놓을지 고르고, 그 형식에 맞는 칸을 채운다. 완성 화면과 갤러리는 이 형식의 서식으로 나온다.
 const FORMATS={
   article:{name:'신문 기사',desc:'알게 된 사실을 많은 사람에게 알려요.',fields:[
     ['a_title','제목','예: 물은 있지만 마실 수 없는 마을','문제가 한눈에 보이게 짧게.'],
@@ -702,6 +702,7 @@ const FORMATS={
     ['l_learned','내가 알게 된 것','체험과 조사에서 알게 된 사실을 전해 주세요.'],
     ['l_ask','부탁하거나 제안하는 것','받는 사람이 실제로 할 수 있는 일을 구체적으로.'],
     ['l_me','나도 할 일','내가 할 수 있는 작은 행동 한 가지.'],
+    ['l_from','보내는 사람 · 작성자 이름','예: 코피 / 2학년 3반 김○○','편지 맨 끝에 “○○ 드림”으로 들어가요. 이름만 적으면 돼요.'],
   ]},
 };
 const fmtOf=()=>FORMATS[fields().format];
@@ -733,7 +734,7 @@ async function reviewSay(c,text,mark){
 }
 function plan(c){const f=fields(),fm=fmtOf();return `<div class="game">${epiArt(c,2)}<div class="stage-main"><article class="paper-card">
   <header class="card-head"><p class="label">마무리 3/4 · 결과물 만들기</p><h1>알게 된 것을, 세상에 내놓을 글로.</h1></header>
-  <form id="plan-form">
+  <form id="plan-form" novalidate>
     <div class="card-body">
       ${sec('① 어떤 글로 만들까',`<div class="formats" role="radiogroup" aria-label="결과물 형식">${Object.entries(FORMATS).map(([k,x])=>`<button type="button" class="format${f.format===k?' on':''}" role="radio" aria-checked="${f.format===k}" data-format="${k}"><span class="thumb thumb-${k}" aria-hidden="true"><i></i><i></i><i></i><i></i></span><strong>${x.name}</strong><span>${x.desc}</span></button>`).join('')}</div>`,'완성하면 고른 형식의 서식으로 갤러리에 올라가요.')}
       ${fm?sec(`② ${fm.name} 쓰기`,`<div class="my-research"><p><strong>나의 질문</strong>${esc(f.question||'')}</p><p><strong>알게 된 것</strong>${esc(f.notes||'')}</p></div>`+fm.fields.map(([n,l,p,h])=>field(n,l,p,true,h||'')).join('')):''}
@@ -792,12 +793,14 @@ function docPolicy(c,f){return `<article class="doc doc-policy">
 </article>`;}
 
 // 편지: 받는 분 → 본문 → 날짜 → 보내는 사람. 오른쪽 위에 캐릭터 우표.
+// 편지 끝 서명: 학생이 적은 보내는 사람. 끝에 ‘드림’을 붙여 적어도 한 번만 나오게 하고, 이 칸이 없던 예전 제출물은 인물 이름으로.
+const signOf=(c,f)=>String(f.l_from||'').replace(/\s*(드림|올림)\s*$/,'').trim()||c.name;
 function docLetter(c,f){return `<article class="doc doc-letter">
   <div class="lt-stamp" aria-hidden="true"><img src="${artSrc(c.id,'face')}" alt=""><span>${esc(c.country)}</span></div>
   <p class="lt-to">${esc(f.l_to||'받는 분께')}</p>
   <div class="lt-body">${paras(f.l_learned)}${paras(f.l_ask)}${paras(f.l_me)}</div>
   <p class="lt-date">${longDate(f)}</p>
-  <p class="lt-from">${esc(c.name)} 드림</p>
+  <p class="lt-from">${esc(signOf(c,f))} 드림</p>
   <footer class="lt-ps"><p>덧붙임 · 이 편지는 ${esc(c.country)} ${esc(c.region)}의 상황을 다룬 수업에서 썼습니다. 제가 읽은 자료: ${c.sources.map(s=>esc(s.title)).join(', ')}</p>${fictionNote(c)}</footer>
 </article>`;}
 const DOCS={article:docArticle,policy:docPolicy,letter:docLetter};

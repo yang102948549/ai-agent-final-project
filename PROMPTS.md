@@ -515,3 +515,18 @@
 - 공개한 대표 화면 — [배포 전 시작](screenshots/2026-11-26-deploy-no-nickname/before-desktop-join.png) · [배포 후 시작](screenshots/2026-11-26-deploy-no-nickname/after-desktop-join.png) · [배포 후 모바일](screenshots/2026-11-26-deploy-no-nickname/after-mobile-join.png) · [배포 전 편지](screenshots/2026-11-26-deploy-no-nickname/before-desktop-letter.png) · [배포 후 편지](screenshots/2026-11-26-deploy-no-nickname/after-desktop-letter.png)
 - 대화 캡처 — [배포 후 장면](screenshots/conversations/2026-11-26-no-nickname/02-after-deploy.png)
 - 변경 파일 — `PROMPTS.md`, `CHECKLIST.md`, `conversations/README.md`, `screenshots/2026-11-26-deploy-no-nickname/`, `screenshots/conversations/2026-11-26-no-nickname/02-after-deploy.png`. 사이트 저장소 `f65d635`.
+
+## 2026-11-26-letter-from
+
+- 실제 요청 — “그럼 편지쓸 때는 누구에게 쓸지, 마지막에 작성자의 이름을 작성하는 걸로 하자.”
+- 진행 기록
+  1. 수정 전 촬영 — 로컬, 가나 코피·편지 형식·예시 문장, AI 차단. `before-*-plan.png`는 편지 칸이 받는 사람·알게 된 것·부탁·나도 할 일 네 칸뿐이고, `before-*-letter.png`는 맺음이 인물 이름 ‘코피 드림’으로 고정된 상태다.
+  2. 구현 — 편지 형식 맨 끝에 ‘보내는 사람 · 작성자 이름’ 칸(`l_from`, 최소 2자)을 추가하고 맺음 줄을 그 이름으로 바꿨다(`signOf`). 학생이 ‘드림’·‘올림’까지 적어도 한 번만 나오게 하고, 이 칸이 없던 예전 제출물은 인물 이름으로 보인다. 받는 사람 칸(`l_to`)은 그대로 맨 앞이다. 첫 치환은 정규식의 `\s`가 `s`로 들어가 Edit로 바로잡았다.
+  3. 빈 칸 처리 수정 — 검사 중, 칸이 완전히 비어 있으면 textarea의 `required` 때문에 브라우저 기본 말풍선만 뜨고 앱의 안내창·해당 칸 이동이 동작하지 않는 것을 발견했다(이전부터 있던 문제). 돌아보기·결과물 폼에 `novalidate`를 붙여 빈 칸도 앱 안내창으로 처리한다.
+  4. 갤러리 서버 — onischool-release `functions/anotherday/api/gallery.js`가 형식별로 정한 칸만 저장해 `l_from`을 선택 칸(`OPTIONAL`)으로 추가했다. 배포 전부터 열려 있던 화면의 제출도 거절되지 않도록 필수는 아니다. `clean()`을 직접 불러 예전 제출(l_from 없음 → 빈 값 저장), 새 제출(‘코피’ 저장), 다른 형식 영향 없음, 필수 칸 누락 시 `empty_field`를 확인했다.
+  5. 검증 — `npm run validate` PASS, `node --check` PASS. `check-min-length.mjs` ALL PASS(보내는 사람이 비면 완성 안 됨, 2자 기준 추가). `check-no-nickname.mjs` ALL PASS(예전 편지 ‘코피 드림’, ‘2학년 3반 김하늘 드림’처럼 드림 한 번). 첫 실행은 검사 스크립트 쪽 실수(새 블록에서 `errors` 변수 누락, 부족한 칸 수 2→3)로 실패해 고쳤다.
+  6. 수정 후 촬영 — `after-*-plan.png`(보내는 사람 칸과 ‘0 / 2자 · 2자 더’), `after-*-letter.png`(‘2학년 3반 김하늘 드림’). 열어 보니 잘림·가림이 없다. 원본 `local-assets/screenshots/2026-11-26-letter-from/`, 데스크톱 1440×900·모바일 780×1688.
+  7. 대화 캡처 — (12:13) 전체 화면을 찍었으나 화면에 다른 업무 창(인증서 로그인, 실명 노출)이 떠 있어 바로 지웠다. 이번 작업 대화 캡처는 없고 위 실제 요청 발췌로 대신한다.
+- 공개한 대표 화면 — [전 입력](screenshots/2026-11-26-letter-from/before-desktop-plan.png) · [후 입력](screenshots/2026-11-26-letter-from/after-desktop-plan.png) · [후 모바일](screenshots/2026-11-26-letter-from/after-mobile-plan.png) · [전 편지](screenshots/2026-11-26-letter-from/before-desktop-letter.png) · [후 편지](screenshots/2026-11-26-letter-from/after-desktop-letter.png)
+- 변경 파일 — `app/dist/app.js`, `app/tools/check-min-length.mjs`, `app/tools/check-no-nickname.mjs`, `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-letter-from/`. 사이트 저장소 `functions/anotherday/api/gallery.js`(배포 때 커밋).
+- 배포 — 아직 하지 않았다.
