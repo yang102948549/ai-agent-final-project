@@ -487,3 +487,19 @@
 - 화면 — 로컬, 가나 코피·편지 형식·예시 문장, AI 차단, 맺음 줄로 스크롤. 원본 `local-assets/screenshots/2026-11-26-letter-sign/` before/after-desktop(1440×900)·mobile(780×1688), 아프가니스탄 마리암 `after-*-afghanistan.png`. 열어 보니 전 ‘익명 드림’ → 후 ‘코피 드림’, ‘마리암 드림’이 잘림 없이 보였다.
 - 공개한 대표 화면 — [전](screenshots/2026-11-26-letter-sign/before-desktop.png) · [후 코피](screenshots/2026-11-26-letter-sign/after-desktop.png) · [후 모바일](screenshots/2026-11-26-letter-sign/after-mobile.png) · [후 마리암](screenshots/2026-11-26-letter-sign/after-desktop-afghanistan.png)
 - 변경 파일 — `app/dist/app.js`, `app/tools/check-no-nickname.mjs`, `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-letter-sign/`.
+
+
+## 2026-11-26-padlet-rubric-and-trailer-prd
+
+- 실제 요청
+  - “https://padlet.com/limtaehyeong/15-s025jqwfv5267xpqq43o/wish/XGyBQb3KDqM9ZL6K 이 내용을 파악해서 채점기준 수정 및 가이드라인을 수정하여 깃에 커밋,푸시해줘”
+  - “지금은 트레일러 영상 초안 틀을 짜자. 그리고 videos폴더에 들어갈 내용들이 뭐여야되는지 먼저 파악하고 작업을 시작할거야. 영상 초안틀은 md로 작성하자. 이 앱에 대해 발표했을 때 사용한 깃을 제시할게 참고해줘 https://github.com/yang102948549/moral-ai-class-1112”
+  - “여러 인물 교차가 좋아. 사운드 방식은 a안으로, 추가캡쳐 방식도 도입하는걸로 해서 초안 틀 작성해줘. 지금은 영상 제작 prd라 생각하고 작성하면 돼”
+- 한 일
+  1. **패들렛 채점기준·가이드라인 반영 (`d050d8f`, 푸시 완료)** — 패들렛 공지 본문, 첨부 이미지(`CHECKLIST.md 만드는 법`), 첫 댓글 빈 양식을 모두 확인해 `DEVELOPMENT.md`, `CLAUDE.md`(로컬 `AGENTS.md` 동기화), `video/README.md`를 개정했다. 마감일(12월 9일 23:59), 통과 조건·감점 기준, 정성 평가 100점과 3단계 척도(기본값/손봄/깎음), DB·API 가산점 조건, `CHECKLIST.md` 공식 양식·규칙을 반영했다.
+  2. **`video/` 폴더 구성 및 트레일러 초안 (`c6efb08`)** — 공식 폴더명이 `videos/`가 아닌 단수 `video/`임을 명시하고, Git 커밋 대상(`TRAILER-PLAN.md`, `PROCESS-PLAN.md`, Remotion 소스·선별 정적 에셋)과 `local-assets/` 제외 대상(`node_modules/`, 완성 MP4)을 `video/README.md`에 정리했다. 발표 슬라이드 저장소 `moral-ai-class-1112`(27장)를 분석해 르포 매거진 톤과 “왜 안 갔니? → 왜 못 갔니?” 질문 구조를 계승한 초안을 작성했다.
+  3. **트레일러 영상 제작 PRD 확정 (`video/TRAILER-PLAN.md`)** — 사용자 확정에 따라 ① 여러 인물 교차(12명 얼굴·앨범 + 마리암 + 시오네 분기 + 아시프·코피·그라스·라마 4인 현장 몽타주), ② 사운드 안 A(무내레이션, 타이포 중심 + 잔잔한 BGM + 절제된 SFX), ③ 라이브 추가 캡처 4컷(`CAP-01`~`CAP-04`: AI 대화 칩, 조사 응답·출처 열림, 결과물·피드백, 학급 갤러리) 명세를 포함해 총 54초(1,620 frames @ 30fps) 프레임 단위 스토리보드, Remotion 코드 아키텍처, ‘깎음’ 검수 기준을 PRD 형식으로 완성했다.
+- 변경 파일 — `DEVELOPMENT.md`, `CLAUDE.md`, `video/README.md`, `video/TRAILER-PLAN.md`, `PROMPTS.md`.
+- 검증 — 문서 내 참조한 기존 앱 캡처 및 상황 이미지 11개 경로 존재 확인(모두 True). 문서 전용 작업이므로 앱 UI 전후 촬영은 비대상이다.
+- 대화 캡처 — 촬영하지 못했다(대기). 위 실제 요청 발췌로 대신한다.
+- 배포 — 문서 작업이므로 사이트 배포 비대상. `d050d8f`는 원격 푸시 완료, `video/` PRD 커밋은 로컬 커밋까지 수행.
