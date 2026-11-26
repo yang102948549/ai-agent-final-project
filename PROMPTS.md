@@ -591,4 +591,19 @@
 - 공개한 대표 화면 — [전 갤러리](screenshots/2026-11-26-gallery-hearts/before-desktop.png) · [후 갤러리](screenshots/2026-11-26-gallery-hearts/after-desktop.png) · [후 모바일](screenshots/2026-11-26-gallery-hearts/after-mobile.png) · [전 크게 보기](screenshots/2026-11-26-gallery-hearts/before-desktop-open.png) · [후 크게 보기](screenshots/2026-11-26-gallery-hearts/after-desktop-open.png) · [후 모바일 크게 보기](screenshots/2026-11-26-gallery-hearts/after-mobile-open.png)
 - 대화 캡처 — [검사 통과 장면](screenshots/conversations/2026-11-26-gallery-hearts/01-checks.png)
 - 변경 파일 — `app/dist/app.js`, `app/dist/style.css`, `app/relay/worker.js`, `app/relay/test-gallery-store.mjs`(새로), `app/tools/gallery-mock.mjs`(새로), `app/tools/capture-gallery.mjs`(새로), `app/tools/check-gallery-hearts.mjs`(새로), `PROMPTS.md`, `CHECKLIST.md`, `conversations/README.md`, `screenshots/2026-11-26-gallery-hearts/`, `screenshots/conversations/2026-11-26-gallery-hearts/`. 사이트 저장소 `functions/anotherday/api/gallery.js`(배포 때 커밋).
-- 배포 — 아직 하지 않았다. 순서는 Worker(`wrangler deploy`) → 사이트. Worker를 먼저 올려도 기존 화면은 그대로 동작한다.
+- 배포 — 2026-11-26 `2026-11-26-deploy-gallery-hearts`에서 Worker → 사이트 순서로 배포했다(사이트 `d3f0dc8`).
+
+## 2026-11-26-deploy-gallery-hearts
+
+- 실제 요청 — “커밋 푸시 배포해해줘”
+- 진행 기록
+  1. Worker 확인 — 배포된 `anotherday-gemini-relay`의 원본을 Cloudflare API(wrangler 로그인 토큰, 출력하지 않음)로 받아, 이번 수정 직전 `app/relay/worker.js`(커밋 `1c9daba~1`)와 글자 하나까지 같은지 확인했다(4,183자, 같음). 배포된 것을 덮어써 다른 변경이 사라지지 않게 하기 위해서다.
+  2. Worker 배포 — `app/relay`에서 `npx wrangler deploy`. 버전 `2312ce80-c618-491a-b81b-f247c062966d`. 바로 뒤 라이브 갤러리 목록(실제 93장)이 정상으로 오고 모든 항목에 `hearts`·`liked`가 붙는 것을 확인했다(기존 화면은 이 칸을 무시하므로 영향 없음).
+  3. 배포 전 라이브 촬영 — 실제 학생 결과물 대신 가짜 API(예시 3장)로 `https://onischool.net/anotherday/` 갤러리를 찍었다. `before-*.png`에 하트가 없다.
+  4. 사이트 배포 — `npm run validate` PASS, `node sync-onischool.cjs`(바뀐 파일 app.js·style.css·index.html), 배포본이 과제 저장소 `1c9daba`와 같은지 해시로 확인한 뒤 갤러리 API(`functions/anotherday/api/gallery.js`)와 함께 onischool-release `d3f0dc8`를 origin main에 푸시했다. 새 해시 `app.js?v=f9d7c0b6b8`, 약 30초 뒤 반영.
+  5. 라이브 검증 — 화면: `check-gallery-hearts.mjs`(가짜 API) 첫 실행은 예외로 끝났고(출력 끝 줄만 받아 원인 미확인, 라이브 페이지 로딩 지연으로 보임) 다시 돌려 24항목 ALL PASS. `check-genre-writing`·`check-min-length`·`check-no-nickname` ALL PASS. 실제 API: 확인용 기기 번호로 실제 결과물 하나에 하트를 켰다가(0→1, 목록에서 liked true) 바로 껐다(→0, 시작과 같음). 잘못된 결과물 번호 400, 없는 결과물 404, 다른 사이트 403. 같은 Worker가 중계하는 AI 대화도 짧은 실제 요청 하나로 200·completed를 확인했다.
+  6. 배포 후 촬영 — `after-*.png`(카드 하트, 내가 누른 카드는 빨강 2), `after-*-open.png`(크게 보기 막대 빨간 하트 4와 닫기). 열어 잘림·가림 없음을 확인했다. 원본 `local-assets/screenshots/2026-11-26-deploy-gallery-hearts/`, 데스크톱 1440×900·모바일 780×1688.
+  7. 대화 캡처 — 이번 단계는 찍지 않았다. 위 실제 요청 발췌로 대신한다.
+- 공개한 대표 화면 — [배포 전](screenshots/2026-11-26-deploy-gallery-hearts/before-desktop.png) · [배포 후](screenshots/2026-11-26-deploy-gallery-hearts/after-desktop.png) · [배포 후 모바일](screenshots/2026-11-26-deploy-gallery-hearts/after-mobile.png) · [배포 후 크게 보기](screenshots/2026-11-26-deploy-gallery-hearts/after-desktop-open.png)
+- 변경 파일 — `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-deploy-gallery-hearts/`. 사이트 저장소 `d3f0dc8`, Worker 버전 `2312ce80`.
+- 푸시 — 사용자 요청에 따라 과제 저장소 main을 origin에 푸시했다.
