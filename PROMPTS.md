@@ -645,3 +645,7 @@
 - 공개 화면 — [PC 전](screenshots/2026-11-26-opening-chips/before-desktop.png) · [PC 후](screenshots/2026-11-26-opening-chips/after-desktop.png) · [모바일 전](screenshots/2026-11-26-opening-chips/before-mobile.png) · [모바일 후](screenshots/2026-11-26-opening-chips/after-mobile.png).
 - 대화 캡처 — 실제 발췌를 위에 기록. 이번 작업의 대화 창 원본 캡처는 미확보, 캡처 대기. 앱 전후 캡처와 구별한다.
 - 배포 확인 — 배포 후 추가 기록. 실시간 AI 응답 품질은 이번 정적 첫 칩 검증 범위 밖이다.
+
+- 배포 완료 — 앱 ca94e61, 사이트 cb7bd8b 푸시. 라이브 ai.js?v=9c3642f5d8 및 precomputed.js?v=2d7cb5bf77 내용이 로컬과 일치. 배포 사이트에서도 12명 × PC·모바일 24회 모두 통과. 라이브 원본 local-assets/screenshots/2026-11-26-opening-chips-live/ (1440×900, 780×1688)을 각각 열어 문구와 잘림·가림 없음 확인. [라이브 PC](screenshots/2026-11-26-opening-chips/live-desktop.png) · [라이브 모바일](screenshots/2026-11-26-opening-chips/live-mobile.png).
+- 추가 동작 확인 — 아시프 첫 칩 클릭 시 해당 문구가 그대로 API 입력으로 전달되고, 모의 503 응답에서는 오류 안내가 표시되며 선택은 null로 유지됨. 최초 오류 검사 명령의 한글이 PowerShell 파이프에서 손상되어 대기 시간 초과, 상태 기반 검사로 재시도해 통과.
+- 체크리스트 — 기존 표를 공식 열 순서 및 앱 이름·배포 주소 형식으로 정리. 공개 GitHub 표 렌더링 확인 후 중간 빈 줄도 제거해 하나의 표로 정리.

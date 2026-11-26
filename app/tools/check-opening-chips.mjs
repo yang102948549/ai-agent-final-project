@@ -21,4 +21,3 @@ for(const [kind,viewport] of Object.entries({desktop:{width:1440,height:900},mob
  await ctx.close();
 }
 await browser.close();
-
