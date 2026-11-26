@@ -897,12 +897,16 @@ async function submitWork(c){
 }
 
 const gallery={items:null,loading:false,error:'',filter:{cls:'',format:'',cid:''},admin:''};
+// 하트를 누른 기기 번호. 로그인이 없으니 브라우저마다 무작위 번호를 하나 만들어 두고, 한 결과물에 하트 하나만 단다.
+// ‘이 브라우저의 기록 지우기’와 상관없이 남도록 진행 기록과 다른 곳에 둔다.
+const VOTER_KEY='anotherday-voter';
+function voterId(){let v='';try{v=localStorage.getItem(VOTER_KEY)||'';}catch{}if(!/^[A-Za-z0-9-]{8,64}$/.test(v)){v=(crypto.randomUUID?crypto.randomUUID():[...crypto.getRandomValues(new Uint8Array(16))].map(b=>b.toString(16).padStart(2,'0')).join(''));try{localStorage.setItem(VOTER_KEY,v);}catch{}}return v;}
 async function loadGallery(){
   if(gallery.loading)return;gallery.loading=true;gallery.error='';
   try{
     const res=gallery.admin
-      ?await fetch(GALLERY_PATH,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'list',admin:gallery.admin})})
-      :await fetch(GALLERY_PATH,{cache:'no-store'});
+      ?await fetch(GALLERY_PATH,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'list',admin:gallery.admin,voter:voterId()})})
+      :await fetch(`${GALLERY_PATH}?voter=${encodeURIComponent(voterId())}`,{cache:'no-store'});
     const out=await res.json().catch(()=>({}));
     if(!res.ok){if(out?.error?.code==='bad_admin'){gallery.admin='';throw new Error('교사 비밀번호가 맞지 않아요.');}throw new Error(out?.error?.code==='not_configured'?'이 사이트에서는 갤러리를 쓸 수 없어요.':'갤러리를 불러오지 못했어요.');}
     gallery.items=Array.isArray(out.items)?out.items:[];
@@ -910,6 +914,27 @@ async function loadGallery(){
   gallery.loading=false;if(view==='gallery')render();
 }
 const who=it=>`${it.grade}학년 ${it.cls}반 ${it.num}번 ${it.name}`;
+// 하트(인스타그램처럼): 빈 하트를 누르면 빨갛게 채워지며 톡 튀고, 다시 누르면 취소. 결과물 크게 보기에서는 두 번 톡 눌러도 된다.
+const HEART_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.6l-1.3-1.2C5.7 14.9 2.6 12.1 2.6 8.6c0-2.8 2.2-5 5-5 1.6 0 3.2.8 4.2 2 1-1.2 2.6-2 4.2-2 2.8 0 5 2.2 5 5 0 3.5-3.1 6.3-8.1 10.8L12 20.6z"/></svg>';
+const heartLabel=it=>`${it.liked?'하트 취소':'하트 누르기'} · 지금 ${it.hearts||0}개`;
+const heartBtn=(it,cls='')=>`<button type="button" class="heart${it.liked?' on':''}${cls?' '+cls:''}" data-heart="${esc(it.key)}" aria-pressed="${!!it.liked}" aria-label="${esc(heartLabel(it))}">${HEART_SVG}<span class="heart-n">${it.hearts||0}</span></button>`;
+function paintHeart(it,pop){document.querySelectorAll(`[data-heart="${CSS.escape(it.key)}"]`).forEach(b=>{b.classList.toggle('on',!!it.liked);b.setAttribute('aria-pressed',String(!!it.liked));b.setAttribute('aria-label',heartLabel(it));b.querySelector('.heart-n').textContent=it.hearts||0;if(pop&&it.liked&&!reduceMotion){b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop');}});}
+// 먼저 화면을 바꾸고(누른 느낌이 바로 나게) 서버 답으로 숫자를 맞춘다. 실패하면 되돌리고 알려 준다.
+async function setHeart(key,on){
+  const it=(gallery.items||[]).find(x=>x.key===key);if(!it||it._busy||!!it.liked===on)return;
+  const prev={liked:!!it.liked,hearts:it.hearts||0};
+  it._busy=true;it.liked=on;it.hearts=Math.max(0,prev.hearts+(on?1:-1));paintHeart(it,on);
+  try{
+    const res=await fetch(GALLERY_PATH,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'heart',key,voter:voterId(),on})});
+    const out=await res.json().catch(()=>({}));
+    if(!res.ok)throw new Error(out?.error?.code||res.status);
+    it.liked=!!out.liked;it.hearts=Number(out.hearts)||0;
+  }catch{it.liked=prev.liked;it.hearts=prev.hearts;toast('하트를 저장하지 못했어요. 잠시 뒤 다시 눌러 주세요.');}
+  it._busy=false;paintHeart(it,false);
+}
+// 크게 보기에서 두 번 톡: 가운데에 큰 하트가 피어오르고 하트가 켜진다(이미 켜져 있으면 그대로).
+function heartBurst(box){if(reduceMotion)return;const s=document.createElement('span');s.className='heart-burst';s.innerHTML=HEART_SVG;box.appendChild(s);setTimeout(()=>s.remove(),900);}
+let lastTap={t:0,key:''};
 const titleOf=it=>({article:it.data.a_title,policy:it.data.p_title,letter:it.data.l_to})[it.format]||'';
 const gistOf=it=>({article:it.data.a_lead,policy:it.data.p_problem,letter:it.data.l_ask})[it.format]||'';
 function galleryView(){
@@ -920,6 +945,7 @@ function galleryView(){
   const card=it=>{const c=cases.find(x=>x.id===it.cid);if(!c)return '';return `<article class="gcard" style="--tone:${TONE[c.id]}">
     <button class="gcard-open" data-open="${esc(it.key)}"><span class="gcard-kind">${esc(FORMATS[it.format]?.name||'')}</span><strong>${esc(titleOf(it))}</strong><span class="gcard-gist">${esc(gistOf(it).slice(0,110))}${gistOf(it).length>110?'…':''}</span>
     <span class="gcard-foot"><span class="gcard-face">${art(c,'face')}</span><span><b>${esc(c.name)}</b> · ${esc(c.country)}<br>${esc(who(it))}</span></span></button>
+    ${heartBtn(it,'gcard-heart')}
     ${gallery.admin?`<button class="gcard-del" data-del="${esc(it.key)}" aria-label="${esc(who(it))}의 결과물 지우기">지우기</button>`:''}</article>`;};
   return `<div class="page-head"><h1>결과물 갤러리</h1><p class="muted">‘다른 곳의 하루’를 마친 친구들이 낸 신문 기사·정책 제안서·편지입니다. 카드를 누르면 크게 볼 수 있어요.</p></div>
   <div class="g-filters">
@@ -939,7 +965,7 @@ function openWork(key){
   const f={...it.data,format:it.format,nickname:`${it.grade}학년 ${it.cls}반 ${it.name}`,_ts:it.updated};
   const m=document.querySelector('#modal');
   m.setAttribute('aria-label',`${who(it)}의 ${FORMATS[it.format]?.name||'결과물'}`);
-  m.innerHTML=`<div class="modal-box work-view" style="--tone:${TONE[c.id]}"><div class="work-bar"><span>${esc(who(it))} · ${esc(c.name)}의 하루</span><button class="btn ghost small" data-action="ai-skip">닫기</button></div>${DOCS[it.format](c,f)}<div class="work-research"><h3>나의 질문</h3>${paras(f.question)}<h3>알게 된 것과 근거</h3>${paras(f.notes)}</div></div>`;
+  m.innerHTML=`<div class="modal-box work-view" style="--tone:${TONE[c.id]}"><div class="work-bar"><span>${esc(who(it))} · ${esc(c.name)}의 하루</span><span class="work-acts">${heartBtn(it)}<button class="btn ghost small" data-action="ai-skip">닫기</button></span></div><div class="work-doc" data-tap="${esc(it.key)}">${DOCS[it.format](c,f)}</div><div class="work-research"><h3>나의 질문</h3>${paras(f.question)}<h3>알게 된 것과 근거</h3>${paras(f.notes)}</div></div>`;
   m.hidden=false;openAiModal.then=null;m.querySelector('.work-view').scrollTop=0;
 }
 
@@ -980,7 +1006,11 @@ document.addEventListener('input',e=>{const el=e.target;
 function updateCount(k){const box=document.querySelector(`[data-count="${k}"]`);if(!box)return;box.textContent=countText(k,fields()[k]);box.classList.toggle('ok',!short(k));}
 document.addEventListener('change',e=>{const el=e.target;if(el.dataset.gfilter!==undefined){gallery.filter[el.dataset.gfilter]=el.value;render();}});
 document.addEventListener('click',async e=>{
+  // 크게 본 결과물을 두 번 톡(0.35초 안) 누르면 하트
+  const doc=e.target.closest('[data-tap]');
+  if(doc&&!e.target.closest('button,a')){const k=doc.dataset.tap,now=Date.now();if(lastTap.key===k&&now-lastTap.t<350){lastTap={t:0,key:''};window.getSelection()?.removeAllRanges();heartBurst(doc);setHeart(k,true);}else lastTap={t:now,key:k};return;}
   const el=e.target.closest('button,a#brand');if(!el)return;
+  if(el.dataset.heart){setHeart(el.dataset.heart,!el.classList.contains('on'));return;}
   if(el.id==='brand'){e.preventDefault();navigate('home');return;}
   if(el.id==='resume'){navigate(state.run?.view||'home');return;}
   if(el.dataset.nav){navigate(el.dataset.nav);return;}

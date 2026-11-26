@@ -913,3 +913,23 @@ select:focus-visible{outline:2px solid var(--tone);outline-offset:2px}
   .part-no{width:24px;height:24px;font-size:13px;top:22px}
   .gc-list{grid-template-columns:1fr}
 }
+
+/* ---------- 갤러리 하트 (인스타그램처럼) ---------- */
+.heart{--heart:#ed4956;display:inline-flex;align-items:center;gap:5px;min-height:40px;padding:6px 10px;border:0;background:none;color:var(--ink);font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.heart svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linejoin:round;transition:transform .12s}
+.heart:hover svg{transform:scale(1.08)}
+.heart:active svg{transform:scale(.88)}
+.heart.on svg{fill:var(--heart);stroke:var(--heart)}
+.heart:focus-visible{outline:2px solid var(--tone);outline-offset:2px}
+.heart.pop svg{animation:heart-pop .45s cubic-bezier(.2,1.4,.4,1)}
+@keyframes heart-pop{0%{transform:scale(1)}30%{transform:scale(.8)}60%{transform:scale(1.28)}100%{transform:scale(1)}}
+.gcard-foot{padding-right:56px}
+.gcard-heart{position:absolute;right:6px;bottom:10px}
+.work-acts{flex:none;display:flex;align-items:center;gap:4px}
+.work-acts .btn{white-space:nowrap}
+.work-doc{position:relative;touch-action:manipulation}
+/* 두 번 톡: 가운데에서 큰 하트가 피었다 사라진다 */
+.heart-burst{position:absolute;left:50%;top:min(40%,260px);width:110px;height:110px;margin:-55px 0 0 -55px;pointer-events:none;z-index:2;animation:heart-burst .85s ease-out forwards}
+.heart-burst svg{width:100%;height:100%;fill:#ed4956;stroke:#fff;stroke-width:1.2;filter:drop-shadow(0 6px 20px rgba(237,73,86,.45))}
+@keyframes heart-burst{0%{transform:scale(0);opacity:0}15%{transform:scale(1.2);opacity:1}30%{transform:scale(.95)}45%{transform:scale(1.05)}75%{transform:scale(1);opacity:1}100%{transform:scale(1) translateY(-24px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.heart.pop svg,.heart-burst{animation:none}}

@@ -43,17 +43,33 @@ export class GalleryStore {
     this.sql.exec(`CREATE TABLE IF NOT EXISTS subs(
       key TEXT PRIMARY KEY, grade INTEGER, cls INTEGER, num INTEGER, name TEXT,
       cid TEXT, format TEXT, data TEXT, created INTEGER, updated INTEGER)`);
+    // 하트: 한 기기(voter, 브라우저에 둔 무작위 번호)가 한 결과물에 하나만 누를 수 있다.
+    this.sql.exec(`CREATE TABLE IF NOT EXISTS hearts(
+      key TEXT, voter TEXT, created INTEGER, PRIMARY KEY(key, voter))`);
   }
+  heartsOf(key) { return this.sql.exec('SELECT COUNT(*) AS n FROM hearts WHERE key = ?', key).toArray()[0].n; }
   async fetch(request) {
     const { pathname } = new URL(request.url);
     const body = request.method === 'POST' ? await request.json() : {};
     if (pathname.endsWith('/list')) {
       const rows = this.sql.exec('SELECT * FROM subs ORDER BY updated DESC LIMIT 1000').toArray();
+      const counts = new Map(this.sql.exec('SELECT key, COUNT(*) AS n FROM hearts GROUP BY key').toArray().map(r => [r.key, r.n]));
+      const mine = new Set(body.voter ? this.sql.exec('SELECT key FROM hearts WHERE voter = ?', String(body.voter)).toArray().map(r => r.key) : []);
       return Response.json({ items: rows.map(r => ({
         key: r.key, grade: r.grade, cls: r.cls, num: r.num,
         name: body.admin ? r.name : mask(r.name),
         cid: r.cid, format: r.format, data: JSON.parse(r.data), updated: r.updated,
+        hearts: counts.get(r.key) || 0, liked: mine.has(r.key),
       })) });
+    }
+    if (pathname.endsWith('/heart')) {
+      const key = String(body.key || ''), voter = String(body.voter || '');
+      if (!this.sql.exec('SELECT 1 FROM subs WHERE key = ?', key).toArray().length) {
+        return Response.json({ error: { code: 'not_found', message: 'No such submission.' } }, { status: 404 });
+      }
+      if (body.on) this.sql.exec('INSERT OR IGNORE INTO hearts(key, voter, created) VALUES (?, ?, ?)', key, voter, Date.now());
+      else this.sql.exec('DELETE FROM hearts WHERE key = ? AND voter = ?', key, voter);
+      return Response.json({ ok: true, key, hearts: this.heartsOf(key), liked: !!body.on });
     }
     if (pathname.endsWith('/submit')) {
       const s = body.sub, key = `${s.grade}-${s.cls}-${s.num}`, now = Date.now();
@@ -65,6 +81,7 @@ export class GalleryStore {
     }
     if (pathname.endsWith('/delete')) {
       this.sql.exec('DELETE FROM subs WHERE key = ?', String(body.key || ''));
+      this.sql.exec('DELETE FROM hearts WHERE key = ?', String(body.key || ''));
       return Response.json({ ok: true });
     }
     return new Response('Not found', { status: 404 });

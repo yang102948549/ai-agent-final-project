@@ -574,3 +574,21 @@
 - 검증 — `video/PROCESS-PLAN.md`에 매핑한 대화·전후 앱 캡처 43개 경로 존재 확인(누락 0건). 문서 전용 작업이므로 앱 UI 전후 촬영은 비대상이다.
 - 대화 캡처 — 촬영하지 못했다(대기). 위 실제 요청 발췌로 대신한다.
 - 배포 — 문서 작업이므로 사이트 배포 비대상. 로컬 커밋까지 수행.
+
+## 2026-11-26-gallery-hearts
+
+- 실제 요청 — “이제 갤러리에 있는 게시글에 하트표시도 달 수 있게 하자. 인스타 하트처럼”
+- 진행 기록
+  1. 구조 파악 — 갤러리는 Pages 함수(onischool-release `functions/anotherday/api/gallery.js`)가 검사하고, 저장은 중계 Worker(`app/relay/worker.js`의 `GalleryStore`, Durable Object SQLite)가 한다. 하트도 서버에 저장해야 반 친구들이 같은 숫자를 보므로 세 곳(Worker·Pages 함수·화면)을 함께 고쳤다.
+  2. 수정 전 촬영 — 실제 갤러리 데이터 대신 가짜 API(`app/tools/gallery-mock.mjs`, 예시 결과물 3장, 가린 이름)로 `capture-gallery.mjs`를 만들어 찍었다. `before-*.png`는 카드에 하트가 없고, `before-*-open.png`는 크게 보기 위쪽 막대에 닫기만 있다.
+  3. 저장소(Worker) — `hearts(key, voter, created)` 표를 추가해 한 기기(voter) 한 결과물에 하트 하나만 저장한다. 목록에 `hearts`(개수)와 `liked`(이 기기가 눌렀는지)를 붙이고, `/gallery/heart`로 켜고 끈다. 없는 결과물은 404, 결과물을 지우면 그 하트도 지운다. 같은 학생이 다시 제출해도 하트는 남는다. 기존 표는 그대로라 마이그레이션이 필요 없다.
+  4. Pages 함수 — `{action:'heart', key, voter, on}`을 받아 결과물 번호(학년-반-번호)와 기기 번호 형식을 검사해 넘긴다. 한 반이 학교의 같은 IP에서 함께 누르므로 하트는 제출과 따로 1분 400번까지 센다. 목록 GET은 `?voter=`를 받아 넘긴다.
+  5. 화면 — 기기 번호는 로그인이 없으니 브라우저가 무작위로 만들어 `anotherday-voter`에 둔다(‘이 브라우저의 기록 지우기’와 별개). 카드 오른쪽 아래에 하트와 숫자, 누르면 인스타그램 빨강(#ed4956)으로 채워지며 톡 튀고 다시 누르면 취소. 결과물 크게 보기 위쪽 막대에도 하트를 두고, 글을 두 번 톡(0.35초 안) 누르면 가운데 큰 하트가 피며 켜진다(이미 켜져 있으면 그대로, 인스타그램과 같음). 화면을 먼저 바꾸고 서버 답으로 숫자를 맞추며, 실패하면 되돌리고 안내한다. 움직임 줄이기 설정이면 애니메이션을 끈다.
+  6. 함께 고친 것 — 모바일 크게 보기에서 하트가 들어가며 ‘닫기’가 두 줄로 깨져 줄바꿈을 막았다(그 전 `after-*-open.png`는 지우고 다시 찍었다).
+  7. 검증 — `node relay/test-gallery-store.mjs`(Node 내장 SQLite로 실제 SQL 실행) 11항목 ALL PASS. Pages 함수를 저장소 호출만 가짜로 바꿔 11항목 PASS(voter 전달·이상한 값 버림·잘못된 key/voter 400·다른 사이트 403·하트 120번 뒤에도 같은 IP 제출 가능·하트 400번 초과 429), 기존 제출 검사 6항목 PASS. `tools/check-gallery-hearts.mjs` 24항목 ALL PASS(카드 하트, 3→4→3, 빨강 채움, 하트를 눌러도 카드가 열리지 않음, 두 번 톡 큰 하트와 켜짐, 카드·크게 보기 동시 갱신, 천천히 두 번은 무시, 새로고침 뒤 유지, 기록 지워도 기기 번호 유지, 실패 시 되돌림·안내, 모바일 누르는 칸 58×40). `check-genre-writing`·`check-min-length`·`check-no-nickname`·`npm run validate` 모두 PASS. 전체 검사를 한 번에 돌릴 때 `check-genre-writing`이 로컬 서버에서 멈춰 중단했고, 따로 다시 돌려 통과했다.
+  8. 수정 후 촬영 — `after-*.png`(카드 하트, 코피 카드는 내가 눌러 빨강 2), `after-*-open.png`(크게 보기 막대의 빨간 하트 4와 닫기). 모두 열어 잘림·가림이 없음을 확인했다. 원본 `local-assets/screenshots/2026-11-26-gallery-hearts/`, 데스크톱 1440×900·모바일 780×1688.
+  9. 대화 캡처 — (15:53) 전체 화면 4800×1350에서 왼쪽 모니터에 다른 업무 창이 있어 원본은 지우고 오른쪽 모니터 1920×1080만 `local-assets/conversations/2026-11-26-gallery-hearts/01-gallery-hearts-right.png`로 남겼다. 개인정보가 없음을 확인했다.
+- 공개한 대표 화면 — [전 갤러리](screenshots/2026-11-26-gallery-hearts/before-desktop.png) · [후 갤러리](screenshots/2026-11-26-gallery-hearts/after-desktop.png) · [후 모바일](screenshots/2026-11-26-gallery-hearts/after-mobile.png) · [전 크게 보기](screenshots/2026-11-26-gallery-hearts/before-desktop-open.png) · [후 크게 보기](screenshots/2026-11-26-gallery-hearts/after-desktop-open.png) · [후 모바일 크게 보기](screenshots/2026-11-26-gallery-hearts/after-mobile-open.png)
+- 대화 캡처 — [검사 통과 장면](screenshots/conversations/2026-11-26-gallery-hearts/01-checks.png)
+- 변경 파일 — `app/dist/app.js`, `app/dist/style.css`, `app/relay/worker.js`, `app/relay/test-gallery-store.mjs`(새로), `app/tools/gallery-mock.mjs`(새로), `app/tools/capture-gallery.mjs`(새로), `app/tools/check-gallery-hearts.mjs`(새로), `PROMPTS.md`, `CHECKLIST.md`, `conversations/README.md`, `screenshots/2026-11-26-gallery-hearts/`, `screenshots/conversations/2026-11-26-gallery-hearts/`. 사이트 저장소 `functions/anotherday/api/gallery.js`(배포 때 커밋).
+- 배포 — 아직 하지 않았다. 순서는 Worker(`wrangler deploy`) → 사이트. Worker를 먼저 올려도 기존 화면은 그대로 동작한다.

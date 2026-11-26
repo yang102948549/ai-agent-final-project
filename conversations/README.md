@@ -27,3 +27,9 @@
 실제 요청과 판단은 [PROMPTS.md](../PROMPTS.md#2026-11-26-no-nickname)에 있다. 핵심 결정은 학생이 그 인물로 하루를 사는 활동이므로 시작할 때 이름을 받지 않고, 갤러리 제출 때만 학년·반·이름을 받는 것이다.
 
 대화 캡처(전체 화면, 2026-11-26): [요청 장면 4800×1350](../screenshots/conversations/2026-11-26-no-nickname/01-request.png) · [배포 후 장면 1920×1080](../screenshots/conversations/2026-11-26-no-nickname/02-after-deploy.png). 편지 맺음은 인물 이름(코피 드림)으로 하기로 이어서 결정했다.
+
+## 기능 구현 — 2026-11-26-gallery-hearts
+
+실제 요청과 판단은 [PROMPTS.md](../PROMPTS.md#2026-11-26-gallery-hearts)에 있다. 핵심 결정은 로그인 없이 브라우저마다 무작위 기기 번호를 두어 한 결과물에 하트 하나만 달게 하고, 인스타그램처럼 카드 하트와 크게 보기에서 두 번 톡하기를 함께 두는 것이다.
+
+대화 캡처(2026-11-26 15:53, 오른쪽 모니터 1920×1080): [검사 통과 장면](../screenshots/conversations/2026-11-26-gallery-hearts/01-checks.png). 왼쪽 모니터에 다른 업무 창이 있어 전체 화면 원본은 지우고 오른쪽 모니터만 남겼다.
