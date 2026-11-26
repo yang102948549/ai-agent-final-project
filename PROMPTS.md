@@ -917,3 +917,13 @@
 - 공개한 대표 화면 — [배포 전 모바일](screenshots/2026-11-26-deploy-chip-align/before-mobile-long.png) · [배포 후 모바일](screenshots/2026-11-26-deploy-chip-align/after-mobile-long.png)
 - 대화 캡처 — 찍지 않았다(캡처 대기). 위 실제 요청 발췌로 대신한다.
 - 변경 파일 — `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-deploy-chip-align/`. 사이트 저장소 `c0c1023`.
+
+## 2026-11-26-paseo-capture-rule
+
+- 실제 요청
+  - “이 paseo 이 창도 윈도우캡쳐도구를 활용해서 캡쳐해서 작업폴더에 넣어줘. 어떤 도구를 통해서 어떻게 하고 있다는 걸 작업 영상에 스크린샷 몇개를 넣는 용도야”
+  - “앞으로도 이런 paseo 작업 창들도 간혹 캡쳐해줘”
+  - “캡쳐도 알아서 해서 넣어야 해. 작업기록 md에 추가해줘”
+- 변경 이유와 한 일 — 과정 소개 영상(작업 영상)에서 어떤 도구(Paseo 3분할 멀티 에이전트 창: Codex · Claude Code · Antigravity CLI)로 어떻게 협업·검증하며 개발했는지를 시각적으로 보여 주기 위해, 사용자가 매번 따로 지시하지 않아도 에이전트가 주요 작업 단계마다 알아서 Paseo 작업 창을 캡처해 작업 폴더(`local-assets/conversations/<작업ID>/` 및 선별본 `screenshots/conversations/<작업ID>/`)에 넣도록 `CLAUDE.md`, 로컬 `AGENTS.md`, `conversations/README.md`, `PROMPTS.md`에 규칙과 기록을 명시했다.
+- 현재 세션 캡처 제약 기록 — 이 터미널(Antigravity CLI)은 Windows 격리 데스크톱(`exebox-*`) 안에서 실행되어 `CopyFromScreen`/`ImageGrab` 호출 시 실제 모니터(`Default` 데스크톱의 Paseo 창)에 접근할 수 없어 검은 화면만 반환된다(빈 테스트 캡처 파일은 즉시 삭제 완료). 따라서 `exebox-*` 격리 없이 실제 데스크톱(`Default`)에서 실행되는 세션(Claude Code 또는 Codex `cua_repl`)에서 Paseo 작업 창을 주기적으로 자동 캡처해 `local-assets/conversations/<작업ID>/`와 `screenshots/conversations/<작업ID>/`에 보충하도록 작업 지침을 동기화했다. 문서·규칙 갱신 작업이므로 앱 화면 전후 촬영은 비대상이다.
+- 변경 파일 — `CLAUDE.md`, `PROMPTS.md`, `conversations/README.md` (및 로컬 `AGENTS.md`).

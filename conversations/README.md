@@ -16,9 +16,17 @@
 
 ## 배포·작업 방식 — 2026-11-26-paseo-workflow
 
-사용자 요청: “현재 이 paseo 대화창 화면도 캡쳐해서 이런 식으로 작업하고 있다는 걸 알 수 있게 해줘”. Paseo의 대화·코드 작업·실행 결과가 함께 보이는 실제 창을 촬영했다.
+사용자 요청:
+- “현재 이 paseo 대화창 화면도 캡쳐해서 이런 식으로 작업하고 있다는 걸 알 수 있게 해줘”
+- “이 paseo 이 창도 윈도우캡쳐도구를 활용해서 캡쳐해서 작업폴더에 넣어줘. 어떤 도구를 통해서 어떻게 하고 있다는 걸 작업 영상에 스크린샷 몇개를 넣는 용도야”
+- “앞으로도 이런 paseo 작업 창들도 간혹 캡쳐해줘”
+- “캡쳐도 알아서 해서 넣어야 해. 작업기록 md에 추가해줘”
 
-[작업 화면(개인정보 가림)](../screenshots/conversations/2026-11-26-paseo-workflow/paseo-workflow-redacted.png)
+Paseo의 대화·코드 작업·실행 결과가 함께 보이는 실제 창을 촬영해 과정 소개 영상(작업 영상)에서 멀티 에이전트 협업 도구 활용 근거로 사용한다. 앞으로도 주요 작업마다 에이전트가 알아서 Paseo 작업 창을 캡처해 `local-assets/conversations/<작업ID>/`와 `screenshots/conversations/<작업ID>/`에 추가한다(격리 데스크톱 `exebox-*` 세션에서 촬영이 제한될 경우 데스크톱 권한이 있는 세션에서 즉시 촬영해 보충).
+
+- [Paseo 3창 작업 화면(개인정보 가림)](../screenshots/conversations/2026-11-26-paseo-workflow/paseo-workflow-redacted.png)
+- [Paseo 전체 창 · 최소 글자 수 배포 후 검증](../screenshots/conversations/2026-11-26-min-length/02-after-deploy.png)
+- [Paseo 전체 창 · 갤러리 하트 자동 검증 통과](../screenshots/conversations/2026-11-26-gallery-hearts/01-checks.png)
 
 창 캡처 원본은 `local-assets/conversations/2026-11-26-paseo-workflow/paseo-workflow-original.png`(1536×816)에 보존했다. 공개본은 이전 캡처 속 개인정보·전송 전 입력·외부 문서 주소를 가림 표시했으며 나머지 실제 화면은 변경하지 않았다. 이 자료는 작업 방식 증거이며, 1920×1080 모니터 원본 요건을 충족한 영상용 촬영본은 아니다. 창 제어에서 사용자 입력 감지가 반복되어 추가 확대·스크롤은 수행하지 않았다.
 
