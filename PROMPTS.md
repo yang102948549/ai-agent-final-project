@@ -529,7 +529,7 @@
   7. 대화 캡처 — (12:13) 전체 화면을 찍었으나 화면에 다른 업무 창(인증서 로그인, 실명 노출)이 떠 있어 바로 지웠다. 이번 작업 대화 캡처는 없고 위 실제 요청 발췌로 대신한다.
 - 공개한 대표 화면 — [전 입력](screenshots/2026-11-26-letter-from/before-desktop-plan.png) · [후 입력](screenshots/2026-11-26-letter-from/after-desktop-plan.png) · [후 모바일](screenshots/2026-11-26-letter-from/after-mobile-plan.png) · [전 편지](screenshots/2026-11-26-letter-from/before-desktop-letter.png) · [후 편지](screenshots/2026-11-26-letter-from/after-desktop-letter.png)
 - 변경 파일 — `app/dist/app.js`, `app/tools/check-min-length.mjs`, `app/tools/check-no-nickname.mjs`, `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-letter-from/`. 사이트 저장소 `functions/anotherday/api/gallery.js`(배포 때 커밋).
-- 배포 — 아직 하지 않았다.
+- 배포 — 2026-11-26 `2026-11-26-deploy-genre-writing`에서 함께 배포했다(사이트 `695130d`).
 
 ## 2026-11-26-genre-writing
 
@@ -547,4 +547,16 @@
   10. 대화 캡처 — (14:06) 전체 화면 4800×1350을 찍었으나 왼쪽 모니터에 업무포털(실명·학교명)이 떠 있어 바로 지웠다. 이번 작업 대화 캡처는 없고 위 실제 요청 발췌로 대신한다.
 - 공개한 대표 화면 — [전 질문·조사](screenshots/2026-11-26-genre-writing/before-desktop-lab.png) · [후 질문·조사](screenshots/2026-11-26-genre-writing/after-desktop-lab.png) · [후 모바일 질문 틀](screenshots/2026-11-26-genre-writing/after-mobile-lab-letter.png) · [전 결과물](screenshots/2026-11-26-genre-writing/before-desktop-letter.png) · [후 결과물](screenshots/2026-11-26-genre-writing/after-desktop-letter.png) · [편지 쓰기](screenshots/2026-11-26-genre-writing/after-desktop-letter-desk.png) · [기사 쓰기 모바일](screenshots/2026-11-26-genre-writing/after-mobile-article-desk.png) · [성격 체크](screenshots/2026-11-26-genre-writing/after-desktop-article-check.png) · [제안서 쓰기](screenshots/2026-11-26-genre-writing/after-desktop-policy-desk.png) · [완성 제안서](screenshots/2026-11-26-genre-writing/after-desktop-policy-report.png)
 - 변경 파일 — `app/dist/app.js`, `app/dist/ai.js`, `app/dist/style.css`, `app/tools/check-genre-writing.mjs`(새로), `app/tools/check-min-length.mjs`, `app/tools/capture.mjs`, `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-genre-writing/`. 사이트 저장소 `functions/anotherday/api/gallery.js`(배포 때 커밋).
-- 배포 — 아직 하지 않았다.
+- 배포 — 2026-11-26 `2026-11-26-deploy-genre-writing`에서 함께 배포했다(사이트 `695130d`).
+
+## 2026-11-26-deploy-genre-writing
+
+- 실제 요청 — “배포진행해줘 푸시도 같이해줘”
+- 진행 기록
+  1. 배포 전 라이브 촬영 — `https://onischool.net/anotherday/`, 투발루 시오네·예시 조사 내용, AI 차단. `before-*-lab.png`는 형식 선택 없이 ‘① 나의 질문’부터 시작, `before-*-letter.png`는 결과물 단계에서 형식을 고르는 예전 화면이다.
+  2. 배포 — `app/`에서 `npm run validate` PASS, `node sync-onischool.cjs`(66개 파일, 바뀐 파일 app.js·ai.js·style.css·index.html). 배포본 app.js·ai.js·style.css가 과제 저장소 `0554a58`과 같은지 해시로 확인했다. 앞 작업(2026-11-26-letter-from)의 보내는 사람 칸과 갤러리 API 변경(`l_from`, `l_open`, `p_to` 선택 칸)을 함께 담아 onischool-release `695130d`를 origin main에 푸시했다. 새 해시 `app.js?v=069541c211`.
+  3. 라이브 검증 — 약 20초 뒤 해시 반영. 라이브에서 `check-genre-writing.mjs` 22항목, `check-min-length.mjs` 19항목, `check-no-nickname.mjs` 10항목 모두 ALL PASS(AI·갤러리 API 호출은 막고 검사해 실제 갤러리에 테스트 제출이 남지 않음). 갤러리 GET 200. `after-*-lab.png`(종류 고르기와 안내), `after-*-letter.png`(편지와 말투 안내, ‘다른 글로 바꾸기’), `after-*-article-check.png`(성격 체크 4/6)를 열어 잘림·가림 없음을 확인했다. 원본 `local-assets/screenshots/2026-11-26-deploy-genre-writing/`, 데스크톱 1440×900·모바일 780×1688.
+  4. 대화 캡처 — 직전 작업에서 업무포털(실명) 노출로 지운 상태라 이번에도 찍지 않았다. 위 실제 요청 발췌로 대신한다.
+- 공개한 대표 화면 — [배포 전 질문·조사](screenshots/2026-11-26-deploy-genre-writing/before-desktop-lab.png) · [배포 후 질문·조사](screenshots/2026-11-26-deploy-genre-writing/after-desktop-lab.png) · [배포 후 모바일 편지](screenshots/2026-11-26-deploy-genre-writing/after-mobile-letter.png) · [배포 후 성격 체크](screenshots/2026-11-26-deploy-genre-writing/after-desktop-article-check.png)
+- 변경 파일 — `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-deploy-genre-writing/`. 사이트 저장소 `695130d`.
+- 푸시 — 사용자 요청에 따라 과제 저장소 main을 origin에 푸시했다.
