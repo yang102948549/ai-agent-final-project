@@ -47,9 +47,9 @@ function dialog({title,body='',ok='확인',cancel='',icon='!'}){
 // 비어 있는 첫 칸으로 데려간다.
 // 돌아보기부터 학생이 쓰는 칸은 최소 글자 수를 채워야 다음으로 넘어간다. 공백은 몇 칸이든 한 칸으로 센다.
 // 제목·받는 사람·보내는 사람처럼 짧아야 자연스러운 칸만 기준을 낮춘다. ____ 빈칸이 남아 있으면 아직 덜 쓴 것으로 본다.
-const MIN_LEN=20,MIN_SHORT={a_title:10,p_title:10,l_to:10,l_from:2};
+const MIN_LEN=20,MIN_SHORT={a_title:10,p_title:10,p_to:2,l_to:4,l_from:2};
 const minOf=k=>MIN_SHORT[k]||MIN_LEN;
-const lenOf=v=>String(v||'').replace(/s+/g,' ').trim().length;
+const lenOf=v=>String(v||'').replace(/\s+/g,' ').trim().length;
 const hasBlank=v=>String(v||'').includes('____');
 const short=k=>lenOf(fields()[k])<minOf(k)||hasBlank(fields()[k]);
 const countText=(k,v)=>{const n=lenOf(v),m=minOf(k);return hasBlank(v)?'빈칸(____)을 채워 주세요':n>=m?`${n}자 · 좋아요`:`${n} / ${m}자 · ${m-n}자 더`;};
@@ -638,12 +638,13 @@ function sourcesPanel(c){
 }
 
 // 질문을 처음부터 쓰기 막막하지 않게: 출발 질문과 빈칸 틀을 눌러서 시작한다.
-const frames=c=>[
-  c.question,
-  `${c.name} 같은 사람이 ____하려면 누가 무엇을 해야 할까?`,
-  `왜 ${c.region}에서는 ____이(가) 어려울까?`,
-  `____을(를) 돕는 방법에는 어떤 한계나 부작용이 있을까?`,
-];
+// 먼저 고른 글의 종류에 따라, 그 글에 필요한 것을 찾는 질문 틀을 준다.
+const frames=c=>{const k=fields().format;return [c.question,...(
+  k==='article'?[`${c.region}의 ____에 대해 사람들이 꼭 알아야 할 사실은 무엇일까?`,`왜 ${c.region}에서는 ____이(가) 어려울까?`,`____ 문제는 얼마나 많은 사람에게 일어나고 있을까?`]
+  :k==='policy'?[`${c.name} 같은 사람이 ____하려면 누가 무엇을 해야 할까?`,`이미 ____을(를) 위해 어떤 정책이나 노력이 있고, 무엇이 부족할까?`,`____을(를) 돕는 방법에는 어떤 비용이나 부작용이 있을까?`]
+  :[`____(받을 사람)은(는) ${c.name}의 어려움을 줄이려고 무엇을 할 수 있을까?`,`____(받을 사람)이(가) 꼭 알아야 할 ${c.region}의 사실은 무엇일까?`,`왜 ${c.region}에서는 ____이(가) 어려울까?`])];};
+// 결과물 형식 고르기. 질문·조사 맨 앞에서 고르고, 결과물 단계에서 바꿀 수도 있다.
+const formatPicker=f=>`<div class="formats" role="radiogroup" aria-label="결과물 형식">${Object.entries(FORMATS).map(([k,x])=>`<button type="button" class="format${f.format===k?' on':''}" role="radio" aria-checked="${f.format===k}" data-format="${k}"><span class="thumb thumb-${k}" aria-hidden="true"><i></i><i></i><i></i><i></i></span><strong>${x.name}</strong><span>${x.desc}</span><span class="format-reader">읽는 사람 · ${x.reader}</span></button>`).join('')}</div>`;
 const QUICK=[['내 질문에 답해 줘','mine'],['왜 이런 일이 생기는지 쉽게 설명해 줘'],['이미 누가 어떤 노력을 하고 있어?'],['정부·기업·국제사회는 각각 어떻게 볼까?']];
 const labOf=()=>{const r=state.run;if(!r.lab||!Array.isArray(r.lab.log)||!Array.isArray(r.lab.api))r.lab={log:[],api:[]};return r.lab;};
 let asking=false;
@@ -673,39 +674,85 @@ async function ask(c,text){
   asking=false;save();renderAsk();
 }
 
-function lab(c){return `<div class="game">${epiArt(c,1)}<div class="stage-main"><article class="paper-card">
-  <header class="card-head"><p class="label">마무리 2/4 · 질문·조사</p><h1>궁금한 것 하나를 골라, 깊이 알아봐요.</h1></header>
+function lab(c){const f=fields(),fm=fmtOf();return `<div class="game">${epiArt(c,1)}<div class="stage-main"><article class="paper-card">
+  <header class="card-head"><p class="label">마무리 2/4 · 질문·조사</p><h1>무엇을 쓸지 정하고, 깊이 알아봐요.</h1></header>
   <div class="card-body">
-    ${sec('① 나의 질문',`<div class="frames">${frames(c).map((t,i)=>`<button class="chip" data-frame="${i}">${i===0?'출발 질문 · ':''}${esc(t)}</button>`).join('')}</div>`+field('question','내가 알아볼 질문','위의 틀을 누르고 빈칸을 채우거나, 직접 써 보세요.',true),'하나만 정하면 돼요. 눌러서 시작하고 내 말로 고쳐 보세요.')}
-    ${sec('② 알아보기',`${sourcesPanel(c)}<div id="ask-panel" class="ask-panel">${askPanel()}</div>`,'AI에게 묻고, 자료에서 직접 확인해 보세요.')}
-    ${sec('③ 알게 된 것',field('notes','알게 된 것과 근거','예: 해안 지역은 지하수에 바닷물이 섞여 마시기 어렵다 (유니세프 자료)',true,'‘핵심을 메모에 담기’로 옮긴 뒤 내 말로 고쳐도 돼요. 어디서 확인했는지 괄호에 적어 주세요.'))}
+    ${sec('① 어떤 글로 세상에 내놓을까',formatPicker(f),'먼저 정해요. 글의 종류에 따라 찾아야 할 것과 쓰는 법이 달라져요.')}
+    ${fm?`${sec('② 나의 질문',`<div class="frames">${frames(c).map((t,i)=>`<button class="chip" data-frame="${i}">${i===0?'출발 질문 · ':''}${esc(t)}</button>`).join('')}</div>`+field('question','내가 알아볼 질문','위의 틀을 누르고 빈칸을 채우거나, 직접 써 보세요.',true),`${esc(josa(fm.name,'을','를'))} 쓰려면 무엇을 알아야 할까요? 하나만 정하고 내 말로 고쳐 보세요.`)}
+    ${sec('③ 알아보기',`${sourcesPanel(c)}<div id="ask-panel" class="ask-panel">${askPanel()}</div>`,'AI에게 묻고, 자료에서 직접 확인해 보세요.')}
+    ${sec('④ 알게 된 것',field('notes','알게 된 것과 근거','예: 해안 지역은 지하수에 바닷물이 섞여 마시기 어렵다 (유니세프 자료)',true,fm.notesHelp+' 어디서 확인했는지 괄호에 적어 주세요.'))}`
+    :'<p class="pick-first">글의 종류를 고르면 질문 틀과 조사 칸이 나와요.</p>'}
   </div>
   <footer class="card-foot step-nav"><button class="btn ghost back" data-nav="reflect">← 돌아보기</button><button class="btn big" data-action="to-plan">결과물 만들기 →</button></footer>
 </article></div></div>`;}
 
-// 결과물: 조사한 것을 어떤 글로 내놓을지 고르고, 그 형식에 맞는 칸을 채운다. 완성 화면과 갤러리는 이 형식의 서식으로 나온다.
+// 결과물: 질문·조사 맨 앞에서 글의 종류를 고르고, 여기서 그 글의 차례대로 쓴다.
+// 칸마다 그 글다운 쓰는 법(help)과 문장 틀(starters)을 주고, ‘글의 성격 체크’로 그 글답게 썼는지 스스로 확인한다.
+// 칸: [이름, 부분 이름, 예시, 쓰는 법, 문장 틀(c)=>[...]]. 체크: [기준, (f,c)=>참/거짓]. 체크는 넘어가는 것을 막지 않는다.
+const sentencesOf=t=>String(t||'').split(/(?<=[.!?])\s+|\n+/).map(s=>s.trim()).filter(s=>s.length>3);
+// 문장 가운데 끝맺음이 re와 맞는 비율. 쓴 문장이 없으면 0.
+const endShare=(t,re)=>{const s=sentencesOf(t);return s.length?s.filter(x=>re.test(x.replace(/[\s"”’)]+$/,''))).length/s.length:0;};
+const has=(t,re)=>re.test(String(t||''));
+// 장소를 가리키는 말: 나라(‘수단 → 차드’는 마지막 나라부터)와 지역 이름의 낱말.
+const placeWords=c=>[...c.country.split(/\s*→\s*/).reverse(),...c.region.split(/\s+/).map(w=>w.replace(/의$/,'')).filter(w=>w.length>=2&&w!=='지역')];
 const FORMATS={
-  article:{name:'신문 기사',desc:'알게 된 사실을 많은 사람에게 알려요.',fields:[
-    ['a_title','제목','예: 물은 있지만 마실 수 없는 마을','문제가 한눈에 보이게 짧게.'],
-    ['a_lead','첫 문단 · 누구에게 무슨 일이','어디에서, 누가, 어떤 어려움을 겪고 있나요? 두세 문장으로.'],
-    ['a_body','왜 그럴까 · 원인과 근거','조사에서 알게 된 사실을 쓰고, 어디서 확인했는지 밝혀 주세요.'],
-    ['a_end','맺음 · 독자에게','읽는 사람이 함께 생각해 볼 질문이나 할 수 있는 일.'],
+  article:{name:'신문 기사',desc:'알게 된 사실을 많은 사람에게 알려요.',reader:'신문을 펼친 많은 사람',
+    voice:'기자는 ‘나’를 드러내지 않고, 확인한 사실을 ‘~했다’, ‘~이다’로 끝나는 문장으로 전해요.',
+    notesHelp:'기사에 쓸 사실과 숫자, 그 출처를 모아요. 인물이 한 말도 메모해 두면 기사에 옮길 수 있어요.',
+    fields:[
+    ['a_title','제목','예: 바닷물에 잠기는 섬, 학교 가는 길도 사라진다','기사 전체를 한 줄로. 무슨 일인지 사실이 보이게 짧게 써요.',c=>[`${c.region}, ____ 때문에 ____`]],
+    ['a_lead','리드 · 첫 문단','예: 남태평양의 섬나라 투발루에서 바닷물이 마을 땅으로 스며들고 있다.','첫 문단만 읽어도 알 수 있게, 누가·어디서·무엇을 겪는지 두세 문장에 담아요.',c=>[`${placeWords(c)[0]}의 ${c.region}에서 ${c.name} 씨는 ____ 때문에 ____하고 있다.`]],
+    ['a_body','본문 · 원인과 근거','예: 유엔 자료에 따르면 ~. 시오네 씨는 “~”라고 말했다.','왜 이런 일이 생기는지 알게 된 사실로 설명해요. ‘~에 따르면’으로 출처를 밝히고, 인물의 말을 따옴표로 옮겨 보세요.',c=>[`____(기관·자료)에 따르면, ____.`,`${c.name} 씨는 “____”라고 말했다.`,`이런 일이 생기는 까닭은 ____ 때문이다.`]],
+    ['a_end','맺음','예: 이 섬의 아이들이 학교에 계속 다니려면 ~이 필요하다.','기자의 감상 대신, 해결을 위해 필요한 것이나 독자가 함께 생각할 질문으로 끝내요.',c=>[`____을(를) 해결하려면 ____이(가) 필요하다.`,`우리는 ____에 대해 어떻게 생각해야 할까.`]],
+  ],checks:[
+    ['제목이 짧다 (30자 이내)',f=>lenOf(f.a_title)>0&&lenOf(f.a_title)<=30],
+    ['리드에 어디서 일어난 일인지 나온다',(f,c)=>placeWords(c).some(w=>String(f.a_lead||'').includes(w))||has(f.a_lead,/에서/)],
+    ['‘~다.’로 끝나는 기사 문장이다',f=>endShare([f.a_lead,f.a_body,f.a_end].join('\n'),/다[.!?]?$/)>=0.7],
+    ['본문에 출처를 밝혔다 (‘~에 따르면’, 괄호)',f=>has(f.a_body,/따르면|\(.+\)|자료|보고서|발표|조사/)],
+    ['인물이나 전문가의 말을 따옴표로 옮겼다',f=>has(f.a_body,/["“][^"”]{4,}["”]/)],
+    ['‘나·저’ 같은 기자 자신의 말이 없다',f=>lenOf([f.a_lead,f.a_body,f.a_end].join(''))>0&&!has([f.a_lead,f.a_body,f.a_end].join(' '),/(^|[\s,])(나는|내가|저는|제가|나도|저도)/)],
   ]},
-  policy:{name:'정책 제안서',desc:'정부나 기관에 해결 방법을 제안해요.',fields:[
-    ['p_title','제안 이름','예: 해안 마을 정수 시설 관리비 지원','무엇을 하자는 제안인지 한 줄로.'],
-    ['p_problem','문제','누가 어떤 권리를 누리지 못하고 있나요? 근거와 함께.'],
-    ['p_plan','제안 내용','누가(정부·기업·국제기구·주민) 무엇을 하면 될까요?'],
-    ['p_limit','예상되는 어려움과 보완','비용이나 부작용은? 현지 사람들의 의견은 어떻게 들을까요?'],
+  policy:{name:'정책 제안서',desc:'정부나 기관에 해결 방법을 제안해요.',reader:'정책을 정하는 기관의 담당자',
+    voice:'근거를 들어 문제를 밝히고, 누가 무엇을 할지 ‘~해야 한다’, ‘~을 제안한다’처럼 분명하게 써요.',
+    notesHelp:'문제의 크기를 보여 줄 숫자와 출처, 이미 하고 있는 노력과 그 한계를 모아요.',
+    fields:[
+    ['p_to','수신 · 누구에게 제안하나','예: 투발루 정부 / 유엔 기후변화 담당 기구 / 대한민국 외교부','이 제안을 실제로 실행할 수 있는 기관을 적어요.',c=>[]],
+    ['p_title','제안 이름','예: 높은 지대 학교 이전 예산 지원','무엇을 하자는 제안인지 한 줄로 써요.',c=>[`${c.region} ____을(를) 위한 ____ 지원`]],
+    ['p_problem','현황과 문제','예: 투발루에서는 바닷물이 차올라 ~. 유엔 자료에 따르면 ~.','누가 어떤 권리를 누리지 못하는지, 숫자나 자료로 근거를 들어 써요.',c=>[`${c.region}에서는 ____이(가) ____을(를) 누리지 못하고 있다.`,`____ 자료에 따르면, ____.`]],
+    ['p_plan','제안 내용','예: 투발루 정부는 ~해야 한다. 첫째, ~. 둘째, ~.','누가(정부·기업·국제기구·주민) 무엇을 어떻게 할지 차례대로 써요.',c=>[`____(기관)은(는) ____을(를) 해야 한다.`,`이를 위해 첫째, ____. 둘째, ____.`]],
+    ['p_limit','예상되는 어려움과 보완','예: 비용이 많이 든다는 문제가 있다. 그래서 ~. 주민 의견은 ~로 듣는다.','비용·부작용 같은 어려움을 솔직히 쓰고, 어떻게 보완할지와 현지 사람들의 의견을 들을 방법을 써요.',c=>[`이 제안은 ____(비용·부작용)이(가) 생길 수 있다. 그래서 ____.`,`현지 주민의 의견은 ____ 방법으로 듣는다.`]],
+  ],checks:[
+    ['문제에 근거가 있다 (숫자·자료·출처)',f=>has(f.p_problem,/\d|따르면|자료|보고서|조사|통계/)],
+    ['제안에 실행할 주체가 나온다',f=>has(f.p_plan,/정부|기업|회사|국제|유엔|UN|유니세프|기구|단체|학교|주민|시민|의회|부|청/)],
+    ['‘~해야 한다’, ‘~을 제안한다’처럼 분명하다',f=>has(f.p_plan,/야\s?한다|제안한다|필요하다|하자|바란다/)],
+    ['방법이 차례대로 구체적이다 (첫째·둘째, 숫자)',f=>has(f.p_plan,/첫째|둘째|먼저|다음으로|\d/)],
+    ['어려움과 보완 방법을 함께 썼다',f=>has(f.p_limit,/그래서|대신|보완|줄이|막기|위해|해결/)],
+    ['현지 사람들의 의견을 들을 방법이 있다',f=>has([f.p_plan,f.p_limit].join(' '),/주민|당사자|현지|의견|목소리|참여/)],
   ]},
-  letter:{name:'편지',desc:'책임 있는 곳이나 이야기 속 인물에게 내 목소리를 전해요.',fields:[
-    ['l_to','받는 사람','예: 초콜릿 회사 대표님 / 유니세프 담당자님 / 코피에게','누구에게 쓰는지에 따라 부탁도 달라져요.'],
-    ['l_learned','내가 알게 된 것','체험과 조사에서 알게 된 사실을 전해 주세요.'],
-    ['l_ask','부탁하거나 제안하는 것','받는 사람이 실제로 할 수 있는 일을 구체적으로.'],
-    ['l_me','나도 할 일','내가 할 수 있는 작은 행동 한 가지.'],
-    ['l_from','보내는 사람 · 작성자 이름','예: 코피 / 2학년 3반 김○○','편지 맨 끝에 “○○ 드림”으로 들어가요. 이름만 적으면 돼요.'],
+  letter:{name:'편지',desc:'책임 있는 곳이나 이야기 속 인물에게 내 목소리를 전해요.',reader:'내가 고른 한 사람이나 기관',
+    voice:'받는 사람에게 말하듯 존댓말로, 내가 누구이고 왜 쓰는지 밝힌 뒤 부탁과 다짐을 전해요.',
+    notesHelp:'편지 받을 사람이 꼭 알아야 할 사실과 그 출처, 그 사람이 실제로 할 수 있는 일을 모아요.',
+    fields:[
+    ['l_to','받는 사람 · 부르는 말','예: 투발루 정부 담당자님께 / 초콜릿 회사 대표님께 / 코피에게','누구에게 쓰는지에 따라 부탁도 달라져요. ‘~님께’, ‘~에게’로 불러요.',c=>[`____ 담당자님께`]],
+    ['l_open','첫인사 · 나를 소개하고 쓰는 까닭','예: 안녕하세요. 저는 한국의 중학생입니다. 수업에서 ~을 알게 되어 편지를 씁니다.','처음 만나는 사람에게 하듯 인사하고, 내가 누구인지, 왜 이 편지를 쓰는지 밝혀요.',c=>[`안녕하세요. 저는 한국에 사는 중학생입니다. 수업에서 ${c.name}의 하루를 살아 보고 이 편지를 씁니다.`]],
+    ['l_learned','내가 알게 된 것','예: 자료를 찾아보니 ~. 그래서 ~은 어떤 선택을 해도 ~할 수 없었습니다.','받는 사람이 꼭 알아야 할 사실을 근거와 함께 전해요.',c=>[`제가 알아보니, ____ 자료에 따르면 ____.`,`그래서 ${c.name} 같은 사람들은 ____할 수 없습니다.`]],
+    ['l_ask','부탁하는 것','예: ~님께서 ~해 주시면 좋겠습니다. 그러면 ~.','받는 사람이 실제로 할 수 있는 일을 하나, 구체적으로 부탁해요. 그러면 무엇이 달라지는지도요.',c=>[`____님께서 ____해 주시면 좋겠습니다. 그러면 ____.`]],
+    ['l_me','나의 다짐과 끝인사','예: 저도 ~하겠습니다. 바쁘신 중에 읽어 주셔서 감사합니다.','나도 할 수 있는 작은 행동 하나를 약속하고, 고마움을 전하며 마무리해요.',c=>[`저도 ____하겠습니다. 읽어 주셔서 감사합니다.`]],
+    ['l_from','보내는 사람 · 작성자 이름','예: 코피 / 2학년 3반 김○○','편지 맨 끝에 “○○ 드림”으로 들어가요. 이름만 적으면 돼요.',c=>[]],
+  ],checks:[
+    ['받는 사람을 ‘~님께’, ‘~에게’로 불렀다',f=>has(f.l_to,/님|께|에게|한테/)],
+    ['첫인사와 쓰는 까닭이 있다',f=>has(f.l_open,/안녕|처음|저는|제가/)&&has(f.l_open,/쓰|씁|써|전하|전해|알리|말씀/)],
+    ['존댓말로 썼다',f=>endShare([f.l_open,f.l_learned,f.l_ask,f.l_me].join('\n'),/(니다|니까|세요|에요|예요|어요|아요|해요|지요|죠)[.!?]?$/)>=0.7],
+    ['알게 된 것에 근거가 있다',f=>has(f.l_learned,/따르면|자료|보고서|조사|\d|뉴스|기사/)],
+    ['받는 사람이 할 수 있는 일을 부탁했다',f=>has(f.l_ask,/주시|주세요|주십시오|바랍니다|좋겠습니다|부탁/)],
+    ['나의 다짐과 끝인사가 있다',f=>has(f.l_me,/겠|할게|하려고/)&&has(f.l_me,/감사|고맙|건강|안녕히|읽어/)],
   ]},
 };
 const fmtOf=()=>FORMATS[fields().format];
+// 글의 성격 체크: 고른 글답게 썼는지 기준별로 보여 준다. 학생 스스로 고치고, 선생님 평가의 기준으로도 쓴다.
+function genreChecks(c){const fm=fmtOf();if(!fm)return '';const f=fields(),r=fm.checks.map(([l,t])=>[l,!!t(f,c)]),n=r.filter(x=>x[1]).length;
+  return `<p class="gc-sum"><b>${n}</b> / ${r.length} · ${n===r.length?`${esc(josa(fm.name,'으로','로'))} 손색없어요.`:'○ 표시된 기준을 살펴보고 고쳐 보세요.'}</p><ul class="gc-list">${r.map(([l,ok])=>`<li class="${ok?'ok':''}"><span aria-hidden="true">${ok?'✓':'○'}</span>${esc(l)}<span class="sr-only">${ok?' · 갖춤':' · 아직'}</span></li>`).join('')}</ul>`;}
+function updateChecks(){const el=document.querySelector('#genre-check');if(el&&state.run)el.innerHTML=genreChecks(current());}
 // 피드백 대화: 이야기 속 인물과 선생님이 내 글을 읽고 말하고, 나는 칩이나 직접 쓴 말로 대답한다(시뮬레이션과 같은 방식).
 let reviewing=false;
 const reviewOf=()=>{const r=state.run;if(!r.review||!Array.isArray(r.review.log)||!Array.isArray(r.review.api))r.review={log:[],api:[]};return r.review;};
@@ -727,18 +774,20 @@ async function reviewSay(c,text,mark){
   if(mark)rv.log.push({k:'mark',text:mark});else rv.log.push({k:'me',text});
   reviewing=true;save();renderReview(c);
   try{
-    const {reply,history}=await AI.review({c,fields:fields(),kind:fmtOf().name,parts:draftParts(),history:rv.api,text});
+    const {reply,history}=await AI.review({c,fields:fields(),kind:fmtOf().name,criteria:fmtOf().checks.map(([l])=>l).join(', '),parts:draftParts(),history:rv.api,text});
     rv.api=history;rv.log.push({k:'say',...reply});
   }catch(err){rv.log.push({k:'error',text:err.message});}
   reviewing=false;save();renderReview(c);
 }
 function plan(c){const f=fields(),fm=fmtOf();return `<div class="game">${epiArt(c,2)}<div class="stage-main"><article class="paper-card">
-  <header class="card-head"><p class="label">마무리 3/4 · 결과물 만들기</p><h1>알게 된 것을, 세상에 내놓을 글로.</h1></header>
+  <header class="card-head"><p class="label">마무리 3/4 · 결과물 만들기</p><h1>${fm?`${esc(fm.reader)}에게 닿는 ${esc(fm.name)}를 써요.`:'알게 된 것을, 세상에 내놓을 글로.'}</h1></header>
   <form id="plan-form" novalidate>
     <div class="card-body">
-      ${sec('① 어떤 글로 만들까',`<div class="formats" role="radiogroup" aria-label="결과물 형식">${Object.entries(FORMATS).map(([k,x])=>`<button type="button" class="format${f.format===k?' on':''}" role="radio" aria-checked="${f.format===k}" data-format="${k}"><span class="thumb thumb-${k}" aria-hidden="true"><i></i><i></i><i></i><i></i></span><strong>${x.name}</strong><span>${x.desc}</span></button>`).join('')}</div>`,'완성하면 고른 형식의 서식으로 갤러리에 올라가요.')}
-      ${fm?sec(`② ${fm.name} 쓰기`,`<div class="my-research"><p><strong>나의 질문</strong>${esc(f.question||'')}</p><p><strong>알게 된 것</strong>${esc(f.notes||'')}</p></div>`+fm.fields.map(([n,l,p,h])=>field(n,l,p,true,h||'')).join('')):''}
-      ${fm?sec('③ 피드백 대화',`<div id="rv-panel" class="rv-panel">${reviewPanel(c)}</div>`,'AI는 글을 대신 써 주지 않아요. 대화를 보고 고칠지는 내가 정해요.'):''}
+      ${fm?`<div class="genre-head"><div><p class="label">내가 쓰는 글</p><strong>${esc(fm.name)}</strong><p>${esc(fm.voice)}</p></div><button type="button" class="btn ghost small" data-action="format-change">다른 글로 바꾸기</button></div>`
+        :sec('① 어떤 글로 만들까',formatPicker(f),'완성하면 고른 형식의 서식으로 갤러리에 올라가요.')}
+      ${fm?sec(`${esc(fm.name)} 쓰기 · 차례대로`,`<div class="my-research"><p><strong>나의 질문</strong>${esc(f.question||'')}</p><p><strong>알게 된 것</strong>${esc(f.notes||'')}</p></div><div class="desk desk-${f.format}">`+fm.fields.map(([n,l,p,h,st],i)=>{const ts=st(c);return `<div class="part"><span class="part-no" aria-hidden="true">${i+1}</span>${field(n,l,p,true,h||'')}${ts.length?`<div class="frames starters" role="group" aria-label="${esc(l)} 문장 틀">${ts.map((t,j)=>`<button type="button" class="chip" data-gstarter="${n}:${j}"><b>틀</b> ${esc(t)}</button>`).join('')}</div>`:''}</div>`;}).join('')+'</div>','칸마다 그 부분을 쓰는 법이 있어요. 문장 틀을 누르면 칸 끝에 들어가고, 빈칸(____)을 내 말로 채우면 돼요.'):''}
+      ${fm?sec('글의 성격 체크',`<div id="genre-check" class="genre-check" aria-live="polite">${genreChecks(c)}</div>`,`${esc(josa(fm.name,'으로','로'))} 읽히는지 보는 기준이에요. 선생님도 이 기준으로 읽어요. 다 갖추지 않아도 완성할 수 있어요.`):''}
+      ${fm?sec('피드백 대화',`<div id="rv-panel" class="rv-panel">${reviewPanel(c)}</div>`,'AI는 글을 대신 써 주지 않아요. 대화를 보고 고칠지는 내가 정해요.'):''}
     </div>
     <footer class="card-foot step-nav"><button type="button" class="btn ghost back" data-nav="lab">← 질문·조사</button><button class="btn big" type="submit"${fm?'':' disabled'}>완성하기 →</button></footer>
   </form>
@@ -747,7 +796,6 @@ function plan(c){const f=fields(),fm=fmtOf();return `<div class="game">${epiArt(
 /* ---------- 완성: 고른 형식의 서식으로 보여 주고 갤러리에 제출 ---------- */
 const paras=t=>String(t||'').split(/\n+/).map(s=>s.trim()).filter(Boolean).map(s=>`<p>${esc(s)}</p>`).join('')||'<p>(작성하지 않음)</p>';
 // 서식 공통 조각
-const firstSentence=t=>{const s=String(t||'').trim().split(/\n+/)[0]||'';const m=s.match(/^.+?[.!?](?=\s|$)/);return (m?m[0]:s).trim();};
 const longDate=f=>{const d=f._ts?new Date(f._ts):new Date(state.run?.finishedAt||Date.now());return d.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long',timeZone:'Asia/Seoul'});};
 const docNo=f=>{const d=f._ts?new Date(f._ts):new Date(state.run?.finishedAt||Date.now());const p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}`;};
 const factBox=c=>`<ul>${c.facts.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p class="doc-src">출처 · ${c.sources.map(s=>`${esc(s.title)} (${esc(s.date)})`).join(' · ')}</p>`;
@@ -775,12 +823,8 @@ function docArticle(c,f){return `<article class="doc doc-article">
 function docPolicy(c,f){return `<article class="doc doc-policy">
   <header class="pb-band"><span>정책 제안서 <i>POLICY PROPOSAL</i></span><span>제안 번호 ${docNo(f)}</span></header>
   <h1 class="pb-title">${esc(f.p_title||'제안 이름 없음')}</h1>
-  <section class="pb-summary"><h2>핵심 요약</h2><ul>
-    <li><b>문제</b>${esc(firstSentence(f.p_problem))}</li>
-    <li><b>제안</b>${esc(firstSentence(f.p_plan))}</li>
-    <li><b>보완</b>${esc(firstSentence(f.p_limit))}</li></ul></section>
   <table class="pb-meta"><tbody>
-    <tr><th>수신</th><td>${esc(c.actors)}</td></tr>
+    <tr><th>수신</th><td>${esc(String(f.p_to||'').trim()||c.actors)}</td></tr>
     <tr><th>제안자</th><td>${esc(f.nickname||'익명')}</td></tr>
     <tr><th>대상 지역</th><td>${esc(c.country)} · ${esc(c.region)}</td></tr>
     <tr><th>작성일</th><td>${longDate(f)}</td></tr>
@@ -798,7 +842,7 @@ const signOf=(c,f)=>String(f.l_from||'').replace(/\s*(드림|올림)\s*$/,'').tr
 function docLetter(c,f){return `<article class="doc doc-letter">
   <div class="lt-stamp" aria-hidden="true"><img src="${artSrc(c.id,'face')}" alt=""><span>${esc(c.country)}</span></div>
   <p class="lt-to">${esc(f.l_to||'받는 분께')}</p>
-  <div class="lt-body">${paras(f.l_learned)}${paras(f.l_ask)}${paras(f.l_me)}</div>
+  <div class="lt-body">${f.l_open?paras(f.l_open):''}${paras(f.l_learned)}${paras(f.l_ask)}${paras(f.l_me)}</div>
   <p class="lt-date">${longDate(f)}</p>
   <p class="lt-from">${esc(signOf(c,f))} 드림</p>
   <footer class="lt-ps"><p>덧붙임 · 이 편지는 ${esc(c.country)} ${esc(c.region)}의 상황을 다룬 수업에서 썼습니다. 제가 읽은 자료: ${c.sources.map(s=>esc(s.title)).join(', ')}</p>${fictionNote(c)}</footer>
@@ -932,7 +976,7 @@ function render(){
 /* ---------- 입력 처리 ---------- */
 document.addEventListener('input',e=>{const el=e.target;
   // 대화 입력칸은 쓰는 만큼 늘어난다(최대 약 5줄)
-  if(el.id==='say'){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,140)+'px';}if(el.dataset.me!==undefined){meOf()[el.dataset.me]=el.value;save();return;}if(el.dataset.field&&state.run){state.run.fields[el.dataset.field]=el.type==='checkbox'?el.checked:el.value;save();updateCount(el.dataset.field);}});
+  if(el.id==='say'){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,140)+'px';}if(el.dataset.me!==undefined){meOf()[el.dataset.me]=el.value;save();return;}if(el.dataset.field&&state.run){state.run.fields[el.dataset.field]=el.type==='checkbox'?el.checked:el.value;save();updateCount(el.dataset.field);updateChecks();}});
 function updateCount(k){const box=document.querySelector(`[data-count="${k}"]`);if(!box)return;box.textContent=countText(k,fields()[k]);box.classList.toggle('ok',!short(k));}
 document.addEventListener('change',e=>{const el=e.target;if(el.dataset.gfilter!==undefined){gallery.filter[el.dataset.gfilter]=el.value;render();}});
 document.addEventListener('click',async e=>{
@@ -970,6 +1014,9 @@ document.addEventListener('click',async e=>{
   if(el.dataset.frame!==undefined){const t=frames(c)[Number(el.dataset.frame)],box=document.querySelector('[data-field="question"]');if(t&&box){box.value=t;state.run.fields.question=t;save();updateCount('question');box.focus();const i=t.indexOf('____');if(i>=0)box.setSelectionRange(i,i+4);}return;}
   if(el.dataset.ask!==undefined){const k=el.dataset.ask;if(k==='mine'){const q=fields().question?.trim();if(!q){dialog({title:'질문을 먼저 써 주세요',body:'"내가 알아볼 질문" 칸을 채우면 AI에게 물어볼 수 있어요.'}).then(()=>focusEmpty(['question']));return;}ask(c,'내 질문: '+q);}else ask(c,k);return;}
   if(el.dataset.take!==undefined){const e=labOf().log[Number(el.dataset.take)];if(!e?.point)return;const line='• '+e.point+(e.check?' (확인: '+e.check+')':'');const box=document.querySelector('[data-field="notes"]');const v=(fields().notes||'').trim();state.run.fields.notes=(v?v+'\n':'')+line;if(box)box.value=state.run.fields.notes;updateCount('notes');e.taken=true;save();renderAsk();toast('메모에 담았어요. 내 말로 고쳐 써 보세요.');return;}
+  // 결과물 문장 틀: 칸이 비었으면 넣고, 쓰던 글이 있으면 끝에 이어 붙인다. 이어 붙인 틀의 첫 빈칸이 선택된다.
+  if(el.dataset.gstarter){const [n,j]=el.dataset.gstarter.split(':'),it=fmtOf()?.fields.find(x=>x[0]===n),t=it?.[4](c)[Number(j)],box=document.querySelector(`[data-field="${n}"]`);if(t&&box){const cur=box.value.trimEnd(),v=cur?cur+' '+t:t;box.value=v;state.run.fields[n]=v;save();updateCount(n);updateChecks();box.focus();const i=v.indexOf('____',cur.length);if(i>=0)box.setSelectionRange(i,i+4);}return;}
+  if(el.dataset.action==='format-change'){state.run.fields.format='';save();render();document.querySelector('.formats')?.scrollIntoView({block:'start',behavior:'smooth'});return;}
   if(el.dataset.format){state.run.fields.format=el.dataset.format;save();render();document.querySelector('.formats')?.scrollIntoView({block:'start',behavior:'smooth'});return;}
   if(el.dataset.rv!==undefined){const last=[...reviewOf().log].reverse().find(x=>x.k==='say');const t=last?.chips?.[Number(el.dataset.rv)];if(t)reviewSay(c,t);return;}
   const a=el.dataset.action;
@@ -993,7 +1040,7 @@ document.addEventListener('click',async e=>{
     else{navigate('reflect');dayPass(c,from,3);}
   }
   if(a==='prev-scene'){state.run.step=Math.max(0,state.run.step-1);save();navigate('chat');}
-  if(a==='to-plan'){const miss=['question','notes'].filter(short);if(miss.length&&needMore(['question','notes'],miss[0]==='question'?'질문을 조금 더 구체적으로':'알게 된 것을 조금 더 자세히'))return;navigate('plan');}
+  if(a==='to-plan'){if(!fmtOf()){dialog({title:'어떤 글로 낼지 먼저 골라 주세요',body:'신문 기사, 정책 제안서, 편지 가운데 하나를 고르면 그에 맞는 질문 틀이 나와요.'}).then(()=>document.querySelector('.formats')?.scrollIntoView({block:'center'}));return;}const miss=['question','notes'].filter(short);if(miss.length&&needMore(['question','notes'],miss[0]==='question'?'질문을 조금 더 구체적으로':'알게 된 것을 조금 더 자세히'))return;navigate('plan');}
   if(a==='gallery-reload'){gallery.items=null;render();}
   if(a==='gallery-admin')openAdmin();
   if(a==='gallery-admin-off'){gallery.admin='';gallery.items=null;render();}

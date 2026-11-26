@@ -1,5 +1,5 @@
 // 화면 증거 촬영: 같은 경로·화면 크기·테스트 데이터로 데스크톱과 모바일 PNG를 원본 해상도로 저장한다.
-// 사용: node tools/capture.mjs --url <주소> --out <폴더> --name <before|after|baseline> [--run '{"id":"tuvalu","step":1,"choices":[0,null,null]}'] [--suffix -path-b] [--click "선택자"]
+// 사용: node tools/capture.mjs --url <주소> --out <폴더> --name <before|after|baseline> [--run '{"id":"tuvalu","step":1,"choices":[0,null,null]}'] [--suffix -path-b] [--click "선택자"] [--scroll "선택자"]
 // --run을 주면 브라우저 저장소에 진행 상태를 넣고 장면(chat) 화면을 연다. 기존 파일은 덮어쓰지 않는다.
 import { chromium } from 'playwright';
 import fs from 'node:fs';
@@ -39,6 +39,8 @@ for (const [kind, opts] of Object.entries(VIEWPORTS)) {
     await resume.click();
   }
   if (args.click) await page.locator(args.click).first().click();
+  // --scroll: 아래쪽 부분(예: 쓰는 칸, 성격 체크)을 화면 맨 위로 올려 찍는다.
+  if (args.scroll) await page.locator(args.scroll).first().evaluate(el => { el.scrollIntoView({ block: 'start' }); window.scrollBy(0, -16); });
   await page.waitForTimeout(1500);
   await page.screenshot({ path: file });
   const v = opts.viewport;

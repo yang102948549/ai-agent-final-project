@@ -33,7 +33,11 @@ await page.click('#reflection-form button[type=submit]');
 await page.waitForTimeout(600);
 ok(await view() === 'lab', '두 칸 모두 20자 이상이면 질문·조사로 이동');
 
-// 질문·조사
+// 질문·조사: 글의 종류를 먼저 고른다
+ok(await page.locator('[data-field=question]').count() === 0, '글의 종류를 고르기 전에는 질문 칸이 없음');
+await page.click('[data-action=to-plan]');
+ok((await dialogShown()).includes('먼저 골라') && await view() === 'lab', '종류를 안 고르면 결과물로 못 감');
+await page.click('[data-format=letter]'); await page.waitForTimeout(300);
 await page.locator('[data-frame="1"]').click();
 await page.click('[data-action=to-plan]');
 ok((await dialogShown()).length > 0 && await view() === 'lab', '질문 빈칸·알게 된 것 부족이면 결과물로 못 감');
@@ -45,15 +49,15 @@ await page.fill('[data-field=notes]', '투발루는 해발이 낮아 바닷물�
 await page.click('[data-action=to-plan]'); await page.waitForTimeout(600);
 ok(await view() === 'plan', '질문·알게 된 것 20자 이상이면 결과물로 이동');
 
-// 결과물(편지: 받는 사람은 10자 기준)
-await page.click('[data-format=letter]'); await page.waitForTimeout(300);
+// 결과물(편지: 받는 사람은 4자 기준). 종류는 질문·조사에서 이미 골랐다.
 await page.fill('[data-field=l_to]', '투발루 정부 담당자님께');
-ok(await page.locator('[data-count=l_to].ok').count() === 1, '받는 사람은 10자 기준');
+ok(await page.locator('[data-count=l_to].ok').count() === 1, '받는 사람은 4자 기준');
 await page.fill('[data-field=l_learned]', '바닷물이 땅으로 들어와요.');
 await page.fill('[data-field=l_ask]', '높은 땅에 학교와 집을 지을 수 있도록 예산을 늘려 주세요.');
 await page.fill('[data-field=l_me]', '친구들에게 알리기');
 await page.click('#plan-form button[type=submit]');
-ok((await dialogShown()).includes('3칸') && await view() === 'plan', '편지 세 칸(두 칸 20자 미만 + 보내는 사람 빈칸)이 부족하면 완성 안 됨');
+ok((await dialogShown()).includes('4칸') && await view() === 'plan', '편지 네 칸(두 칸 20자 미만 + 첫인사·보내는 사람 빈칸)이 부족하면 완성 안 됨');
+await page.fill('[data-field=l_open]', '안녕하세요. 저는 한국의 중학생입니다. 투발루 이야기를 알리고 싶어 편지를 씁니다.');
 await page.fill('[data-field=l_learned]', '해발이 낮은 섬이라 바닷물이 땅으로 들어와 농사와 식수가 어려워요.');
 await page.fill('[data-field=l_me]', '우리 반 친구들에게 투발루의 상황을 알리는 글을 쓰겠습니다.');
 await page.click('#plan-form button[type=submit]');
