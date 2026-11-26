@@ -864,3 +864,31 @@
 - 공개한 대표 화면 — [배포 전 갤러리](screenshots/2026-11-26-deploy-doc-layout/before-desktop-gallery-article.png) · [배포 후](screenshots/2026-11-26-deploy-doc-layout/after-desktop-article.png) · [배포 후 모바일 갤러리](screenshots/2026-11-26-deploy-doc-layout/after-mobile-gallery-article.png)
 - 대화 캡처 — 찍지 않았다(캡처 대기). 위 실제 요청 발췌로 대신한다.
 - 변경 파일 — `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-deploy-doc-layout/`. 사이트 저장소 `213807c`.
+
+## 2026-11-26-restore-reset
+
+- 실제 요청 — “수정하면서 이전에 기록했던 캐릭터 내용을 초기화하는 기능이 사라졌어. 이는 복원이 필요해”
+- 원인과 수정 — 수업안내 개편 때 기록 지우기 버튼을 함께 제거했다. 기존 clear 처리·확인창은 남아 있어 수업안내 하단에 ‘이 브라우저의 기록 지우기’를 복원했다. 다른 안내문은 유지한다.
+- 검증 — tools/check-reset.mjs로 공개 예시 진행 기록(파키스탄), 완료 캐릭터 2명, 테스트용 하트 기기 번호를 별도 브라우저에 심었다. PC·모바일에서 삭제 취소 후 원본 기록 동일, 삭제 확인 후 run:null·completed:[], 새로고침 후 이어하기 없음·완료 0/12 표시, 하트 기기 번호 유지, JS 오류·가로 넘침 없음 PASS. 실제 사용자 기록이나 서버 제출물은 건드리지 않았다. npm run validate PASS(12명·47장면·94선택·96경로). 이 변경은 로컬 초기화 버튼 복원으로 네트워크 오류 상태는 관련 없음.
+- 화면 — http://127.0.0.1:4173/ 수업 안내. 동일 예시 데이터·PC 1440×900·모바일 390×844 CSS(배율 2) 전후 캡처. 원본 local-assets/screenshots/2026-11-26-restore-reset/. 전후와 확인창·초기화 뒤 목록 PNG 각각 직접 열어 확인. 최초 확인창 촬영에 애니메이션 중간 상태와 모바일 전체 페이지 고정 요소 문제가 보여 after-check-*는 애니메이션을 끝내고 확인창·빈 기록 목록은 viewport로 재촬영했다. 최초 PNG는 덮어쓰지 않았다. 모바일 목록 아래의 로딩 전 이미지는 전체 페이지 촬영의 지연 로딩이며 빈 기록 0/12 표시는 정상이다.
+- 공개 대표 — [PC 전](screenshots/2026-11-26-restore-reset/before-desktop.png) · [후](screenshots/2026-11-26-restore-reset/after-desktop.png) · [모바일 전](screenshots/2026-11-26-restore-reset/before-mobile.png) · [후](screenshots/2026-11-26-restore-reset/after-mobile.png) · [확인창](screenshots/2026-11-26-restore-reset/after-check-mobile-confirm.png).
+- 실행 재시도 — 최초 PowerShell 검색 문자열 따옴표 오류를 고쳐 재실행. after-check 실행 위치를 잘못 지정해 모듈을 찾지 못한 뒤 app/에서 다시 실행해 PASS.
+- 대화 캡처 — 실제 대화 창 캡처는 미확보, 캡처 대기. 위 실제 발췌로 기록하며 증거를 합성하지 않았다.
+- 변경 파일 — app/dist/app.js, app/tools/check-reset.mjs, PROMPTS.md, CHECKLIST.md, screenshots/2026-11-26-restore-reset/.
+- 배포 — 기존 배포 승인 범위에 따라 사이트 bb106a7을 origin/main에 푸시. 실제 사이트 검증은 아래 추가 기록.
+
+- PNG 크기: after-check-desktop-confirm.png: 1440×900
+- PNG 크기: after-check-desktop-empty.png: 1440×900
+- PNG 크기: after-check-desktop.png: 1440×900
+- PNG 크기: after-check-mobile-confirm.png: 780×1688
+- PNG 크기: after-check-mobile-empty.png: 780×1688
+- PNG 크기: after-check-mobile.png: 780×3014
+- PNG 크기: after-desktop-confirm.png: 1440×900
+- PNG 크기: after-desktop-empty.png: 1440×1672
+- PNG 크기: after-desktop.png: 1440×900
+- PNG 크기: after-mobile-confirm.png: 780×3014
+- PNG 크기: after-mobile-empty.png: 780×11470
+- PNG 크기: after-mobile.png: 780×3014
+- PNG 크기: before-desktop.png: 1440×900
+- PNG 크기: before-mobile.png: 780×2894
+- 라이브 검증 — https://onischool.net/anotherday/ 에서 같은 테스트를 PC·모바일 모두 실행해 취소 보존·초기화·새로고침·완료 0/12·하트 기기 번호 보존 ALL PASS. 라이브 안내·확인창·초기화 뒤 목록 6장도 각각 직접 열어 버튼·확인창·빈 기록 표시와 잘림 없음 확인. [배포 PC](screenshots/2026-11-26-restore-reset/after-live-desktop.png) · [배포 모바일](screenshots/2026-11-26-restore-reset/after-live-mobile.png). 라이브 PC 1440×900, 모바일 안내 780×3016, 확인창·목록 780×1688.

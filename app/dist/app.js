@@ -305,7 +305,7 @@ function guide(){return `<div class="page-head"><h1>한 사람의 하루에서 �
   <article class="cell"><p class="label">3차시 · 45분</p><h3>글을 쓰고 고쳐 나누기</h3><p>고른 글의 형식에 맞춰 조사한 내용과 나의 생각을 씁니다. 이야기 속 인물·선생님과 피드백 대화를 나누고, ‘피드백 보며 내 글 고치기’에서 글을 다듬습니다. 완성된 글을 확인해 제출한 뒤 갤러리에서 친구들의 글도 읽어 봅니다.</p></article>
 </div>
 <p class="notice">한 사람의 이야기에서 출발해, 그가 겪는 문제를 더 알아보고 우리가 할 수 있는 일을 생각합니다. 각 이야기는 자료 시점의 특정 지역 상황을 바탕으로 하며, 한 나라 전체의 모습을 대표하지 않습니다.</p>
-<div class="actions"><button class="btn" data-action="random">게임 시작</button><button class="btn ghost" data-nav="atlas">캐릭터 고르기</button></div>`;}
+<div class="actions"><button class="btn" data-action="random">게임 시작</button><button class="btn ghost" data-nav="atlas">캐릭터 고르기</button><button class="btn ghost" data-action="clear">이 브라우저의 기록 지우기</button></div>`;}
 /* ---------- 뽑기 · 소개 ---------- */
 function select(){return `<section class="select">
   <p class="label center">캐릭터 뽑기</p>
