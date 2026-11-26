@@ -2,7 +2,7 @@
 
 이 저장소는 수업도구 웹앱의 기획부터 배포와 영상 제작까지 한 프로젝트의 이력을 담는 기말과제 제출물이다. 첫 구현부터 같은 저장소에 작업을 이어간다.
 
-- **배포 사이트** — https://onischool.net/anotherday/ (2026-11-25 사진풍 캐릭터 이미지 반영. 선택별 장면 갈래는 시나리오 확정 전이라 아직 배포하지 않았다.)
+- **배포 사이트** — https://onischool.net/anotherday/ (2026-11-26 선택별 장면 갈래·상황별 이미지 및 12명 히어로 사진 앨범 배포·검증 완료.)
 - **완성 영상** — 제작 후 추가
 
 수정 개발의 출발점은 기존 [global-life-simulator](https://github.com/yang102948549/global-life-simulator) 프로젝트다. 원본 기능과 주요 커밋은 [원본 프로젝트 기록](ORIGINAL_PROJECT.md)에 정리했다.

@@ -403,3 +403,14 @@
 - 공개 대표 화면 — [전 데스크톱](screenshots/2026-11-26-hero-album/before-desktop.png) · [후 데스크톱](screenshots/2026-11-26-hero-album/after-desktop-aligned.png) · [전 모바일](screenshots/2026-11-26-hero-album/before-mobile.png) · [후 모바일](screenshots/2026-11-26-hero-album/after-mobile-aligned.png) · [라마·마리암·아시프](screenshots/2026-11-26-hero-album/phase-1-desktop-aligned.png) · [호단·나데주·암나](screenshots/2026-11-26-hero-album/phase-2-desktop-aligned.png) · [누르·그라스·람](screenshots/2026-11-26-hero-album/phase-3-desktop-aligned.png).
 - 대화 캡처 — 2026-11-26 현재 대화 제목의 Paseo 창을 확인하고 접근을 시도했으나 `Computer Use app approval timed out`(약 303초)으로 캡처 전 실패했다. 사진 높이 재검토 결정은 위 실제 발췌로 남겼으며 원본 모니터 캡처는 대기다. 합성 대화 이미지는 만들지 않았다.
 - 배포 — 이번 작업은 로컬 구현·검증·커밋까지. 원격 푸시와 배포는 하지 않았다.
+
+
+## 2026-11-26-deploy-hero-album
+
+- 실제 요청 — “배포해줘”
+- 한 일 — 배포 전 라이브 홈 데스크톱·모바일을 촬영했다. `app/`에서 `node validate.cjs` PASS 후 `node sync-onischool.cjs`로 확인된 `OniSchool/onischool-release/anotherday/`에 동기화했다. 변경은 app.js·style.css·index.html 3개이며 배포 커밋 `44f6096`을 origin main에 푸시했다. 라이브 `app.js?v=cfc3c871c2`, `style.css?v=531e389538` 반영을 확인했다. 루트 README의 오래된 미배포 안내도 실제 배포 현황에 맞게 수정했다.
+- 검증 — `check-hero-album.mjs`에 URL·출력 폴더 인자를 추가해 실제 `https://onischool.net/anotherday/`에서 실행, PASS. 12명 전체 등장, 반복 연결 오차 0px, 사진/텍스트 높이·상단 차이 0px, 영역 간격 43.1875px. 일시정지/재생, OS 동작 줄이기, 320~1920px 7개 폭의 가로 넘침·겹침 없음, 캐릭터 선택·홈 재진입·새 게임 시작, JS 오류 없음. 최초 validate 호출은 루트에서 실행해 dist 경로 오류가 나서 app/에서 다시 실행했다.
+- 화면 — 라이브 URL, 기본 홈·가상 인물 데이터, API 차단. 원본 `local-assets/screenshots/2026-11-26-deploy-hero-album/`에 before/after-desktop.png(1440×900), before/after-mobile.png(780×1688), phase-0~3-desktop-aligned.png(1440×900)를 보존했다. 저장한 8장을 직접 열어 배포 전 모자이크에서 배포 후 앨범으로 전환, 텍스트 비침범, 사진 높이 정렬, 얼굴·버튼 가림 없음을 확인했다. 구간별 화면은 실제 브라우저 애니메이션을 0/24/48/72초에 정지시켜 촬영했다.
+- 대표 화면 — [PC 전](screenshots/2026-11-26-deploy-hero-album/before-desktop.png) · [PC 후](screenshots/2026-11-26-deploy-hero-album/after-desktop.png) · [모바일 전](screenshots/2026-11-26-deploy-hero-album/before-mobile.png) · [모바일 후](screenshots/2026-11-26-deploy-hero-album/after-mobile.png).
+- 변경 파일 — README.md, CHECKLIST.md, PROMPTS.md, app/design/hero-album.md, app/tools/check-hero-album.mjs, screenshots/2026-11-26-deploy-hero-album/.
+- 대화 캡처 — 앞선 같은 세션에서 대화 앱 접근 승인 시간이 초과되어 캡처 대기 상태다. 실제 요청은 위 발췌로 남겼다.

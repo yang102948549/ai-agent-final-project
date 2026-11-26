@@ -1,13 +1,14 @@
 import {chromium} from 'playwright';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-const out='../local-assets/screenshots/2026-11-26-hero-album';
+const out=process.argv[3]||'../local-assets/screenshots/2026-11-26-hero-album';
+fs.mkdirSync(out,{recursive:true});
 const browser=await chromium.launch();
 const errors=[];
 const page=await browser.newPage({viewport:{width:1440,height:900}});
 page.on('pageerror',e=>errors.push(e.message));
 await page.route('**/api/**',r=>r.fulfill({status:404,body:''}));
-await page.goto('http://127.0.0.1:4191/',{waitUntil:'networkidle'});
+await page.goto(process.argv[2]||'http://127.0.0.1:4191/',{waitUntil:'networkidle'});
 await page.waitForFunction(()=>document.querySelector('.album-track').style.animationPlayState==='running');
 const geometry=await page.evaluate(()=>{
  const a=document.querySelector('.hero-album').getBoundingClientRect(),t=document.querySelector('.title-body').getBoundingClientRect();
