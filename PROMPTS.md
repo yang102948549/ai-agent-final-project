@@ -690,4 +690,30 @@
 - 공개한 대표 화면 — [전 결과물](screenshots/2026-11-26-writing-coach/before-desktop-plan.png) · [후 결과물](screenshots/2026-11-26-writing-coach/after-desktop-plan.png) · [전 돌아보기](screenshots/2026-11-26-writing-coach/before-mobile-reflect.png) · [후 돌아보기](screenshots/2026-11-26-writing-coach/after-mobile-reflect.png) · [전 질문·조사](screenshots/2026-11-26-writing-coach/before-desktop-lab.png) · [후 질문·조사](screenshots/2026-11-26-writing-coach/after-desktop-lab.png) · [전 피드백](screenshots/2026-11-26-writing-coach/before-mobile-review.png) · [후 피드백](screenshots/2026-11-26-writing-coach/after-mobile-review.png) · [고치기 창](screenshots/2026-11-26-writing-coach/after-desktop-review-edit.png) · [고치기 창 모바일](screenshots/2026-11-26-writing-coach/after-mobile-review-edit.png)
 - 대화 캡처 — 찍지 않았다(캡처 대기). 위 실제 요청 발췌로 대신한다.
 - 변경 파일 — `app/dist/app.js`, `app/dist/style.css`, `app/tools/check-feedback-edit.mjs`(새로), `app/tools/capture-coach.mjs`(새로), `app/tools/check-genre-writing.mjs`, `app/tools/check-min-length.mjs`, `app/tools/check-no-nickname.mjs`, `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-writing-coach/`.
-- 배포 — 아직 하지 않았다.
+- 배포 — 2026-11-26 `2026-11-26-deploy-writing-coach`에서 배포했다(사이트 `aef0709`).
+
+## 2026-11-26-lesson-guide
+
+- 실제 요청 — “사이트의 수업안내 글은 말 그대로 이 앱에서 어떻게 진행되는지를 알려주는 소개글이어야 해. ai대화설정, 안전장치, 공감을 다루는 방법, 12명을 모두 다루려면과 같은 내용은 이 수업 안내와 관련이 없어. 수정해줘”
+- 추가 지시 — “yolo 모드로 전환”. 추가 확인 없이 수정·검증·기록·로컬 커밋까지 진행한다고 안내했다.
+- 변경 이유와 내용 — 교사 운영·기술 설명 대신 학생이 앱에서 진행하는 활동을 소개하도록 수업안내 전체를 정리했다. 1차시 인물 선택·세 장면 대화·돌아보기, 2차시 글 형식 선택·질문·자료 조사, 3차시 글쓰기·피드백을 보며 수정·제출·갤러리 순으로 설명한다. AI 설정·안전장치·12명 배분·공감 지도·평가 항목과 기록 삭제 버튼을 안내에서 제거하고 게임 시작·캐릭터 고르기로 연결했다.
+- 검증 — http://127.0.0.1:4173/ 수업 안내를 빈 브라우저 기록에서 열어 데스크톱·모바일 실제 화면 촬영. 삭제한 네 제목 없음, 가로 넘침 없음, JS 오류 없음, 캐릭터 고르기 → 열두 명의 하루 이동 PASS. npm run validate PASS(12명·47장면·94선택·96경로). 정적 소개글이므로 별도 입력 오류 상태는 없으며 기존 API 오류 상태는 이번 문구 수정의 확인 대상이 아니다.
+- 원본 — local-assets/screenshots/2026-11-26-lesson-guide/. 데스크톱 viewport 1440×900, 모바일 viewport 390×844·배율 2, 전체 페이지 PNG. 전후 네 이미지를 각각 직접 열어 올바른 수업안내 화면, 문구 변경, 잘림·버튼 가림 없음 확인. 실제 PNG 크기는 아래 기록.
+- 공개 대표 — [PC 전](screenshots/2026-11-26-lesson-guide/before-desktop.png) · [PC 후](screenshots/2026-11-26-lesson-guide/after-desktop.png) · [모바일 전](screenshots/2026-11-26-lesson-guide/before-mobile.png) · [모바일 후](screenshots/2026-11-26-lesson-guide/after-mobile.png).
+- 재시도 — 촬영 도구 생성 및 수정 명령에서 app/ 작업 폴더에 app/ 경로를 중복해 첫 실행 실패. 경로를 바로잡았다. 수정 전 화면을 after로 촬영한 1장은 failed-before-edit-desktop.png로 별도 보존하고 실제 수정 후 다시 촬영·검증했다.
+- 대화 화면 — 실제 대화 창 캡처 접근은 확인하지 못했으며 캡처 대기. 위 실제 발췌를 기록했고 대화 증거 이미지를 합성하지 않았다.
+- 변경 파일 — app/dist/app.js, app/tools/capture-guide.mjs, PROMPTS.md, CHECKLIST.md, screenshots/2026-11-26-lesson-guide/.
+- 배포 — 이번 작업은 로컬 수정·검증·커밋까지 수행. 배포 사이트 반영 및 공개 GitHub 표 확인은 미실시.
+
+## 2026-11-26-deploy-writing-coach
+
+- 실제 요청 — “커밋 푸시 배포해줘”
+- 진행 기록
+  1. 배포 전 라이브 촬영 — `capture-coach.mjs --url https://onischool.net/anotherday/`(예시 글·예시 피드백, AI 연결 상태만 모의). `before-*`에 눌러 넣는 예시 칩이 보이고 고치기 창은 없다(8장).
+  2. 배포 — `npm run validate` PASS, `node sync-onischool.cjs`(바뀐 파일 app.js·style.css·index.html), 배포본이 과제 저장소와 같음(cmp)을 확인하고 onischool-release `aef0709`를 origin main에 푸시. 새 해시 `app.js?v=951caf9f28`, 약 45초 뒤 반영.
+  3. 라이브 검증 — `check-feedback-edit`·`check-genre-writing`·`check-min-length`·`check-no-nickname`를 라이브 주소로 돌려 모두 ALL PASS.
+  4. 배포 후 촬영 — 원본 `local-assets/screenshots/2026-11-26-deploy-writing-coach/`(데스크톱 1440×900·모바일 780×1688, 후 10장). after-desktop-plan(칸별 조언)·after-mobile-review-edit(피드백과 칸이 함께 보이는 고치기 창)를 열어 잘림·가림 없음을 확인했다.
+  5. 대화 캡처 — 찍지 않았다. 위 실제 요청 발췌로 대신한다.
+- 공개한 대표 화면 — [배포 전](screenshots/2026-11-26-deploy-writing-coach/before-desktop-plan.png) · [배포 후](screenshots/2026-11-26-deploy-writing-coach/after-desktop-plan.png) · [고치기 창](screenshots/2026-11-26-deploy-writing-coach/after-desktop-review-edit.png) · [고치기 창 모바일](screenshots/2026-11-26-deploy-writing-coach/after-mobile-review-edit.png)
+- 변경 파일 — `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-deploy-writing-coach/`. 사이트 저장소 `aef0709`.
+- 푸시 — 사용자 요청에 따라 과제 저장소 main을 origin에 푸시했다.
