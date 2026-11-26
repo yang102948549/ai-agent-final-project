@@ -664,4 +664,17 @@
 - 공개한 대표 화면 — [전 돌아보기](screenshots/2026-11-26-full-sentences/before-mobile-reflect.png) · [후 돌아보기](screenshots/2026-11-26-full-sentences/after-mobile-reflect.png) · [전 질문·조사](screenshots/2026-11-26-full-sentences/before-desktop-lab.png) · [후 질문·조사](screenshots/2026-11-26-full-sentences/after-desktop-lab.png) · [전 결과물](screenshots/2026-11-26-full-sentences/before-desktop-plan.png) · [후 결과물](screenshots/2026-11-26-full-sentences/after-desktop-plan.png)
 - 대화 캡처 — 찍지 않았다(캡처 대기). 위 실제 요청 발췌로 대신한다.
 - 변경 파일 — `app/dist/app.js`, `app/tools/check-genre-writing.mjs`, `app/tools/check-min-length.mjs`, `app/tools/capture-full-sentences.mjs`(새로), `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-full-sentences/`.
-- 배포 — 아직 하지 않았다.
+- 배포 — 2026-11-26 `2026-11-26-deploy-full-sentences`에서 배포했다(사이트 `8a23d58`).
+
+## 2026-11-26-deploy-full-sentences
+
+- 실제 요청 — “배포 푸시 해줘”
+- 진행 기록
+  1. 배포 전 라이브 촬영 — `capture-full-sentences.mjs --url https://onischool.net/anotherday/`, 시오네·신문 기사 예시 데이터. `before-*`에 빈칸 틀과 따로 나뉜 ‘나의 질문/알아보기’가 보인다.
+  2. 배포 — `npm run validate` PASS, `node sync-onischool.cjs`(바뀐 파일 app.js·index.html), 배포본 app.js가 과제 저장소와 같음(cmp)을 확인하고 onischool-release `8a23d58`을 origin main에 푸시. 새 해시 `app.js?v=6e0a117b03`, 약 30초 뒤 반영.
+  3. 라이브 검증 — `check-genre-writing.mjs`·`check-min-length.mjs`를 라이브 주소로 돌려 ALL PASS.
+  4. 배포 후 촬영 — 원본 `local-assets/screenshots/2026-11-26-deploy-full-sentences/`(데스크톱 1440×900·모바일 780×1688). after-desktop-lab·after-mobile-reflect를 열어 ‘질문하고 알아보기’와 완성 문장 예시, 잘림·가림 없음을 확인했다.
+  5. 대화 캡처 — 찍지 않았다. 위 실제 요청 발췌로 대신한다.
+- 공개한 대표 화면 — [배포 전](screenshots/2026-11-26-deploy-full-sentences/before-desktop-lab.png) · [배포 후](screenshots/2026-11-26-deploy-full-sentences/after-desktop-lab.png) · [배포 후 모바일 돌아보기](screenshots/2026-11-26-deploy-full-sentences/after-mobile-reflect.png) · [배포 후 결과물](screenshots/2026-11-26-deploy-full-sentences/after-desktop-plan.png)
+- 변경 파일 — `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-deploy-full-sentences/`. 사이트 저장소 `8a23d58`.
+- 푸시 — 사용자 요청에 따라 과제 저장소 main을 origin에 푸시했다.
