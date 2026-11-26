@@ -429,3 +429,16 @@
 - 공개한 대표 화면 — [전 PC](screenshots/2026-11-26-min-length/before-desktop-fields.png) · [후 PC](screenshots/2026-11-26-min-length/after-desktop-fields.png) · [전 모바일](screenshots/2026-11-26-min-length/before-mobile-fields.png) · [후 모바일](screenshots/2026-11-26-min-length/after-mobile-fields.png) · [문장 틀 선택](screenshots/2026-11-26-min-length/after-mobile-starter.png) · [질문·조사 글자 수](screenshots/2026-11-26-min-length/after-desktop-lab.png)
 - 대화 캡처 — 촬영하지 못했다(대기). 위 실제 요청 발췌로 대신한다.
 - 배포 — 로컬 구현·검증·커밋까지. 원격 푸시와 배포는 하지 않았다.
+
+## 2026-11-26-deploy-min-length
+
+- 실제 요청 — “배포 후 캡쳐도 진행. 그리고 작업기록 틈틈히 기록해줘.”
+- 진행 기록
+  1. (11:05) 대화 캡처 — 첫 시도는 DPI 배율 때문에 가상 화면이 1536×864로 잡혀 잘라내기에 실패했다. `SetProcessDPIAware` 후 재캡처해 1920×1080 원본(`local-assets/conversations/2026-11-26-min-length/01-request-deploy-full.png`, 이번엔 모니터 1대라 전체 = 왼쪽 영역)과 `01-request-deploy.png`를 저장했다. 처음엔 좌우 창의 다른 세션을 빼려고 가운데 대화 창만 자른 `01-request-deploy-terminal.png`(642×975)도 만들었으나, 사용자가 “아냐 그냥 전체 대화 캡쳐해도 돼. 프롬프트 내용이 md로 들어가기 떄문에 그 기록만 있어도 충분해”라고 해 전체 화면 `01-request-deploy.png`를 기본 기록으로 쓴다.
+  2. 배포 전 라이브 화면 — `https://onischool.net/anotherday/`, 시오네·닉네임 `테스트`·선택 [0,0,0]·첫 칸 ‘가족’, AI 차단, 두 번째 칸으로 이동. `local-assets/screenshots/2026-11-26-deploy-min-length/before-desktop-fields.png`(1440×900)·`before-mobile-fields.png`(780×1688). 열어 보니 예전 질문 ‘내 선택만으로는 바꾸기 어려웠던 것은?’과 글자 수 표시 없음이 그대로였다.
+  3. 배포 — `app/`에서 `npm run validate` PASS 후 `node sync-onischool.cjs`(66개 파일). 바뀐 파일은 app.js·style.css·index.html 3개. onischool-release `722093a`를 origin main에 푸시(Cloudflare Pages 자동 배포). 새 해시 `app.js?v=5215830f0d`, `style.css?v=eaf9a57952`.
+  4. 라이브 검증 — 1차 조회 이전 해시, 약 20초 뒤 `app.js?v=5215830f0d` 반영 확인. `node tools/check-min-length.mjs --url https://onischool.net/anotherday/` 15항목 ALL PASS. 같은 조건으로 `after-desktop-fields.png`(1440×900)·`after-mobile-fields.png`(780×1688)·`after-*-starter.png`를 촬영해 열어 보니 새 질문, ‘2 / 20자 · 18자 더’ 표시, 문장 틀 5개와 첫 빈칸 선택, ‘빈칸(____)을 채워 주세요’ 안내가 잘림 없이 보였다.
+  5. (11:09) 배포 후 대화 캡처 — 사용자 지시대로 전체 화면 그대로 `local-assets/conversations/2026-11-26-min-length/02-after-deploy.png`(1920×1080)로 저장, 열어서 배포 검증 대화가 읽히는 것을 확인했다.
+- 공개한 대표 화면 — [배포 전 PC](screenshots/2026-11-26-deploy-min-length/before-desktop-fields.png) · [배포 후 PC](screenshots/2026-11-26-deploy-min-length/after-desktop-fields.png) · [배포 전 모바일](screenshots/2026-11-26-deploy-min-length/before-mobile-fields.png) · [배포 후 모바일](screenshots/2026-11-26-deploy-min-length/after-mobile-fields.png) · [배포 후 문장 틀](screenshots/2026-11-26-deploy-min-length/after-mobile-starter.png)
+- 대화 캡처 — [배포 요청](screenshots/conversations/2026-11-26-min-length/01-request-deploy.png) · [배포 후 검증](screenshots/conversations/2026-11-26-min-length/02-after-deploy.png)
+- 변경 파일 — `PROMPTS.md`, `CHECKLIST.md`, `conversations/README.md`, `screenshots/2026-11-26-deploy-min-length/`, `screenshots/conversations/2026-11-26-min-length/`. 사이트 저장소는 onischool-release `722093a`.
