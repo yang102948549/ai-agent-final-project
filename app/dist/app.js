@@ -547,7 +547,7 @@ function talkFoot(c,s,ch){
   </div>`:'';
   const stuck=!confirm&&talked>=STUCK_TALK?(ch.showOptions?`<p class="small-ask">두 가지 길 가운데 하나를 고를 수도 있어요</p>${choiceRow(s)}`:`<button class="link" data-action="show-options">정하기 어렵다면 두 가지 길 보기</button>`):'';
   const waitChips=!confirm&&!pending&&!ch.chips?.length&&chipsLoading&&state.run.step===0&&!talked;
-  const chips=waitChips?'<div class="chips" aria-label="말 고르기를 준비하는 중"><span class="chip-wait"></span><span class="chip-wait"></span><span class="chip-wait"></span></div>':!confirm&&!pending&&ch.chips?.length?`<div class="chips" role="group" aria-label="이렇게 말해 볼까요">${ch.chips.map((x,i)=>`<button type="button" class="chip${x.path==='none'?'':' go'}" data-chip="${i}">${fmt(x.text)}${x.path==='none'?'':'<span aria-hidden="true">→</span>'}</button>`).join('')}</div>`:'';
+  const chips=waitChips?'<div class="chips" aria-label="말 고르기를 준비하는 중"><span class="chip-wait"></span><span class="chip-wait"></span><span class="chip-wait"></span></div>':!confirm&&!pending&&ch.chips?.length?`<div class="chips" role="group" aria-label="이렇게 말해 볼까요">${ch.chips.map((x,i)=>`<button type="button" class="chip${x.path==='none'?'':' go'}" data-chip="${i}"><span class="chip-t">${fmt(x.text)}</span>${x.path==='none'?'':'<span class="chip-go" aria-hidden="true">→</span>'}</button>`).join('')}</div>`:'';
   return `${confirm}${chips}<form id="say-form" class="say-box">
     <textarea id="say" rows="1" maxlength="500" placeholder="직접 써서 말해 보세요" ${pending?'disabled':''}></textarea>
     <button class="btn small" ${pending?'disabled':''}>보내기</button>

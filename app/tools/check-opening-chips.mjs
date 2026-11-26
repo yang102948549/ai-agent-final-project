@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 const [url='http://127.0.0.1:4196/', phase='after', out='../local-assets/screenshots/2026-11-26-opening-chips']=process.argv.slice(2);
 fs.mkdirSync(out,{recursive:true});
-const browser=await chromium.launch();
+const browser=await chromium.launch(process.env.PW_CHROME?{executablePath:process.env.PW_CHROME}:{});
 for(const [kind,viewport] of Object.entries({desktop:{width:1440,height:900},mobile:{width:390,height:844}})){
  const ctx=await browser.newContext({viewport,deviceScaleFactor:kind==='mobile'?2:1});
  const page=await ctx.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));

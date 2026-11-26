@@ -576,6 +576,9 @@ h1,h2,.brand,.portrait figcaption strong,.tile strong,.life h2{font-weight:700;l
 
 /* 답 칩은 말이든 행동이든 같은 서체로(행동 표시 *…*도 기울이지 않는다) */
 .chips .chip i{font-style:normal}
+/* 칩 글은 한 덩어리로 묶어 두 줄이 넘어도 한 문단처럼 왼쪽 정렬로 흐르게 한다. 묶지 않으면 행동 표시와 말이 따로 떨어진 칸이 되어 띄어쓰기가 벌어져 보인다. 화살표만 오른쪽에 둔다. */
+.chips .chip .chip-t{flex:1 1 auto;min-width:0;text-align:left}
+.chips .chip .chip-go{flex:none}
 
 /* ---------- 마무리: 질문 틀, 자료 접기, AI 조사 도우미 ---------- */
 .frames{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}

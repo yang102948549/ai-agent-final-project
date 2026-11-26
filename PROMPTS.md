@@ -892,3 +892,15 @@
 - PNG 크기: before-desktop.png: 1440×900
 - PNG 크기: before-mobile.png: 780×2894
 - 라이브 검증 — https://onischool.net/anotherday/ 에서 같은 테스트를 PC·모바일 모두 실행해 취소 보존·초기화·새로고침·완료 0/12·하트 기기 번호 보존 ALL PASS. 라이브 안내·확인창·초기화 뒤 목록 6장도 각각 직접 열어 버튼·확인창·빈 기록 표시와 잘림 없음 확인. [배포 PC](screenshots/2026-11-26-restore-reset/after-live-desktop.png) · [배포 모바일](screenshots/2026-11-26-restore-reset/after-live-mobile.png). 라이브 PC 1440×900, 모바일 안내 780×3016, 확인창·목록 780×1688.
+
+## 2026-11-26-chip-align
+
+- 실제 요청 — “모바일에서 대화하고 칩을 선택할 때 텍스트 정렬이 이상해 두줄이상이 되면 왼쪽 정렬로 하면 되는데 지금은 띄어쓰기가 이상하게 정렬이 되고 있어 검토해줘”
+- 원인 — 대화 칩(`<button class="chip">`)은 플렉스 상자이고, 모바일에서는 `justify-content:space-between`이다. AI 칩 글에 행동 표시 `*…*`(`<i>`)가 들어가면 칩 안의 글이 ‘행동’·‘말’·‘→’ 여러 조각으로 나뉜다. 각 조각이 따로 벌어지고 따로 줄바꿈되어, 왼쪽에 “고개를 / 끄덕이며”가 좁은 칸으로, 오른쪽에 말이 다른 칸으로 놓였다. 시작 칩 24개(12명×2화면)는 모두 한 줄이라 증상이 없었고, 대화가 이어진 뒤 긴 칩에서 생겼다.
+- 변경 — 칩 글을 `<span class="chip-t">`로 한 덩어리로 묶었다(`flex:1; text-align:left`). 화살표는 `<span class="chip-go">`로 따로 오른쪽에 둔다. 묻기 칩·피드백 칩은 글 한 조각이라 바꾸지 않았다.
+- 검증 — 새 `tools/capture-chat-chips.mjs`로 긴 칩 3개(행동 표시 + → 칩 2개, 일반 칩 1개)를 넣은 파키스탄 대화를 찍었다. 칩마다 자식 조각 수도 재었다(전 3개 → 후 2개, 글 1 + 화살표 1). `check-opening-chips`(Chrome 경로 설정 `PW_CHROME`을 읽게 실행 줄 수정) 24개 PASS, `check-feedback-edit`·`check-ask-record`·`check-doc-layout` ALL PASS, `npm run validate` PASS.
+- 화면 — 데스크톱 1440×900, 모바일 780×1688. 원본은 `local-assets/screenshots/2026-11-26-chip-align/`에 있다. before/after-mobile-long과 before/after-desktop-long을 직접 열어 봤다. 수정 전 모바일은 행동 표시가 왼쪽 좁은 칸에 세로로 끊겨 있었다. 수정 후에는 “고개를 끄덕이며 그럼 오늘은 학교에 가지 말고 / 어머니를 도와 물을 길어 올게요”처럼 한 문단으로 왼쪽 정렬되고 화살표만 오른쪽에 있다. 데스크톱도 행동과 말 사이 넓은 틈이 없어졌다.
+- 공개한 대표 화면 — [모바일 전](screenshots/2026-11-26-chip-align/before-mobile-long.png) · [모바일 후](screenshots/2026-11-26-chip-align/after-mobile-long.png) · [데스크톱 전](screenshots/2026-11-26-chip-align/before-desktop-long.png) · [데스크톱 후](screenshots/2026-11-26-chip-align/after-desktop-long.png)
+- 대화 캡처 — 찍지 않았다(캡처 대기). 위 실제 요청 발췌로 대신한다.
+- 변경 파일 — `app/dist/app.js`, `app/dist/style.css`, `app/tools/capture-chat-chips.mjs`(새로), `app/tools/check-opening-chips.mjs`, `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-chip-align/`.
+- 배포 — 아직 하지 않았다.
