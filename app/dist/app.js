@@ -321,7 +321,6 @@ function intro(c){const i=cases.indexOf(c);return `<section class="profile">
 
 /* ---------- 게임 화면: 장면 카드 ---------- */
 const chatOf=step=>state.run.chats[step];
-const playerTag=()=>fields().nickname?`<span class="player">플레이어 · ${esc(fields().nickname)}</span>`:'';
 // AI에게 넘길 앞 장면 요약: 고른 길, 대본 결과, 학생이 대화에서 한 말(최근 4개, 앞부분만).
 function pastScenes(c){
   const r=state.run;
@@ -462,7 +461,7 @@ function entry(e,c,s){
 }
 // 장면 화면 왼쪽: 상황에 맞는 장면 그림(없으면 기본 인물 그림), 이름표, 아침·낮·저녁 진행
 function stageArt(c,step,decided){return `<aside class="stage-art">
-  <figure class="portrait">${sceneArt(c,step,'card','',{priority:'high'})}<figcaption><strong>${esc(c.name)}</strong>${esc(c.country)} · ${esc(c.region)}${playerTag()}</figcaption></figure>
+  <figure class="portrait">${sceneArt(c,step,'card','',{priority:'high'})}<figcaption><strong>${esc(c.name)}</strong>${esc(c.country)} · ${esc(c.region)}</figcaption></figure>
   <ol class="pips" aria-label="장면 진행">${c.scenes.map((x,i)=>`<li class="${i<step||(i===step&&decided)?'done':i===step?'now':''}">${esc(x.time)}</li>`).join('')}</ol>
 </aside>`;}
 // 휴대폰 장면 카드 상단: 16:9 고정 비율로 자리만 먼저 잡아 두고, 미리 받은 상황 그림이 글과 함께 보이게 한다.
@@ -577,23 +576,6 @@ function openAiModal(then){
   m.hidden=false;openAiModal.then=then;
   m.querySelector('#ai-key').focus();
 }
-// 플레이어 등록 팝업: 캐릭터를 고른 뒤 이름을 적고 그 사람의 하루를 시작한다.
-function openJoinModal(c){
-  const m=document.querySelector('#modal');
-  m.setAttribute('aria-label','플레이어 등록');
-  m.innerHTML=`<form class="modal-box join" id="join-form">
-    <div class="join-face">${art(c,'face')}</div>
-    <p class="label">플레이어 등록</p>
-    <h2>오늘 하루, 나는 ${esc(c.name)}입니다</h2>
-    <p class="muted small">${esc(c.country)} · ${esc(c.region)}에 사는 ${esc(c.role)}의 아침·낮·저녁을 살아 봅니다.</p>
-    <label class="field join-field"><span>플레이어 이름</span><input id="join-name" maxlength="20" autocomplete="off" enterkeyhint="go" value="${esc(fields().nickname||'')}" placeholder="이름이나 별명"></label>
-    <button class="btn big join-go">${esc(c.name)}의 하루 시작하기 →</button>
-    <button type="button" class="link" data-action="ai-skip">다시 고를래요</button>
-  </form>`;
-  m.hidden=false;openAiModal.then=null;
-  setTimeout(()=>m.querySelector('#join-name')?.focus(),50);
-  AI.serverCheck.then(()=>prefetchChips(c));
-}
 function closeModal(){const m=document.querySelector('#modal');m.hidden=true;m.innerHTML='';const then=openAiModal.then;openAiModal.then=null;renderStatus();if(then)then();}
 // 상단의 AI 연결 표시는 없앴다. 학교 서버 키로 자동 연결된다.
 function renderStatus(){}
@@ -603,7 +585,7 @@ AI.serverCheck.then(ok=>{if(!ok)return;renderStatus();if(view==='chat')render();
 /* ---------- 돌아보기 이후: 게임 화면과 같은 틀(왼쪽 그림, 오른쪽 종이 카드) ---------- */
 const EPI=['돌아보기','질문·조사','결과물','완성'];
 function epiArt(c,active,extra=''){return `<aside class="stage-art">
-  <figure class="portrait">${art(c,'card')}<figcaption><strong>${esc(c.name)}</strong>${esc(c.country)} · ${esc(c.region)}${playerTag()}</figcaption></figure>
+  <figure class="portrait">${art(c,'card')}<figcaption><strong>${esc(c.name)}</strong>${esc(c.country)} · ${esc(c.region)}</figcaption></figure>
   <ol class="pips" aria-label="마무리 단계">${EPI.map((t,i)=>`<li class="${i<active?'done':i===active?'now':''}"${i===active?' aria-current="step"':''}>${t}</li>`).join('')}</ol>
   ${extra||`<p class="wish">“${esc(c.wish)}”</p>`}
 </aside>`;}
@@ -815,7 +797,7 @@ function docLetter(c,f){return `<article class="doc doc-letter">
   <p class="lt-to">${esc(f.l_to||'받는 분께')}</p>
   <div class="lt-body">${paras(f.l_learned)}${paras(f.l_ask)}${paras(f.l_me)}</div>
   <p class="lt-date">${longDate(f)}</p>
-  <p class="lt-from">${esc(f.nickname||'')} 드림</p>
+  <p class="lt-from">${esc(f.nickname||'익명')} 드림</p>
   <footer class="lt-ps"><p>덧붙임 · 이 편지는 ${esc(c.country)} ${esc(c.region)}의 상황을 다룬 수업에서 썼습니다. 제가 읽은 자료: ${c.sources.map(s=>esc(s.title)).join(', ')}</p>${fictionNote(c)}</footer>
 </article>`;}
 const DOCS={article:docArticle,policy:docPolicy,letter:docLetter};
@@ -830,13 +812,15 @@ function report(c){const f=fields(),fm=fmtOf();
   <div class="side-actions no-print"><button class="link" data-nav="plan">← ${esc(fm.name)} 고치기</button></div>`;
   return `<div class="game">${epiArt(c,4,side)}<div class="stage-main"><article class="paper-card report">
   <header class="card-head no-print"><p class="label">마무리 4/4 · 완성</p><h1>나의 ${esc(fm.name)}가 완성됐어요.</h1><p class="muted">아래에서 확인하고, 맨 아래에서 제출하세요.</p></header>
-  <div class="card-body">${DOCS[f.format](c,f)}${appendix(c)}${submitBox()}</div>
+  <div class="card-body">${DOCS[f.format](c,{...f,nickname:writer()})}${appendix(c)}${submitBox()}</div>
   <footer class="card-foot no-print"><button class="btn ghost" data-nav="gallery">갤러리 보기</button><button class="btn ghost" data-action="random">다른 캐릭터 뽑기</button><p class="sec-note">새 캐릭터를 시작하면 지금 기록이 바뀝니다. 먼저 제출해 두세요.</p></footer>
 </article></div></div>`;}
 
 /* ---------- 제출과 갤러리 ---------- */
 // 학년·반·번호·이름은 다음 캐릭터를 할 때도 다시 쓰도록 state.me에 둔다.
 const GALLERY_PATH='api/gallery';
+// 완성 화면의 기자·제안자·보내는 사람 이름. 제출 칸에 적은 학년·반·이름을 쓰고, 비어 있으면 익명.
+const writer=()=>{const m=meOf(),n=String(m.name||'').trim();return n?(m.grade&&m.cls?`${m.grade}학년 ${m.cls}반 `:'')+n:'';};
 const meOf=()=>{if(!state.me||typeof state.me!=='object')state.me={grade:'',cls:'',num:'',name:''};return state.me;};
 let submitting=false;
 function submitBox(){
@@ -992,7 +976,7 @@ document.addEventListener('click',async e=>{
   if(a==='redraw')draw(c.id);
   if(a==='resume')navigate(state.run?.view||'home');
   if(a==='enter-chat')navigate('chat');
-  if(a==='join')openJoinModal(c);
+  if(a==='join'){AI.serverCheck.then(()=>prefetchChips(c));navigate('chat');}
   if(a==='confirm'){const p=chatOf(state.run.step).proposal;if(!pending&&Number.isInteger(p))lock(c,p);}
   if(a==='keep-talking'){chatOf(state.run.step).proposal=null;save();render();document.querySelector('#say')?.focus();}
   if(a==='show-options'){chatOf(state.run.step).showOptions=true;save();render();}
@@ -1013,12 +997,6 @@ document.addEventListener('click',async e=>{
   if(a==='clear')dialog({title:'이 브라우저의 기록을 지울까요?',body:'지금 이야기와 완료 목록이 지워져요. 이미 내려받은 파일은 그대로 남아요.',ok:'지우기',cancel:'그만두기',icon:'?'}).then(ok=>{if(!ok)return;state={run:null,completed:[]};save();navigate('home');toast('이 브라우저의 기록을 지웠어요.');});
 });
 document.addEventListener('submit',async e=>{
-  if(e.target.id==='join-form'){
-    e.preventDefault();
-    const box=document.querySelector('#join-name'),name=box.value.trim();
-    if(!name){box.focus();box.classList.add('shake');setTimeout(()=>box.classList.remove('shake'),400);return;}
-    state.run.fields.nickname=name;save();closeModal();navigate('chat');return;
-  }
   if(e.target.id==='submit-form'){e.preventDefault();submitWork(current());return;}
   if(e.target.id==='admin-form'){e.preventDefault();const pw=document.querySelector('#admin-pw').value;if(!pw)return;gallery.admin=pw;gallery.items=null;closeModal();navigate('gallery');return;}
   if(e.target.id==='ask-form'){e.preventDefault();const box=document.querySelector('#ask');const t=box.value;box.value='';ask(current(),t);return;}

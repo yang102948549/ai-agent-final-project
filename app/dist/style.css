@@ -410,16 +410,8 @@ textarea:focus,input:focus,select:focus{border-color:var(--tone);outline:none}
   .report-block{break-inside:avoid}
 }
 
-/* ---------- 플레이어 등록 팝업 ---------- */
-.modal-box.join{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:32px 24px 22px;animation:pop .25s ease-out}
-.join-face .art{width:104px;margin:0 auto 8px}
-.join h2{font-size:28px;line-height:1.2;letter-spacing:-.035em;margin:0}
-.join-field{width:100%;margin-top:12px;text-align:left}
-.join-field input{width:100%;font-size:20px;padding:14px 16px;background:var(--card);text-align:center}
-.join-go{width:100%;margin-top:6px}
-.join .link{margin-top:2px}
+
 .shake{animation:shake .35s}
-.portrait figcaption .player{display:inline-block;margin:8px 0 0;padding:3px 10px;background:var(--tone);color:var(--white);font-size:13px;font-weight:600;opacity:1}
 @keyframes pop{from{transform:scale(.94);opacity:0}to{transform:none;opacity:1}}
 @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 
@@ -515,7 +507,6 @@ textarea:focus,input:focus,select:focus{border-color:var(--tone);outline:none}
   .game.play .stage-art .art{height:calc(var(--stage-h) - 48px);max-height:none;aspect-ratio:auto}
   .game.play .stage-art .art img{object-position:50% 18%}
 }
-.modal-box.join .btn{background:var(--tone);border-color:var(--tone)}
 
 /* ---------- 홈: 텍스트 높이에 맞춘 열두 사람의 사진 앨범 ---------- */
 .title-screen{position:relative;display:grid;grid-template-columns:minmax(400px,40%) minmax(0,1fr);align-content:center;column-gap:clamp(20px,3vw,48px);width:100vw;margin:-24px 0 -24px calc(50% - 50vw);min-height:calc(100dvh - var(--topbar));padding:70px clamp(24px,4vw,64px) 90px}
@@ -565,11 +556,11 @@ html,body{overflow-x:clip}
 
 /* ---------- 명조와 고딕: 제목·이야기·대사는 명조(따뜻한 이야기책 느낌), 화면 조작과 설명은 고딕 ---------- */
 h1,h2,blockquote,.brand,.art-initial,.portrait figcaption strong,.tile strong,.slot strong,#select-status,.stage-art .wish,
-.story,.msg.narr,.msg.say,.passing,.ask,.recap-item strong,.clear-badge,.join h2,.life h2,.dialog-icon{font-family:var(--serif)}
+.story,.msg.narr,.msg.say,.passing,.ask,.recap-item strong,.clear-badge,.life h2,.dialog-icon{font-family:var(--serif)}
 .msg.say b{font-family:var(--sans)}
 .msg.narr{font-style:italic}
 /* 명조는 굵기가 400·700뿐이고 글자 사이가 넓어 보이므로 자간을 덜 좁힌다 */
-h1,h2,.brand,.portrait figcaption strong,.tile strong,.join h2,.life h2{font-weight:700;letter-spacing:-.015em}
+h1,h2,.brand,.portrait figcaption strong,.tile strong,.life h2{font-weight:700;letter-spacing:-.015em}
 .profile h1{letter-spacing:-.02em;line-height:1.05}
 .card-head h1{line-height:1.3}
 .story{line-height:1.95}

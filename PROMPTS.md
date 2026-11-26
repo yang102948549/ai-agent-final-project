@@ -462,3 +462,19 @@
 
 - 라이브 검증 — `app.js?v=6973754653` 반영. `check-hero-autoplay.mjs https://onischool.net/anotherday/`의 데스크톱·모바일 자동 재생 및 일시정지/재생 모두 PASS. 라이브 후 화면은 `local-assets/screenshots/2026-11-26-hero-autoplay-live/after-desktop-reduced.png`(1440×900), `after-mobile-reduced.png`(780×1688)에 보존하고 각각 직접 열어 확인했다.
 - 공개 전후 — [PC 전](screenshots/2026-11-26-hero-autoplay/before-desktop-reduced.png) · [PC 후](screenshots/2026-11-26-hero-autoplay/after-desktop-reduced.png) · [모바일 전](screenshots/2026-11-26-hero-autoplay/before-mobile-reduced.png) · [모바일 후](screenshots/2026-11-26-hero-autoplay/after-mobile-reduced.png).
+
+## 2026-11-26-no-nickname
+
+- 실제 요청 — “그리고 시작 시 이름 닉네님을 입력하는 란은 걷어내자. 왜냐하면 이 사람의 삶을 사는거니까 내가 해당인물이 된거잖아. 갤러리 제출 때에만 지금 현재 방식처럼 내 정보를 입력하면 돼”
+- 앞선 확인(같은 대화) — “생각해보기 입력 필드 란에 그냥 ㄷㄷ만 입력해도 다음 단게로 진행되는데?” → 사용자 Chrome 탭이 배포 전 옛 질문 문구와 글자 수 표시 없는 화면이었다. 라이브(`app.js?v=6973754653`)에서 같은 입력을 재현하면 “2 / 20자 · 18자 더”와 안내창이 떠 진행이 막혔다. 첫 페이지는 `Cache-Control: max-age=0`이라 새로고침하면 새 버전이 열리며, 배포 전부터 열려 있던 단일 페이지 탭이 원인이었다. 코드 변경 없음.
+- 진행 기록
+  1. 수정 전 촬영 — 로컬 `http://127.0.0.1:4193/`, 가나 코피, AI 차단. 인물 소개에서 ‘이 사람으로 시작’을 누른 화면(`before-*-join.png`)에 ‘플레이어 등록 · 플레이어 이름’ 팝업, 장면 화면(`before-*-chat.png`)에 초상 아래 ‘플레이어 · 테스트’ 표시를 확인했다.
+  2. 구현 — 이름 입력 팝업(`openJoinModal`, `join-form` 처리)과 초상 아래 플레이어 표시(`playerTag`)를 없애고, ‘이 사람으로 시작’을 누르면 대화 칩을 미리 준비하며 곧바로 아침 장면으로 들어가게 했다. 결과물의 기자·제안자·보내는 사람은 갤러리 제출 칸의 학년·반·이름을 쓰고(`writer()`), 비어 있으면 ‘익명’으로 둔다. 갤러리 제출 칸과 갤러리 표시는 그대로다. 쓰지 않게 된 팝업·플레이어 CSS를 지웠다. 첫 치환 스크립트는 파일 줄바꿈이 CRLF로 바뀌어 있어 일치하지 않아 변경 없이 멈췄고, 줄바꿈과 무관하게 다시 작성해 적용했다.
+  3. 검증 — `npm run validate` PASS(12명·47장면·94선택지·96경로), `node --check` PASS. 새 `node tools/check-no-nickname.mjs --url http://127.0.0.1:4193/` 9항목 ALL PASS(팝업 없음, 바로 장면 이동, 선택지 2개, 플레이어 표시 없음, 제출 정보 없으면 ‘익명 드림’, 있으면 ‘2학년 3반 홍길동 드림’, 제출 칸 유지, JS 오류 없음). 기존 `check-min-length.mjs` 15항목 ALL PASS.
+  4. 수정 후 촬영 — 같은 조건으로 `after-*-join.png`(시작을 누르면 바로 ‘“오늘 하루만 같이 가자”’ 아침 장면), `after-*-chat.png`, `after-*-reflect.png`(돌아보기 초상에도 플레이어 표시 없음). 각각 열어 잘림·가림이 없음을 확인했다. 원본은 `local-assets/screenshots/2026-11-26-no-nickname/`, 데스크톱 1440×900·모바일 780×1688.
+  5. 대화 캡처 — 이번엔 모니터 2대(1920×1080 + 2400×1350)라 전체 4800×1350을 `local-assets/conversations/2026-11-26-no-nickname/01-request-full.png`로 저장했다. 오른쪽 모니터만 잘라 본 파일은 창 경계와 맞지 않아 대화가 잘려 지웠고, 사용자 지시대로 전체 화면을 기록으로 쓴다.
+  6. 커밋 정리 — 다른 세션의 히어로 자동 재생 작업(이미 배포·라이브 검증 완료)이 스테이징된 채 남아 있어, 섞이지 않게 그 스테이징 그대로 `d6406b9`로 먼저 커밋하고 이번 작업을 따로 커밋했다.
+- 공개한 대표 화면 — [전 · 이름 입력 팝업](screenshots/2026-11-26-no-nickname/before-desktop-join.png) · [후 · 바로 아침 장면](screenshots/2026-11-26-no-nickname/after-desktop-join.png) · [후 모바일](screenshots/2026-11-26-no-nickname/after-mobile-join.png) · [전 모바일 장면](screenshots/2026-11-26-no-nickname/before-mobile-chat.png) · [후 돌아보기](screenshots/2026-11-26-no-nickname/after-desktop-reflect.png)
+- 대화 캡처 — [요청 장면](screenshots/conversations/2026-11-26-no-nickname/01-request.png)
+- 변경 파일 — `app/dist/app.js`, `app/dist/style.css`, `app/tools/check-no-nickname.mjs`(신규), `PROMPTS.md`, `CHECKLIST.md`, `conversations/README.md`, `screenshots/2026-11-26-no-nickname/`, `screenshots/conversations/2026-11-26-no-nickname/`.
+- 배포 — 아직 하지 않았다.

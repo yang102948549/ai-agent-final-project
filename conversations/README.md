@@ -21,3 +21,9 @@
 [작업 화면(개인정보 가림)](../screenshots/conversations/2026-11-26-paseo-workflow/paseo-workflow-redacted.png)
 
 창 캡처 원본은 `local-assets/conversations/2026-11-26-paseo-workflow/paseo-workflow-original.png`(1536×816)에 보존했다. 공개본은 이전 캡처 속 개인정보·전송 전 입력·외부 문서 주소를 가림 표시했으며 나머지 실제 화면은 변경하지 않았다. 이 자료는 작업 방식 증거이며, 1920×1080 모니터 원본 요건을 충족한 영상용 촬영본은 아니다. 창 제어에서 사용자 입력 감지가 반복되어 추가 확대·스크롤은 수행하지 않았다.
+
+## 개선 판단 — 2026-11-26-no-nickname
+
+실제 요청과 판단은 [PROMPTS.md](../PROMPTS.md#2026-11-26-no-nickname)에 있다. 핵심 결정은 학생이 그 인물로 하루를 사는 활동이므로 시작할 때 이름을 받지 않고, 갤러리 제출 때만 학년·반·이름을 받는 것이다.
+
+대화 캡처(4800×1350, 모니터 2대 전체, 2026-11-26): [요청 장면](../screenshots/conversations/2026-11-26-no-nickname/01-request.png)
