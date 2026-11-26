@@ -414,3 +414,18 @@
 - 대표 화면 — [PC 전](screenshots/2026-11-26-deploy-hero-album/before-desktop.png) · [PC 후](screenshots/2026-11-26-deploy-hero-album/after-desktop.png) · [모바일 전](screenshots/2026-11-26-deploy-hero-album/before-mobile.png) · [모바일 후](screenshots/2026-11-26-deploy-hero-album/after-mobile.png).
 - 변경 파일 — README.md, CHECKLIST.md, PROMPTS.md, app/design/hero-album.md, app/tools/check-hero-album.mjs, screenshots/2026-11-26-deploy-hero-album/.
 - 대화 캡처 — 앞선 같은 세션에서 대화 앱 접근 승인 시간이 초과되어 캡처 대기 상태다. 실제 요청은 위 발췌로 남겼다.
+
+## 2026-11-26-min-length
+
+- 실제 요청 — “활동 돌아보기 시 질문이 조금 막연해 내가 개인적으로 바꿀 수 없던 것은 무엇이었나요라는 질문 같은 경우 작성하기가 어려워. 그리고 최소 글자를 정하자. 20글자 이상은 작성해야 해. 활동돌아보기 이후에 학생들이 작성하는 모든 내용들은 최소글자가 있어야 해. 개선해줘.”
+- 한 일
+  1. 돌아보기 두 번째 질문 ‘내 선택만으로는 바꾸기 어려웠던 것은?’을 ‘(인물 이름)가 무엇을 골라도 그대로였던 어려움은?’으로 바꾸고, 누르면 칸에 들어가 첫 빈칸이 선택되는 문장 틀 5개(시설·돈·제도·안전·자연)를 추가했다. 첫 번째 질문에도 ‘무엇이, 왜 중요했는지’ 안내와 20자 이상 예시를 넣었다.
+  2. 돌아보기 이후 학생이 쓰는 모든 칸(돌아보기 2칸, 나의 질문, 알게 된 것, 결과물 형식별 4칸)에 최소 20자를 적용했다. 공백은 여러 칸이어도 한 칸으로 센다. 짧아야 자연스러운 신문 제목·제안 이름·편지 받는 사람만 10자로 두었다(`MIN_SHORT`에서 조정 가능). 질문 틀·문장 틀의 ____ 빈칸이 남아 있으면 덜 쓴 것으로 본다.
+  3. 칸 아래에 ‘2 / 20자 · 18자 더’처럼 실시간 글자 수를 보여 주고 기준을 넘으면 테마색 ‘n자 · 좋아요’로 바뀐다. 다음 단계·피드백 대화·완성 버튼에서 기준 미달이면 안내창을 띄우고 첫 미달 칸으로 이동한다.
+  4. 대화·AI 질문·피드백 대화 입력창은 짧게 주고받는 채팅이라 최소 글자 대상에서 제외했다.
+- 변경 파일 — `app/dist/app.js`, `app/dist/style.css`, `app/tools/check-min-length.mjs`(신규), `CHECKLIST.md`, `PROMPTS.md`, `screenshots/2026-11-26-min-length/`.
+- 검증 — `npm run validate` PASS(12명·47장면·94선택지·96경로), `node --check dist/app.js` PASS. `node tools/check-min-length.mjs --url http://127.0.0.1:4193/` 15항목 ALL PASS: 새 질문 표시, 글자 수 표시, 문장 틀 입력과 빈칸 안내, 미달 시 돌아보기·질문·조사·결과물 각 단계 진행 차단, 기준 충족 시 이동, 편지 받는 사람 10자 기준, 완성 화면 도달, JS 오류 없음. 첫 실행은 검사 스크립트가 안내창을 `#modal`로 잘못 찾아 실패했고, 실제 안내창(`.modal.dialog`)을 기다리도록 고친 뒤 통과했다.
+- 화면 — 로컬 `http://127.0.0.1:4193/`, 투발루 시오네·닉네임 `테스트`·선택 [0,0,0]·첫 칸에 ‘가족’ 입력, AI 차단. 원본은 `local-assets/screenshots/2026-11-26-min-length/`의 before/after-desktop(1440×900), before/after-mobile(780×1688)과 `-fields`(입력 칸으로 이동), `-lab`(질문·조사), after `-starter`(돈 문장 틀 선택) 변형. 저장한 화면을 열어 새 질문과 안내문, 글자 수 표시, 문장 틀 5개가 데스크톱·모바일에서 잘리거나 버튼을 가리지 않는 것, 문장 틀을 누르면 첫 빈칸이 선택되고 ‘빈칸(____)을 채워 주세요’가 뜨는 것을 확인했다.
+- 공개한 대표 화면 — [전 PC](screenshots/2026-11-26-min-length/before-desktop-fields.png) · [후 PC](screenshots/2026-11-26-min-length/after-desktop-fields.png) · [전 모바일](screenshots/2026-11-26-min-length/before-mobile-fields.png) · [후 모바일](screenshots/2026-11-26-min-length/after-mobile-fields.png) · [문장 틀 선택](screenshots/2026-11-26-min-length/after-mobile-starter.png) · [질문·조사 글자 수](screenshots/2026-11-26-min-length/after-desktop-lab.png)
+- 대화 캡처 — 촬영하지 못했다(대기). 위 실제 요청 발췌로 대신한다.
+- 배포 — 로컬 구현·검증·커밋까지. 원격 푸시와 배포는 하지 않았다.

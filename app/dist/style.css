@@ -887,3 +887,8 @@ select:focus-visible{outline:2px solid var(--tone);outline-offset:2px}
   @media (max-width:900px){.game.play .scene-card:not(.result){min-height:calc(100dvh - var(--topbar) - 70px)}}
 }
 @media (pointer:coarse){.card-foot.talk .say-box .btn{min-height:36px}}
+/* 최소 글자 수 안내: 칸 아래 오른쪽. 채우면 테마색으로 바뀐다. */
+.field .count{margin-top:6px;text-align:right;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.field .count.ok{color:var(--tone);font-weight:600}
+.starters{margin-top:10px}
+.starters .chip b{font-weight:700;color:var(--tone);margin-right:2px}

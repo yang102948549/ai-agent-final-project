@@ -45,7 +45,18 @@ function dialog({title,body='',ok='확인',cancel='',icon='!'}){
   });
 }
 // 비어 있는 첫 칸으로 데려간다.
-function focusEmpty(names){const n=names.find(k=>!fields()[k]?.trim());const el=n&&document.querySelector(`[data-field="${n}"]`);if(el){el.scrollIntoView({block:'center',behavior:reduceMotion?'auto':'smooth'});el.focus({preventScroll:true});}}
+// 돌아보기부터 학생이 쓰는 칸은 최소 글자 수를 채워야 다음으로 넘어간다. 공백은 몇 칸이든 한 칸으로 센다.
+// 제목·받는 사람처럼 짧아야 자연스러운 칸만 기준을 낮춘다. ____ 빈칸이 남아 있으면 아직 덜 쓴 것으로 본다.
+const MIN_LEN=20,MIN_SHORT={a_title:10,p_title:10,l_to:10};
+const minOf=k=>MIN_SHORT[k]||MIN_LEN;
+const lenOf=v=>String(v||'').replace(/s+/g,' ').trim().length;
+const hasBlank=v=>String(v||'').includes('____');
+const short=k=>lenOf(fields()[k])<minOf(k)||hasBlank(fields()[k]);
+const countText=(k,v)=>{const n=lenOf(v),m=minOf(k);return hasBlank(v)?'빈칸(____)을 채워 주세요':n>=m?`${n}자 · 좋아요`:`${n} / ${m}자 · ${m-n}자 더`;};
+function countEl(k){const v=fields()[k];return `<small class="count${short(k)?'':' ok'}" data-count="${k}" aria-live="polite">${countText(k,v)}</small>`;}
+// 덜 쓴 칸이 있으면 알려 주고 그 칸으로 데려간다. 모두 채웠으면 false.
+function needMore(names,title){const miss=names.filter(short);if(!miss.length)return false;const one=miss.length===1?`이 칸은 ${minOf(miss[0])}자 이상 써야 해요.`:`${miss.length}칸이 아직 최소 글자 수(${MIN_LEN}자)에 못 미쳐요.`;dialog({title,body:one+' 해당 칸으로 안내할게요.'}).then(()=>focusEmpty(names));return true;}
+function focusEmpty(names){const n=names.find(short);const el=n&&document.querySelector(`[data-field="${n}"]`);if(el){el.scrollIntoView({block:'center',behavior:reduceMotion?'auto':'smooth'});el.focus({preventScroll:true});}}
 function toast(msg){const el=document.querySelector('#toast');el.textContent=msg;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),3800);}
 function navigate(next){
   view=next;
@@ -191,7 +202,7 @@ function sceneArt(c,step,kind='card',extra='',opts={}){
 function preloadArt(){
   for(const kind of ['face','card'])for(const c of cases)preloadUrl(artSrc(c.id,kind));
 }
-function field(name,label,placeholder='',required=false,help=''){return `<label class="field"><span>${esc(label)}${required?' <em>필수</em>':''}</span>${help?`<small>${esc(help)}</small>`:''}<textarea data-field="${name}" name="${name}" maxlength="4000" ${required?'required':''} placeholder="${esc(placeholder)}">${esc(fields()[name]||'')}</textarea></label>`;}
+function field(name,label,placeholder='',required=false,help=''){return `<label class="field"><span>${esc(label)}${required?' <em>필수</em>':''}</span>${help?`<small>${esc(help)}</small>`:''}<textarea data-field="${name}" name="${name}" maxlength="4000" ${required?'required':''} placeholder="${esc(placeholder)}">${esc(fields()[name]||'')}</textarea>${required?countEl(name):''}</label>`;}
 function tile(c){const i=cases.indexOf(c),done=state.completed.includes(c.id);return `<button class="tile" data-start="${c.id}" style="--tone:${TONE[c.id]}">${art(c,'card')}<span class="tile-body"><span class="tile-meta">${esc(c.theme)}${done?' · 완료':''}</span><strong>${esc(c.name)}</strong><span class="tile-title">${esc(c.title)}</span><span class="tile-desc">${esc(c.summary)}</span></span></button>`;}
 
 /* ---------- 홈 · 목록 · 안내 ---------- */
@@ -602,12 +613,20 @@ function epiArt(c,active,extra=''){return `<aside class="stage-art">
 function recap(c){return `<div class="recap">${c.scenes.map((s,i)=>{const o=s.options[state.run.choices[i]];return `<div class="recap-item"><span class="label">${esc(s.time)}</span><strong>${esc(o?.text||'고르지 않음')}</strong><details><summary>선택을 넘어</summary><p>${esc(s.barrier)}</p></details></div>`;}).join('')}</div>`;}
 function sec(title,body,note=''){return `<section class="sec"><h2>${title}</h2>${note?`<p class="sec-note">${note}</p>`:''}${body}</section>`;}
 
+// 돌아보기 두 번째 칸: 막연하지 않도록 원인 갈래별 문장 틀을 준다. 누르면 칸에 들어가고 첫 빈칸이 선택된다.
+const STARTERS=[
+  ['시설','마을에 ____이(가) 없어서, 어떤 선택을 해도 ____할 수 없었다.'],
+  ['돈','집에 돈이 부족해서, ____ 대신 ____할 수밖에 없었다.'],
+  ['제도','____(법·규칙·차별) 때문에, 원해도 ____할 수 없었다.'],
+  ['안전','____이(가) 위험해서, ____을(를) 포기해야 했다.'],
+  ['자연','____(날씨·바다·땅) 때문에, 노력해도 ____은(는) 달라지지 않았다.'],
+];
 function reflect(c){return `<div class="game">${epiArt(c,0)}<div class="stage-main"><article class="paper-card">
   <header class="card-head"><p class="label">마무리 1/4 · 돌아보기</p><h1>어려웠던 건, 선택만의 문제였을까요?</h1></header>
   <form id="reflection-form">
     <div class="card-body">
       ${sec('나의 하루',recap(c),'세 장면에서 내가 고른 것입니다. ‘선택을 넘어’를 펼쳐 다시 읽어 보세요.')}
-      ${sec('생각해 보기',field('feeling',`${c.name}에게 가장 중요했던 것은?`,'한두 문장이면 충분해요. 예: 친구와 함께 학교에 다니는 평범한 하루',true)+field('constraint','내 선택만으로는 바꾸기 어려웠던 것은?','예: 물을 길으러 가야 하는 거리, 일꾼을 쓸 수 없는 형편',true,'시설·돈·제도·안전 가운데 떠오르는 것을 적어 보세요.'))}
+      ${sec('생각해 보기',field('feeling',`${c.name}에게 가장 중요했던 것은?`,'예: 친구와 함께 학교에 다니는 평범한 하루가 가장 중요했다. 시험을 보러 가는 길에서도 그 마음이 느껴졌다.',true,'무엇이, 왜 중요했는지 함께 써 보세요.')+field('constraint',`${josa(c.name,'이','가')} 무엇을 골라도 그대로였던 어려움은?`,'예: 마을에 정수 시설이 없어서, 어떤 선택을 해도 깨끗한 물을 마시기 어려웠다.',true,`위 ‘선택을 넘어’를 펼쳐 보세요. 아래 문장 틀 하나를 눌러 빈칸(____)을 채우면 돼요.`)+`<div class="frames starters" role="group" aria-label="문장 틀">${STARTERS.map(([k,t],i)=>`<button type="button" class="chip" data-starter="${i}"><b>${k}</b> ${esc(t)}</button>`).join('')}</div>`)}
     </div>
     <footer class="card-foot step-nav"><button class="btn ghost back" type="button" data-nav="chat">← 대화로</button><button class="btn big" type="submit">질문 만들고 조사하기 →</button></footer>
   </form>
@@ -928,7 +947,8 @@ function render(){
 /* ---------- 입력 처리 ---------- */
 document.addEventListener('input',e=>{const el=e.target;
   // 대화 입력칸은 쓰는 만큼 늘어난다(최대 약 5줄)
-  if(el.id==='say'){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,140)+'px';}if(el.dataset.me!==undefined){meOf()[el.dataset.me]=el.value;save();return;}if(el.dataset.field&&state.run){state.run.fields[el.dataset.field]=el.type==='checkbox'?el.checked:el.value;save();}});
+  if(el.id==='say'){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,140)+'px';}if(el.dataset.me!==undefined){meOf()[el.dataset.me]=el.value;save();return;}if(el.dataset.field&&state.run){state.run.fields[el.dataset.field]=el.type==='checkbox'?el.checked:el.value;save();updateCount(el.dataset.field);}});
+function updateCount(k){const box=document.querySelector(`[data-count="${k}"]`);if(!box)return;box.textContent=countText(k,fields()[k]);box.classList.toggle('ok',!short(k));}
 document.addEventListener('change',e=>{const el=e.target;if(el.dataset.gfilter!==undefined){gallery.filter[el.dataset.gfilter]=el.value;render();}});
 document.addEventListener('click',async e=>{
   const el=e.target.closest('button,a#brand');if(!el)return;
@@ -961,13 +981,14 @@ document.addEventListener('click',async e=>{
     chatOf(state.run.step).log.push({k:'me',text:o.text});lock(c,n);
     return;
   }
-  if(el.dataset.frame!==undefined){const t=frames(c)[Number(el.dataset.frame)],box=document.querySelector('[data-field="question"]');if(t&&box){box.value=t;state.run.fields.question=t;save();box.focus();const i=t.indexOf('____');if(i>=0)box.setSelectionRange(i,i+4);}return;}
+  if(el.dataset.starter!==undefined){const t=STARTERS[Number(el.dataset.starter)]?.[1],box=document.querySelector('[data-field="constraint"]');if(t&&box){box.value=t;state.run.fields.constraint=t;save();updateCount('constraint');box.focus();const i=t.indexOf('____');if(i>=0)box.setSelectionRange(i,i+4);}return;}
+  if(el.dataset.frame!==undefined){const t=frames(c)[Number(el.dataset.frame)],box=document.querySelector('[data-field="question"]');if(t&&box){box.value=t;state.run.fields.question=t;save();updateCount('question');box.focus();const i=t.indexOf('____');if(i>=0)box.setSelectionRange(i,i+4);}return;}
   if(el.dataset.ask!==undefined){const k=el.dataset.ask;if(k==='mine'){const q=fields().question?.trim();if(!q){dialog({title:'질문을 먼저 써 주세요',body:'"내가 알아볼 질문" 칸을 채우면 AI에게 물어볼 수 있어요.'}).then(()=>focusEmpty(['question']));return;}ask(c,'내 질문: '+q);}else ask(c,k);return;}
-  if(el.dataset.take!==undefined){const e=labOf().log[Number(el.dataset.take)];if(!e?.point)return;const line='• '+e.point+(e.check?' (확인: '+e.check+')':'');const box=document.querySelector('[data-field="notes"]');const v=(fields().notes||'').trim();state.run.fields.notes=(v?v+'\n':'')+line;if(box)box.value=state.run.fields.notes;e.taken=true;save();renderAsk();toast('메모에 담았어요. 내 말로 고쳐 써 보세요.');return;}
+  if(el.dataset.take!==undefined){const e=labOf().log[Number(el.dataset.take)];if(!e?.point)return;const line='• '+e.point+(e.check?' (확인: '+e.check+')':'');const box=document.querySelector('[data-field="notes"]');const v=(fields().notes||'').trim();state.run.fields.notes=(v?v+'\n':'')+line;if(box)box.value=state.run.fields.notes;updateCount('notes');e.taken=true;save();renderAsk();toast('메모에 담았어요. 내 말로 고쳐 써 보세요.');return;}
   if(el.dataset.format){state.run.fields.format=el.dataset.format;save();render();document.querySelector('.formats')?.scrollIntoView({block:'start',behavior:'smooth'});return;}
   if(el.dataset.rv!==undefined){const last=[...reviewOf().log].reverse().find(x=>x.k==='say');const t=last?.chips?.[Number(el.dataset.rv)];if(t)reviewSay(c,t);return;}
   const a=el.dataset.action;
-  if(a==='review-start'||a==='review-again'){const miss=fmtOf().fields.find(([n])=>!fields()[n]?.trim());if(miss){dialog({title:'빈칸을 먼저 채워 주세요',body:'네 칸을 모두 쓰면 보여 줄 수 있어요.'}).then(()=>focusEmpty(fmtOf().fields.map(([n])=>n)));return;}reviewSay(c,a==='review-start'?'제가 쓴 글이에요. 읽어 봐 주세요.':'글을 고쳤어요. 다시 읽어 봐 주세요.',a==='review-start'?'':'— 고친 글을 다시 보여 줬어요 —');return;}
+  if(a==='review-start'||a==='review-again'){if(needMore(fmtOf().fields.map(([n])=>n),'조금 더 써 주세요'))return;reviewSay(c,a==='review-start'?'제가 쓴 글이에요. 읽어 봐 주세요.':'글을 고쳤어요. 다시 읽어 봐 주세요.',a==='review-start'?'':'— 고친 글을 다시 보여 줬어요 —');return;}
   if(a==='rv-send'){const box=document.querySelector('#rv-say');if(box?.value.trim()){const t=box.value;box.value='';reviewSay(c,t);}return;}
   if(a==='random')draw();
   if(a==='redraw')draw(c.id);
@@ -987,7 +1008,7 @@ document.addEventListener('click',async e=>{
     else{navigate('reflect');dayPass(c,from,3);}
   }
   if(a==='prev-scene'){state.run.step=Math.max(0,state.run.step-1);save();navigate('chat');}
-  if(a==='to-plan'){const miss=['question','notes'].filter(k=>!fields()[k]?.trim());if(miss.length){dialog({title:miss[0]==='question'?'질문을 먼저 정해 주세요':'알게 된 것을 적어 주세요',body:'비어 있는 칸으로 안내할게요.'}).then(()=>focusEmpty(miss));return;}navigate('plan');}
+  if(a==='to-plan'){const miss=['question','notes'].filter(short);if(miss.length&&needMore(['question','notes'],miss[0]==='question'?'질문을 조금 더 구체적으로':'알게 된 것을 조금 더 자세히'))return;navigate('plan');}
   if(a==='gallery-reload'){gallery.items=null;render();}
   if(a==='gallery-admin')openAdmin();
   if(a==='gallery-admin-off'){gallery.admin='';gallery.items=null;render();}
@@ -1014,8 +1035,8 @@ document.addEventListener('submit',async e=>{
     catch(err){AI.clear();msg.textContent=err.message;btn.disabled=false;}
     return;
   }
-  if(e.target.id==='reflection-form'){e.preventDefault();if(['feeling','constraint'].some(k=>!fields()[k]?.trim())){dialog({title:'돌아보기 두 칸을 모두 적어 주세요',body:'비어 있는 칸으로 안내할게요.'}).then(()=>focusEmpty(['feeling','constraint']));return;}navigate('lab');}
-  if(e.target.id==='plan-form'){e.preventDefault();const fm=fmtOf();if(!fm)return;const names=fm.fields.map(([n])=>n);if(names.some(n=>!fields()[n]?.trim())){dialog({title:fm.name+'의 네 칸을 모두 적어 주세요',body:'비어 있는 칸으로 안내할게요.'}).then(()=>focusEmpty(names));return;}state.run.finishedAt=new Date().toISOString();if(!state.completed.includes(state.run.id))state.completed.push(state.run.id);save();navigate('report');}
+  if(e.target.id==='reflection-form'){e.preventDefault();if(needMore(['feeling','constraint'],'돌아보기를 조금 더 써 주세요'))return;navigate('lab');}
+  if(e.target.id==='plan-form'){e.preventDefault();const fm=fmtOf();if(!fm)return;const names=fm.fields.map(([n])=>n);if(needMore(names,josa(fm.name,'을','를')+' 조금 더 써 주세요'))return;state.run.finishedAt=new Date().toISOString();if(!state.completed.includes(state.run.id))state.completed.push(state.run.id);save();navigate('report');}
 });
 document.addEventListener('keydown',e=>{
   // 대화창: Enter로 보내고 Shift+Enter로 줄을 바꾼다.
