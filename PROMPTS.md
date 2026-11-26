@@ -717,3 +717,11 @@
 - 공개한 대표 화면 — [배포 전](screenshots/2026-11-26-deploy-writing-coach/before-desktop-plan.png) · [배포 후](screenshots/2026-11-26-deploy-writing-coach/after-desktop-plan.png) · [고치기 창](screenshots/2026-11-26-deploy-writing-coach/after-desktop-review-edit.png) · [고치기 창 모바일](screenshots/2026-11-26-deploy-writing-coach/after-mobile-review-edit.png)
 - 변경 파일 — `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-deploy-writing-coach/`. 사이트 저장소 `aef0709`.
 - 푸시 — 사용자 요청에 따라 과제 저장소 main을 origin에 푸시했다.
+
+- PNG 크기: after-desktop.png: 1440×900
+- PNG 크기: after-mobile.png: 780×2894
+- PNG 크기: before-desktop.png: 1440×1138
+- PNG 크기: before-mobile.png: 780×4254
+- 추가 요청: 커밋 푸시 배포까지 완료해줘. 배포 및 원격 푸시 진행.
+- 배포 완료 — 추가 요청에 따라 사이트 저장소 032417d를 origin/main에 푸시. 실제 https://onischool.net/anotherday/ 에서 데스크톱·모바일 수업안내 문구 및 캐릭터 목록 이동 PASS. 라이브 두 PNG도 각각 직접 열어 잘림·가림 없음을 확인했다. [배포 PC](screenshots/2026-11-26-lesson-guide/after-live-desktop.png), [배포 모바일](screenshots/2026-11-26-lesson-guide/after-live-mobile.png). 원본 동일 작업 폴더, 1440×900·780×2896. 앞의 배포 미실시 기록은 추가 요청 이전 상태다.
+- 기록 재시도 — PNG 크기를 출력하는 Python 명령이 cp949 인코딩 오류로 실패해 python -X utf8로 재실행했다.

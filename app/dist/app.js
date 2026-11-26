@@ -92,7 +92,7 @@ const sourceList=c=>`<ul class="sources">${c.sources.map(s=>`<li><a href="${esc(
 const facts=c=>`<ul class="facts">${c.facts.map(f=>`<li>${esc(f)}</li>`).join('')}</ul>`;
 // 캐릭터·장면 그림. kind가 face면 얼굴 부분, 아니면 전신/장면 그림. 그림을 못 읽으면 이름 첫 글자가 보인다.
 // 그림을 바꾸면 ART_V를 올린다. 학교 사이트는 파일을 몇 시간씩 캐시해서, 같은 이름이면 예전 그림이 보일 수 있다.
-const ART_V='20261126-scene-all';
+const ART_V='20261126-diversity';
 // 상황별 장면 그림 매핑(장면 제목 기준). 등록되지 않은 장면은 기본 인물 그림으로 폴백한다.
 const SCENE_ART={
   haiti:{
@@ -255,21 +255,14 @@ function atlas(){const shown=filter==='전체'?cases:cases.filter(c=>c.theme===f
 <div class="tiles">${shown.map(tile).join('')}</div>
 <div class="actions"><button class="btn" data-action="random">무작위로 뽑기</button></div>`;}
 
-function guide(){return `<div class="page-head"><h1>체험에서 공감으로,<br>공감에서 책임으로.</h1><p class="muted">중학교 도덕 · 지구촌 문제 해결 수업. 모든 사례는 자료 시점의 특정 지역 상황이며 나라 전체를 대표하지 않습니다.</p></div>
+function guide(){return `<div class="page-head"><h1>한 사람의 하루에서 시작해,<br>나의 생각을 글로 나눕니다.</h1><p class="muted">‘다른 곳의 하루’는 지구촌의 한 인물이 되어 하루를 보내고, 그 경험에서 생긴 질문을 조사해 나의 글로 완성하는 중학교 도덕 수업입니다. 세 차시에 걸쳐 체험부터 조사, 글쓰기까지 이어집니다.</p></div>
 <div class="grid3">
-  <article class="cell"><p class="label">1차시 · 45분</p><h3>캐릭터와 대화하기</h3><p>도입·뽑기 10분 → 세 장면 대화 20분 → 돌아보기 15분. 다른 선택의 결과도 비교해 봅니다.</p></article>
-  <article class="cell"><p class="label">2차시 · 45분</p><h3>질문하고 조사하기</h3><p>질문 하나 정하기 10분 → 앱 안의 AI 조사 도우미와 원문 자료로 알아보기 25분 → 알게 된 것과 근거 정리 10분.</p></article>
-  <article class="cell"><p class="label">3차시 · 45분</p><h3>해결책을 글로 내놓기</h3><p>신문 기사·정책 제안서·편지 가운데 하나 고르기 5분 → 쓰기 20분 → 이야기 속 인물·선생님과 피드백 대화하며 고치기 15분 → 갤러리에 제출 5분.</p></article>
+  <article class="cell"><p class="label">1차시 · 45분</p><h3>하루를 살아 보고 돌아보기</h3><p>‘게임 시작’으로 인물을 뽑거나 ‘캐릭터 직접 고르기’에서 한 명을 고릅니다. 인물의 소개를 읽고 아침·낮·저녁의 세 장면에서 대화하며 결정을 내립니다. 선택에 따라 달라진 하루를 마친 뒤, 가장 마음에 남은 장면과 인물이 겪은 어려움을 내 말로 돌아봅니다.</p></article>
+  <article class="cell"><p class="label">2차시 · 45분</p><h3>질문하고 알아보기</h3><p>신문 기사·정책 제안서·편지 가운데 어떤 글을 쓸지 고르고, 체험에서 궁금해진 점을 질문으로 만듭니다. 앱의 조사 도우미에게 묻고 연결된 원문 자료를 읽으며 답을 찾아갑니다. 알게 된 내용은 출처와 함께 정리해 글의 근거로 준비합니다.</p></article>
+  <article class="cell"><p class="label">3차시 · 45분</p><h3>글을 쓰고 고쳐 나누기</h3><p>고른 글의 형식에 맞춰 조사한 내용과 나의 생각을 씁니다. 이야기 속 인물·선생님과 피드백 대화를 나누고, ‘피드백 보며 내 글 고치기’에서 글을 다듬습니다. 완성된 글을 확인해 제출한 뒤 갤러리에서 친구들의 글도 읽어 봅니다.</p></article>
 </div>
-<div class="grid2">
-  <article class="cell"><h3>AI 대화 설정</h3><p>onischool.net에서는 학교 서버가 AI 키를 갖고 있어 학생은 키 입력 없이 바로 대화합니다. 키는 학생 기기로 가지 않습니다. AI가 연결되면 선택지 버튼은 보이지 않고, 학생은 답 칩을 누르거나 직접 말하며 대화하다가 세 번째 말부터 나오는 결정 칩(→)이나 직접 쓴 결정으로 장면을 마칩니다. AI를 쓸 수 없을 때는 선택 버튼으로 진행됩니다.</p></article>
-  <article class="cell"><h3>AI 대화의 안전장치</h3><p>대화는 Google 쪽에 저장되지 않게 보냅니다. 괴롭힘·혐오·성적·위험 내용 필터를 켜 두었고, 잔인한 묘사·연애 묘사·개인정보 요청을 막는 지침을 넣었습니다. 그래도 AI는 실수할 수 있으니 수업 중 화면을 살펴 주세요. 학생에게 실명·학교·연락처를 쓰지 않도록 안내해 주세요.</p></article>
-  <article class="cell"><h3>12명을 모두 다루려면</h3><p>학생마다 무작위로 한 명씩 뽑아 개인 활동으로 진행합니다. 무작위 뽑기는 이 브라우저에서 마치지 않은 캐릭터를 먼저 고릅니다. 기기 사이의 중복은 자동으로 조정되지 않으니 ‘캐릭터’ 목록에서 직접 나눠 줄 수 있습니다.</p></article>
-  <article class="cell"><h3>공감을 다루는 방법</h3><p>생존 점수, 빈곤 순위, 사망 결말은 없습니다. 모든 선택에는 얻는 것과 잃는 것이 있습니다. 불편한 장면은 다른 캐릭터로 바꾸거나 자료 읽기로 대신해도 됩니다.</p></article>
-</div>
-<p class="notice"><strong>평가 관점</strong> · 문제와 당사자 이해 / 스스로 정한 질문 / 출처와 시점 확인 / 개인과 제도의 책임 구분 / 형식에 맞는 글쓰기 / 피드백을 반영한 고치기</p>
-<div class="actions"><button class="btn" data-nav="atlas">캐릭터 나눠 주기</button><button class="btn ghost" data-action="clear">이 브라우저의 기록 지우기</button></div>`;}
-
+<p class="notice">한 사람의 이야기에서 출발해, 그가 겪는 문제를 더 알아보고 우리가 할 수 있는 일을 생각합니다. 각 이야기는 자료 시점의 특정 지역 상황을 바탕으로 하며, 한 나라 전체의 모습을 대표하지 않습니다.</p>
+<div class="actions"><button class="btn" data-action="random">게임 시작</button><button class="btn ghost" data-nav="atlas">캐릭터 고르기</button></div>`;}
 /* ---------- 뽑기 · 소개 ---------- */
 function select(){return `<section class="select">
   <p class="label center">캐릭터 뽑기</p>
@@ -638,7 +631,7 @@ function sourcesPanel(c){
     <div class="src-grid">${all.map(card).join('')}</div></details>`;
 }
 
-// 질문을 처음부터 쓰기 막막하지 않게: 완성된 질문을 주지 않고, 고른 글에 맞는 질문을 만드는 방향을 조언한다.
+// AI에게 무엇을 물을지 막막하지 않게: 완성된 질문을 주지 않고, 고른 글에 맞는 질문 방향을 조언한다. 따로 질문 칸은 없고, AI에게 물은 말이 곧 나의 질문으로 기록된다.
 const qTips=c=>{const k=fields().format;return k==='article'?[
   ['무슨 일이, 얼마나',`${c.region}에서 어떤 일이 얼마나 일어나는지 묻는 질문을 만들어 보세요.`],
   ['왜','그런 일이 생기는 까닭을 ‘왜’로 시작해 물어 보세요.'],
@@ -652,7 +645,7 @@ const qTips=c=>{const k=fields().format;return k==='article'?[
   ['알려 줄 사실','받는 사람이 모를 수 있는 사실이 무엇인지 물어 보세요.']];};
 // 결과물 형식 고르기. 질문·조사 맨 앞에서 고르고, 결과물 단계에서 바꿀 수도 있다.
 const formatPicker=f=>`<div class="formats" role="radiogroup" aria-label="결과물 형식">${Object.entries(FORMATS).map(([k,x])=>`<button type="button" class="format${f.format===k?' on':''}" role="radio" aria-checked="${f.format===k}" data-format="${k}"><span class="thumb thumb-${k}" aria-hidden="true"><i></i><i></i><i></i><i></i></span><strong>${x.name}</strong><span>${x.desc}</span><span class="format-reader">읽는 사람 · ${x.reader}</span></button>`).join('')}</div>`;
-const QUICK=[['내 질문에 답해 줘','mine'],['왜 이런 일이 생기는지 쉽게 설명해 줘'],['이미 누가 어떤 노력을 하고 있어?'],['정부·기업·국제사회는 각각 어떻게 볼까?']];
+const QUICK=[['왜 이런 일이 생기는지 쉽게 설명해 줘'],['이미 누가 어떤 노력을 하고 있어?'],['정부·기업·국제사회는 각각 어떻게 볼까?']];
 const labOf=()=>{const r=state.run;if(!r.lab||!Array.isArray(r.lab.log)||!Array.isArray(r.lab.api))r.lab={log:[],api:[]};return r.lab;};
 let asking=false;
 function askEntry(e,i){
@@ -673,7 +666,7 @@ function askPanel(){
 function renderAsk(){const p=document.querySelector('#ask-panel');if(!p)return;p.innerHTML=askPanel();const log=p.querySelector('#ask-log');if(log)log.scrollTop=log.scrollHeight;}
 async function ask(c,text){
   text=String(text||'').trim();if(!text||asking)return;
-  const lab=labOf();lab.log.push({k:'me',text});asking=true;save();renderAsk();
+  const lab=labOf();lab.log.push({k:'me',text});state.run.fields.question=lab.log.filter(e=>e.k==='me').map(e=>e.text).join('\n');asking=true;save();renderAsk();
   try{
     const {reply,history}=await AI.research({c,fields:fields(),refs:refs(c),history:lab.api,text});
     lab.api=history;lab.log.push({k:'ai',...reply});
@@ -685,7 +678,7 @@ function lab(c){const f=fields(),fm=fmtOf();return `<div class="game">${epiArt(c
   <header class="card-head"><p class="label">마무리 2/4 · 질문·조사</p><h1>무엇을 쓸지 정하고, 깊이 알아봐요.</h1></header>
   <div class="card-body">
     ${sec('① 어떤 글로 세상에 내놓을까',formatPicker(f),'먼저 정해요. 글의 종류에 따라 찾아야 할 것과 쓰는 법이 달라져요.')}
-    ${fm?`${sec('② 질문하고 알아보기',`<p class="tip-ref"><b>이야기가 던진 질문</b>${esc(c.question)}</p>`+tipList(qTips(c),'질문 만드는 법')+field('question','내가 알아볼 질문','위의 조언을 보고, 내가 궁금한 것을 내 말로 한 문장으로 써 보세요.',true)+`${sourcesPanel(c)}<div id="ask-panel" class="ask-panel">${askPanel()}</div>`,`${esc(josa(fm.name,'을','를'))} 쓰려면 무엇을 알아야 할까요? 질문 하나를 직접 만들고, 바로 AI에게 묻고 자료에서 확인해 보세요.`)}
+    ${fm?`${sec('② 질문하고 알아보기',`<p class="tip-ref"><b>이야기가 던진 질문</b>${esc(c.question)}</p>`+tipList(qTips(c),'AI에게 묻는 법')+`${sourcesPanel(c)}<div id="ask-panel" class="ask-panel">${askPanel()}</div>`,`${esc(josa(fm.name,'을','를'))} 쓰려면 무엇을 알아야 할까요? 아래 조언을 보고 AI에게 내 말로 직접 묻고, 자료에서 확인해 보세요. 내가 물어본 것은 저절로 기록돼요.`)}
     ${sec('③ 알게 된 것',field('notes','알게 된 것과 근거','예: 해안 지역은 지하수에 바닷물이 섞여 마시기 어렵다 (유니세프 자료)',true,fm.notesHelp+' 어디서 확인했는지 괄호에 적어 주세요.'))}`
     :'<p class="pick-first">글의 종류를 고르면 질문과 조사 칸이 나와요.</p>'}
   </div>
@@ -801,7 +794,7 @@ function plan(c){const f=fields(),fm=fmtOf();return `<div class="game">${epiArt(
     <div class="card-body">
       ${fm?`<div class="genre-head"><div><p class="label">내가 쓰는 글</p><strong>${esc(fm.name)}</strong><p>${esc(fm.voice)}</p></div><button type="button" class="btn ghost small" data-action="format-change">다른 글로 바꾸기</button></div>`
         :sec('① 어떤 글로 만들까',formatPicker(f),'완성하면 고른 형식의 서식으로 갤러리에 올라가요.')}
-      ${fm?sec(`${esc(fm.name)} 쓰기 · 차례대로`,`<div class="my-research"><p><strong>나의 질문</strong>${esc(f.question||'')}</p><p><strong>알게 된 것</strong>${esc(f.notes||'')}</p></div><div class="desk desk-${f.format}">`+fm.fields.map(([n,l,p,h,st],i)=>`<div class="part"><span class="part-no" aria-hidden="true">${i+1}</span>${field(n,l,p,true,h||'')}${tipList(st(c),`${l} 쓰는 조언`)}</div>`).join('')+'</div>','칸마다 쓰는 법과 조언이 있어요. 조언을 보며 내가 알게 된 것을 내 말로 써요.'):''}
+      ${fm?sec(`${esc(fm.name)} 쓰기 · 차례대로`,`<div class="my-research">${f.question?`<p><strong>내가 물어본 것</strong>${esc(f.question)}</p>`:''}<p><strong>알게 된 것</strong>${esc(f.notes||'')}</p></div><div class="desk desk-${f.format}">`+fm.fields.map(([n,l,p,h,st],i)=>`<div class="part"><span class="part-no" aria-hidden="true">${i+1}</span>${field(n,l,p,true,h||'')}${tipList(st(c),`${l} 쓰는 조언`)}</div>`).join('')+'</div>','칸마다 쓰는 법과 조언이 있어요. 조언을 보며 내가 알게 된 것을 내 말로 써요.'):''}
       ${fm?sec('글의 성격 체크',`<div id="genre-check" class="genre-check" aria-live="polite">${genreChecks(c)}</div>`,`${esc(josa(fm.name,'으로','로'))} 읽히는지 보는 기준이에요. 선생님도 이 기준으로 읽어요. 다 갖추지 않아도 완성할 수 있어요.`):''}
       ${fm?sec('피드백 대화',`<div id="rv-panel" class="rv-panel">${reviewPanel(c)}</div>`,'AI는 글을 대신 써 주지 않아요. 대화를 보고 고칠지는 내가 정해요.'):''}
     </div>
@@ -867,7 +860,7 @@ const DOCS={article:docArticle,policy:docPolicy,letter:docLetter};
 function appendix(c){const r=state.run,f=fields(),row=(l,t)=>`<div class="ap-row"><h3>${esc(l)}</h3>${paras(t)}</div>`;return `<section class="appendix">
   <h2>탐구 과정</h2>
   <div class="ap-row"><h3>${esc(c.name)}의 하루에서 내가 고른 것</h3><ol>${c.scenes.map((s,i)=>`<li><strong>${esc(s.time)}</strong> ${esc(s.options[r.choices[i]]?.text||'고르지 않음')}</li>`).join('')}</ol></div>
-  ${row('가장 중요했던 것',f.feeling)}${row('내 선택만으로 바꾸기 어려웠던 것',f.constraint)}${row('나의 질문',f.question)}${row('알게 된 것과 근거',f.notes)}
+  ${row('가장 중요했던 것',f.feeling)}${row('내 선택만으로 바꾸기 어려웠던 것',f.constraint)}${f.question?row('내가 물어본 것',f.question):''}${row('알게 된 것과 근거',f.notes)}
   <div class="ap-row"><h3>참고 자료</h3>${sourceList(c)}</div>
 </section>`;}
 function report(c){const f=fields(),fm=fmtOf();
@@ -981,7 +974,7 @@ function openWork(key){
   const f={...it.data,format:it.format,nickname:`${it.grade}학년 ${it.cls}반 ${it.name}`,_ts:it.updated};
   const m=document.querySelector('#modal');
   m.setAttribute('aria-label',`${who(it)}의 ${FORMATS[it.format]?.name||'결과물'}`);
-  m.innerHTML=`<div class="modal-box work-view" style="--tone:${TONE[c.id]}"><div class="work-bar"><span>${esc(who(it))} · ${esc(c.name)}의 하루</span><span class="work-acts">${heartBtn(it)}<button class="btn ghost small" data-action="ai-skip">닫기</button></span></div><div class="work-doc" data-tap="${esc(it.key)}">${DOCS[it.format](c,f)}</div><div class="work-research"><h3>나의 질문</h3>${paras(f.question)}<h3>알게 된 것과 근거</h3>${paras(f.notes)}</div></div>`;
+  m.innerHTML=`<div class="modal-box work-view" style="--tone:${TONE[c.id]}"><div class="work-bar"><span>${esc(who(it))} · ${esc(c.name)}의 하루</span><span class="work-acts">${heartBtn(it)}<button class="btn ghost small" data-action="ai-skip">닫기</button></span></div><div class="work-doc" data-tap="${esc(it.key)}">${DOCS[it.format](c,f)}</div><div class="work-research">${f.question?`<h3>내가 물어본 것</h3>${paras(f.question)}`:""}<h3>알게 된 것과 근거</h3>${paras(f.notes)}</div></div>`;
   m.hidden=false;openAiModal.then=null;m.querySelector('.work-view').scrollTop=0;
 }
 
@@ -1056,7 +1049,7 @@ document.addEventListener('click',async e=>{
     chatOf(state.run.step).log.push({k:'me',text:o.text});lock(c,n);
     return;
   }
-  if(el.dataset.ask!==undefined){const k=el.dataset.ask;if(k==='mine'){const q=fields().question?.trim();if(!q){dialog({title:'질문을 먼저 써 주세요',body:'"내가 알아볼 질문" 칸을 채우면 AI에게 물어볼 수 있어요.'}).then(()=>focusEmpty(['question']));return;}ask(c,'내 질문: '+q);}else ask(c,k);return;}
+  if(el.dataset.ask!==undefined){const k=el.dataset.ask;ask(c,k);return;}
   if(el.dataset.take!==undefined){const e=labOf().log[Number(el.dataset.take)];if(!e?.point)return;const line='• '+e.point+(e.check?' (확인: '+e.check+')':'');const box=document.querySelector('[data-field="notes"]');const v=(fields().notes||'').trim();state.run.fields.notes=(v?v+'\n':'')+line;if(box)box.value=state.run.fields.notes;updateCount('notes');e.taken=true;save();renderAsk();toast('메모에 담았어요. 내 말로 고쳐 써 보세요.');return;}
   if(el.dataset.action==='format-change'){state.run.fields.format='';save();render();document.querySelector('.formats')?.scrollIntoView({block:'start',behavior:'smooth'});return;}
   if(el.dataset.format){state.run.fields.format=el.dataset.format;save();render();document.querySelector('.formats')?.scrollIntoView({block:'start',behavior:'smooth'});return;}
@@ -1085,7 +1078,7 @@ document.addEventListener('click',async e=>{
     else{navigate('reflect');dayPass(c,from,3);}
   }
   if(a==='prev-scene'){state.run.step=Math.max(0,state.run.step-1);save();navigate('chat');}
-  if(a==='to-plan'){if(!fmtOf()){dialog({title:'어떤 글로 낼지 먼저 골라 주세요',body:'신문 기사, 정책 제안서, 편지 가운데 하나를 고르면 그에 맞는 질문 틀이 나와요.'}).then(()=>document.querySelector('.formats')?.scrollIntoView({block:'center'}));return;}const miss=['question','notes'].filter(short);if(miss.length&&needMore(['question','notes'],miss[0]==='question'?'질문을 조금 더 구체적으로':'알게 된 것을 조금 더 자세히'))return;navigate('plan');}
+  if(a==='to-plan'){if(!fmtOf()){dialog({title:'어떤 글로 낼지 먼저 골라 주세요',body:'신문 기사, 정책 제안서, 편지 가운데 하나를 고르면 그에 맞는 조사 방법이 나와요.'}).then(()=>document.querySelector('.formats')?.scrollIntoView({block:'center'}));return;}if(needMore(['notes'],'알게 된 것을 조금 더 자세히'))return;navigate('plan');}
   if(a==='gallery-reload'){gallery.items=null;render();}
   if(a==='gallery-admin')openAdmin();
   if(a==='gallery-admin-off'){gallery.admin='';gallery.items=null;render();}
