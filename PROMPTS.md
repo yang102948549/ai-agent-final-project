@@ -725,3 +725,28 @@
 - 추가 요청: 커밋 푸시 배포까지 완료해줘. 배포 및 원격 푸시 진행.
 - 배포 완료 — 추가 요청에 따라 사이트 저장소 032417d를 origin/main에 푸시. 실제 https://onischool.net/anotherday/ 에서 데스크톱·모바일 수업안내 문구 및 캐릭터 목록 이동 PASS. 라이브 두 PNG도 각각 직접 열어 잘림·가림 없음을 확인했다. [배포 PC](screenshots/2026-11-26-lesson-guide/after-live-desktop.png), [배포 모바일](screenshots/2026-11-26-lesson-guide/after-live-mobile.png). 원본 동일 작업 폴더, 1440×900·780×2896. 앞의 배포 미실시 기록은 추가 요청 이전 상태다.
 - 기록 재시도 — PNG 크기를 출력하는 Python 명령이 cp949 인코딩 오류로 실패해 python -X utf8로 재실행했다.
+
+## 2026-11-26-character-diversity
+
+- 실제 요청
+  - “각 캐릭터들 이미지를 보았을 때 유사한 인물들이 많아 예를 들어 히잡을 착용한 캐릭터만 해도 4명이 되는데 이목구비도 흑인같은 경우 비슷한 인물들이 있어. 어떻게 보면 한 구역에 치중된 거 아닌가 싶은데 한번 검토해줘”
+  - “일단 a방향으로 진행하도록 하자” (1단계로 아침 대표 이미지와 얼굴 썸네일을 먼저 수정·검토한 뒤 확정된 외모로 낮·저녁 상황 이미지 맞춤)
+  - “2번으로 진행” (겹치는 인물 확대 수정)
+  - “그리고 람 같은 경우 실사가 아니라 그림같은 느낌이야. 캐릭터들을 보고 실사보다 그림처럼 느껴지는 경우를 검토해서 더 실제 인물처럼, 배경도 실제처럼 다듬을 필요가 있어”
+- 검토 및 변경 이유
+  1. **복장(히잡·머릿수건) 중복 해소**: 기존 1차 실사풍 이미지는 여학생 5명(호단·라마·암나·누르·마리암)과 남성 1명(아시프)까지 총 6명이 머리에 스카프/히잡을 두르고 있어 목록에서 실루엣이 겹쳤다. 집 안 방에 있는 **마리암(아프가니스탄)**은 붉은 숄을 어깨에 걸치고 검은 반묶음 웨이브 머리가 드러나게 했고, **암나(수단)**는 보라색 타르하를 어깨에 두르고 자연스러운 짧은 아프로 퍼프 번(양쪽 묶음 머리)이 드러나게 했으며, **아시프(파키스탄)**는 청록 스카프를 목에 걸고 땀에 젖은 검은 머리카락이 보이게 해 머릿수건 착용 인물을 3명(호단·라마·누르)으로 줄였다.
+  2. **인종·권역별 이목구비·헤어·표정 차별화**:
+     - 흑인 5명: **그라스(콩고)**는 가르마를 탄 짧은 아프로 헤어와 또렷한 광대·단호한 옆모습으로, **나데주(아이티)**는 둥근 볼과 호박색 리본 양갈래 땋은 머리·환한 미소로, **호단(소말리아)**은 동아프리카 특유의 갸름한 얼굴형과 높은 콧대·파랑/황금빛 가르바사르로, **암나(수단)**는 나일계 특유의 깊은 흑단빛 피부와 둥근 이마·퍼프 번 헤어로, **코피(가나)**는 짧은 페이드 컷과 환하게 웃는 소년 얼굴·톱니바퀴 스케치 공책으로 서로 완전히 다른 인물로 구분했다.
+     - 남아시아·동남아: **누르(로힝야)**는 동남아/미얀마 접경의 부드러운 턱선과 눈매·타나카 분장·한쪽 팔에 낀 교과서로 **루파(방글라데시)**와 구도와 얼굴을 분리했다.
+  3. **다큐멘터리 실사 사진 질감 강화**: 기존에 2D 일러스트를 원본 참조(`image-to-image`)로 삼아 생성하면서 **람(카타르)**, **시오네(투발루)**, **루파(방글라데시)**, **라마(가자)** 등에 남아 있던 디지털 페인팅 느낌(에어브러시 피부, 그려진 듯한 배경 빌딩·나뭇잎·수면)을 없애고 12명 모두 실제 35mm 다큐멘터리 카메라 촬영 질감(자연스러운 피부 결·모공·실제 직물과 광학 아웃포커싱 배경)으로 재생성했다.
+  4. **후처리(콩고 X·얼굴 썸네일 12장)**: `app/tools/paint-congo-x.py`의 좌표를 새 콩고 집 회벽(`cx=135, cy=530, r=36`)에 맞춰 붉은 페인트 X를 칠했고, `app/tools/make-faces.py`의 12명 얼굴 좌표를 새로 재어 360×360 `-face.webp` 12장을 생성했다. 캐시 버전(`ART_V`)과 `index.html` 프리로드 주소를 `20261126-diversity`로 갱신했다.
+- 변경 파일 — `app/dist/assets/characters/*.webp`(전신 12장 + 얼굴 12장), `app/dist/app.js`, `app/dist/index.html`, `app/tools/make-faces.py`, `app/tools/paint-congo-x.py`, `app/design/characters.md`, `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-character-diversity/`.
+- 검증
+  - `node validate.cjs` → `PASS: 12 unique scenarios, 47 scenes, 94 choices, 96 complete choice paths; branched slots 13 ...`
+  - 12명 얼굴 밀착 시트(`local-assets/photoreal-characters/diversity-20261126/faces-sheet.jpg`)와 앱 데스크톱·모바일 캡처 12장을 각각 직접 열어 얼굴 중심 정렬, 히잡 비중 축소, 흑인·남아시아 인물 간 이목구비 차별화, 람·시오네 등의 실사 질감, 그라스 집 벽의 빨간 X(데스크톱 3:4 및 모바일 16:9 배너 모두 노출), 글자·버튼 잘림 없음을 확인했다.
+- 화면 — 로컬 `http://127.0.0.1:4173/`, AI 차단, 데스크톱 1440×900·모바일 780×1688. 원본 PNG는 `local-assets/screenshots/2026-11-26-character-diversity/`, 생성 원본 PNG 12장은 `local-assets/photoreal-characters/diversity-20261126/`, 직전 WebP 백업은 `local-assets/photoreal-characters/before-diversity-20261126/`에 보관했다.
+- 공개한 대표 화면 — [전 목록](screenshots/2026-11-26-character-diversity/before-desktop-atlas.png) · [후 목록 상단](screenshots/2026-11-26-character-diversity/after-desktop-atlas.png) · [후 목록 하단](screenshots/2026-11-26-character-diversity/after-desktop-atlas-bottom.png) · [전 모바일 목록](screenshots/2026-11-26-character-diversity/before-mobile-atlas.png) · [후 모바일 목록](screenshots/2026-11-26-character-diversity/after-mobile-atlas.png) · [후 모바일 하단](screenshots/2026-11-26-character-diversity/after-mobile-atlas-bottom.png) · [후 홈](screenshots/2026-11-26-character-diversity/after-desktop.png) · [후 그라스](screenshots/2026-11-26-character-diversity/after-desktop-congo.png) · [후 람](screenshots/2026-11-26-character-diversity/after-desktop-qatar.png)
+- 대화 캡처 — 찍지 않았다(캡처 대기). 위 실제 요청 발췌로 대신한다.
+- 남은 일 — 1단계 아침 대표 이미지에 대한 사용자 확인 후, 2단계로 낮·저녁 상황별 이미지(`assets/scenes/`)의 인물 외모·복장 일관성 맞춤 및 배포 진행.
+- 원격 완료 — 과제 저장소 5070906 및 분리 커밋 e48c791을 origin/main에 푸시했다. 같은 app.js에 동시 진행된 캐릭터 캐시·조사 기록 변경이 최초 커밋에 섞인 것을 확인하여, 작업 폴더의 다른 변경은 보존하고 Git 인덱스만 검증한 배포본으로 분리했다. 이력 수정·강제 푸시는 하지 않았다.
+- 공개 표 확인 — 로그인 없는 GitHub CHECKLIST.md 요청 HTTP 200, HTML table 및 이번 수업안내 행 존재 확인. 배포·화면 검증 완료. 대화 창 캡처는 여전히 대기 상태다.
