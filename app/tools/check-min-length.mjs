@@ -33,20 +33,19 @@ await page.waitForTimeout(600);
 ok(await view() === 'lab', '두 칸 모두 20자 이상이면 질문·조사로 이동');
 
 // 질문·조사: 글의 종류를 먼저 고른다
-ok(await page.locator('[data-field=question]').count() === 0, '글의 종류를 고르기 전에는 질문 칸이 없음');
+ok(await page.locator('[data-field=notes]').count() === 0, '글의 종류를 고르기 전에는 조사 칸이 없음');
 await page.click('[data-action=to-plan]');
 ok((await dialogShown()).includes('먼저 골라') && await view() === 'lab', '종류를 안 고르면 결과물로 못 감');
 await page.click('[data-format=letter]'); await page.waitForTimeout(300);
-await page.fill('[data-field=question]', '왜 그럴까?');
+ok(await page.locator('[data-field=question]').count() === 0, '따로 쓰는 ‘내가 알아볼 질문’ 칸이 없음');
 await page.click('[data-action=to-plan]');
-ok((await dialogShown()).length > 0 && await view() === 'lab', '질문 빈칸·알게 된 것 부족이면 결과물로 못 감');
-await page.fill('[data-field=question]', '시오네 같은 사람이 섬에 남으려면 정부가 무엇을 해야 할까?');
+ok((await dialogShown()).length > 0 && await view() === 'lab', '알게 된 것이 비면 결과물로 못 감');
 await page.fill('[data-field=notes]', '짧은 메모');
 await page.click('[data-action=to-plan]');
 ok(await view() === 'lab', '알게 된 것이 20자 미만이면 머무름'); await dialogShown();
 await page.fill('[data-field=notes]', '투발루는 해발이 낮아 바닷물이 땅으로 스며든다 (UN 뉴스 자료)');
 await page.click('[data-action=to-plan]'); await page.waitForTimeout(600);
-ok(await view() === 'plan', '질문·알게 된 것 20자 이상이면 결과물로 이동');
+ok(await view() === 'plan', '알게 된 것 20자 이상이면 결과물로 이동');
 
 // 결과물(편지: 받는 사람은 4자 기준). 종류는 질문·조사에서 이미 골랐다.
 await page.fill('[data-field=l_to]', '투발루 정부 담당자님께');

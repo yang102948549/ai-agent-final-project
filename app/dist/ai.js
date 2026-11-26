@@ -365,7 +365,7 @@ ${refs.map(r=>`- ${r.title}`).join('\n')}
 [학생이 쓴 것]
 가장 중요했던 것: ${f.feeling||'(아직 없음)'}
 바꾸기 어려운 조건: ${f.constraint||'(아직 없음)'}
-나의 질문: ${f.question||'(아직 없음)'}
+학생이 지금까지 물어본 것: ${f.question||'(아직 없음)'}
 
 [답하는 법]
 - 중학생이 읽기 쉬운 말로 짧게 답하라. 어려운 말은 풀어 써라.
@@ -422,7 +422,7 @@ ${background(c)}
 주인공: ${c.name}(${c.role}) · 관련 주체: ${c.actors}
 
 [학생의 조사]
-나의 질문: ${fields.question||'(없음)'}
+학생이 조사하며 물어본 것: ${fields.question||'(없음)'}
 알게 된 것과 근거: ${fields.notes||'(없음)'}
 
 [학생의 ${kind}]

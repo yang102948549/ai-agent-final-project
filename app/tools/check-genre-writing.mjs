@@ -26,6 +26,7 @@ const framesFor = async k => { await page.click(`[data-format=${k}]`); await pag
 const fa = await framesFor('article'), fp = await framesFor('policy'), fl = await framesFor('letter');
 ok(fa.some(t => t.includes('숫자로')), '기사: 숫자로 답할 수 있게 묻는 조언');
 ok(await page.locator('[data-frame]').count() === 0, '완성된 질문을 눌러 넣는 칩이 없고 조언만 보임');
+ok(await page.locator('[data-field=question]').count() === 0 && await page.locator('[data-ask=mine]').count() === 0, '질문 칸과 ‘내 질문에 답해 줘’ 칩 없이 AI 묻기로 바로 이어짐');
 ok(await page.locator('.sec h2', { hasText: '질문하고 알아보기' }).count() === 1 && await page.locator('.sec h2', { hasText: '나의 질문' }).count() === 0, '나의 질문과 알아보기가 한 단계로 합쳐짐');
 ok(fp.some(t => t.includes('정책이나 지원')), '제안서: 이미 있는 정책과 부족한 점을 묻는 조언');
 ok(fl.some(t => t.includes('편지를 받을 한 곳') && t.includes('투발루 정부')), '편지: 관련된 곳 가운데 받을 사람부터 정하라는 조언');

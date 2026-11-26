@@ -750,3 +750,17 @@
 - 남은 일 — 1단계 아침 대표 이미지에 대한 사용자 확인 후, 2단계로 낮·저녁 상황별 이미지(`assets/scenes/`)의 인물 외모·복장 일관성 맞춤 및 배포 진행.
 - 원격 완료 — 과제 저장소 5070906 및 분리 커밋 e48c791을 origin/main에 푸시했다. 같은 app.js에 동시 진행된 캐릭터 캐시·조사 기록 변경이 최초 커밋에 섞인 것을 확인하여, 작업 폴더의 다른 변경은 보존하고 Git 인덱스만 검증한 배포본으로 분리했다. 이력 수정·강제 푸시는 하지 않았다.
 - 공개 표 확인 — 로그인 없는 GitHub CHECKLIST.md 요청 HTTP 200, HTML table 및 이번 수업안내 행 존재 확인. 배포·화면 검증 완료. 대화 창 캡처는 여전히 대기 상태다.
+
+## 2026-11-26-no-question-field
+
+- 실제 요청 — “내가 알아볼 질문이 필요가 없어. 왜냐하면 밑에 이미 질문을 물어보고 ai와 대화하기를 하잖아. 이 부분 수정이 필요한거야.” (질문하고 알아보기 화면 캡처 첨부)
+- 변경
+  1. 질문·조사의 ‘내가 알아볼 질문’ 칸을 없앴다. 조언 목록 바로 아래에 자료와 AI 묻기가 이어진다. 그 칸을 전제로 한 ‘내 질문에 답해 줘’ 빠른 칩도 없앴다.
+  2. 결과물로 넘어갈 때 질문 칸 검사를 빼고 ‘알게 된 것’만 검사한다.
+  3. 학생이 AI에게 물은 말을 차례대로 `fields.question`에 저절로 기록한다. 결과물 화면 요약, 완성 화면의 탐구 과정, 갤러리 크게 보기에는 ‘내가 물어본 것’으로 보이고, 기록이 없으면 그 줄을 숨긴다. AI 조사 도우미·피드백 지침에는 ‘학생이 물어본 것’으로 넘긴다. 갤러리에 이미 제출된 글의 질문도 같은 이름으로 보인다.
+- 검증 — 새 `tools/check-ask-record.mjs`(아이티·정책 제안서: 질문 칸 없음, 조언이 AI 묻기 위, 두 질문이 차례대로 기록, 알게 된 것만 채우면 결과물로 이동, 결과물에 ‘내가 물어본 것’, JS 오류 없음) ALL PASS. `check-genre-writing`(질문 칸·‘내 질문에 답해 줘’ 칩 없음 항목 추가)·`check-min-length`(질문 칸 항목 교체)·`check-feedback-edit`·`check-no-nickname` ALL PASS, `npm run validate` PASS.
+- 화면 — `capture-coach.mjs --out local-assets/screenshots/2026-11-26-no-question-field`로 전후 각 10장(데스크톱 1440×900·모바일 780×1688). 전 촬영 첫 실행에서 마지막 한 장이 페이지 로딩 대기 시간 초과로 실패해 그 장만 다시 찍었다. after-desktop-lab·after-mobile-lab을 열어 질문 칸이 없고 조언 → 자료 열어 보기 → AI 묻기 순서임을 확인했다.
+- 공개한 대표 화면 — [전](screenshots/2026-11-26-no-question-field/before-desktop-lab.png) · [후](screenshots/2026-11-26-no-question-field/after-desktop-lab.png) · [전 모바일](screenshots/2026-11-26-no-question-field/before-mobile-lab.png) · [후 모바일](screenshots/2026-11-26-no-question-field/after-mobile-lab.png)
+- 대화 캡처 — 사용자가 첨부한 화면 외에는 찍지 않았다(캡처 대기).
+- 변경 파일 — `app/dist/app.js`, `app/dist/ai.js`, `app/tools/check-ask-record.mjs`(새로), `app/tools/check-genre-writing.mjs`, `app/tools/check-min-length.mjs`, `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-no-question-field/`.
+- 배포 — 아직 하지 않았다.
