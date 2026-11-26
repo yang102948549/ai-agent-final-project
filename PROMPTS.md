@@ -764,3 +764,27 @@
 - 대화 캡처 — 사용자가 첨부한 화면 외에는 찍지 않았다(캡처 대기).
 - 변경 파일 — `app/dist/app.js`, `app/dist/ai.js`, `app/tools/check-ask-record.mjs`(새로), `app/tools/check-genre-writing.mjs`, `app/tools/check-min-length.mjs`, `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-no-question-field/`.
 - 배포 — 아직 하지 않았다.
+
+## 2026-11-26-scene-diversity
+
+- 실제 요청
+  - “상황별 장면 이미지도 다듬고 썸네일 이미지 및 다른 이미지들도 다 파악해서 수정된 내용에 맞게 업데이트 해줘”
+  - “그리고 이에 맞게 페이지 히어로 섹션 이미지들도 다 변경되어야 해 / 그라스 집의 x표시도 집에 있는 x표시가 아니야. x표시는 없애자”
+- 검토 및 변경 내용
+  1. **그라스(콩고) 집 벽의 빨간 X 표시 제거**: 사용자 지시에 따라 아침 대표 이미지(`app/dist/assets/characters/congo.webp`)에서 합성했던 빨간 페인트 X를 없애고 원본 다큐멘터리 사진의 깨끗한 회벽으로 복원했으며, 얼굴 썸네일(`congo-face.webp`)도 다시 생성했다. 낮 장면(`congo-noon-a.webp`, `congo-noon-b.webp`)에서도 벽에 X 표시를 넣지 않고 깨끗한 외벽으로 생성했다.
+  2. **12명 낮·저녁 상황별 장면 이미지 35장 전량 재생성(`app/dist/assets/scenes/*.webp`)**: 새로 확정된 12명 대표 초상 원본(`local-assets/photoreal-characters/diversity-20261126/<id>.png`)을 참조 이미지(`inline_data`)로 넣어 35장 모두 동일한 인물 외모·복장·헤어스타일·35mm 다큐멘터리 사진 질감으로 재제작했다(900×1200, WebP 품질 76).
+     - **암나(수단)**: 낮 A·낮 B·저녁 3장 모두 히잡 없이 양쪽 아프로 퍼프 번 헤어와 어깨에 두른 보라색 타르하 숄, 깊은 흑단빛 피부로 통일(`sudan-noon-b` 초안의 배경 천막 로고는 로고 없는 무지 흰 천막으로 재생성해 제거).
+     - **마리암(아프가니스탄)**: 낮(귓속말)·저녁(사촌 언니 통화) 2장 모두 히잡 없이 반묶음 웨이브 머리와 어깨에 걸친 붉은 숄로 통일.
+     - **그라스(콩고)**: 낮 A·낮 B·저녁 3장 모두 가르마를 탄 짧은 자연 아프로 헤어와 장미색·금색 왁스 프린트 원피스, X 표시 없는 집 외벽으로 통일.
+     - **아시프(파키스탄)**: 낮·저녁 A·저녁 B 3장 모두 머리 스카프 없이 땀에 젖은 검은 머리카락과 목에 두른 청록 스카프로 통일(`pakistan-evening-a` 선풍기 중앙의 작은 글자 제거).
+     - **호단(소말리아)·누르(로힝야)·나데주(아이티)·코피(가나)·람(카타르)·루파(방글라데시)·시오네(투발루)·라마(가자)**: 모두 새로 바뀐 대표 초상의 얼굴 골격·피부 톤·의상과 일치하고 디지털 페인팅 느낌이 없는 실제 다큐멘터리 사진 질감으로 35장 전량 교체(`tuvalu-evening-ab` 식탁 위 종이에 인쇄된 글자가 나온 시안은 완전한 무지 백지로 재생성해 해결).
+  3. **모바일 16:9 배너 크롭(`SCENE_ART` `pos`) 전수 검수 및 히어로 앨범 연동**: 35장의 모바일 16:9 배너 밀착 시트(`local-assets/scene-images/diversity-20261126/mobile-banners-sheet.jpg`)를 만들어 머리나 핵심 소품이 잘리지 않도록 `app/dist/app.js`의 `SCENE_ART` `pos` 값을 조정했다. 캐시 버전(`ART_V`)과 `app/dist/index.html`의 히어로 `<link rel="preload">` 4개를 `20261126-diversity-all`로 올려 홈 히어로 앨범 12장·목록·뽑기 썸네일·장면 화면이 모두 새 이미지를 불러오도록 동기화했다.
+- 변경 파일 — `app/dist/assets/scenes/*.webp`(35장), `app/dist/assets/characters/congo.webp`, `app/dist/assets/characters/congo-face.webp`, `app/dist/app.js`, `app/dist/index.html`, `app/tools/check-hero-album.mjs`(`PW_CHROME` 지원), `app/design/characters.md`, `app/design/scene-images-group-b.md`, `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-scene-diversity/`.
+- 검증
+  - `node validate.cjs` → `PASS: 12 unique scenarios, 47 scenes, 94 choices, 96 complete choice paths; branched slots 13 ...` (35장 WebP 파일 존재 및 문법 검증 통과)
+  - `node tools/check-hero-album.mjs` → `PASS` (홈 히어로 섹션 12명 전체 노출, 반복 이음 오차 0px, 텍스트·사진 높이 차이 0px, 7개 해상도 가로 넘침·겹침 없음, JS 오류 0건)
+  - 35장 16:9 모바일 배너 시트와 데스크톱·모바일 전후 캡처 16장 및 히어로 4개 구간(`phase-0~3`) 화면을 각각 직접 열어 인물 외모 일관성, 그라스 집 X 표시 제거, 글자·버튼 잘림 없음을 확인했다.
+- 화면 — 로컬 `http://127.0.0.1:4174/`, AI 차단, 데스크톱 1440×900·모바일 780×1688. 원본 PNG는 `local-assets/screenshots/2026-11-26-scene-diversity/`, 생성 원본 PNG 35장은 `local-assets/scene-images/diversity-20261126/`, 직전 장면 WebP 백업은 `local-assets/scene-images/before-diversity-20261126/`에 보관했다.
+- 공개한 대표 화면 — [암나 낮 A 전](screenshots/2026-11-26-scene-diversity/before-desktop-sudan-noon-a.png) · [후](screenshots/2026-11-26-scene-diversity/after-desktop-sudan-noon-a.png) · [모바일 후](screenshots/2026-11-26-scene-diversity/after-mobile-sudan-noon-a.png) · [그라스 아침(X 제거)](screenshots/2026-11-26-scene-diversity/after-desktop-congo-morning.png) · [그라스 낮 A 전](screenshots/2026-11-26-scene-diversity/before-desktop-congo-noon-a.png) · [후(X 제거)](screenshots/2026-11-26-scene-diversity/after-desktop-congo-noon-a.png) · [모바일 후](screenshots/2026-11-26-scene-diversity/after-mobile-congo-noon-a.png) · [마리암 낮 전](screenshots/2026-11-26-scene-diversity/before-desktop-afghanistan-noon.png) · [후](screenshots/2026-11-26-scene-diversity/after-desktop-afghanistan-noon.png) · [모바일 후](screenshots/2026-11-26-scene-diversity/after-mobile-afghanistan-noon.png) · [호단 낮 전](screenshots/2026-11-26-scene-diversity/before-desktop-somalia-noon.png) · [후](screenshots/2026-11-26-scene-diversity/after-desktop-somalia-noon.png) · [람 낮 전](screenshots/2026-11-26-scene-diversity/before-desktop-qatar-noon.png) · [후](screenshots/2026-11-26-scene-diversity/after-desktop-qatar-noon.png) · [모바일 후](screenshots/2026-11-26-scene-diversity/after-mobile-qatar-noon.png) · [히어로 앨범](screenshots/2026-11-26-scene-diversity/phase-3-desktop-aligned.png)
+- 대화 캡처 — 찍지 않았다(캡처 대기). 위 실제 요청 발췌로 대신한다.
+- 배포 — 로컬 커밋까지 완료. 배포는 사용자 승인 후 진행한다.

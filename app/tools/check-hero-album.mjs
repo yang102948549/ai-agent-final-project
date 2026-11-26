@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 const out=process.argv[3]||'../local-assets/screenshots/2026-11-26-hero-album';
 fs.mkdirSync(out,{recursive:true});
-const browser=await chromium.launch();
+const browser=await chromium.launch(process.env.PW_CHROME?{executablePath:process.env.PW_CHROME}:{});
 const errors=[];
 const page=await browser.newPage({viewport:{width:1440,height:900}});
 page.on('pageerror',e=>errors.push(e.message));

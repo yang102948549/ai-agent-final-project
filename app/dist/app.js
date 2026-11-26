@@ -92,49 +92,49 @@ const sourceList=c=>`<ul class="sources">${c.sources.map(s=>`<li><a href="${esc(
 const facts=c=>`<ul class="facts">${c.facts.map(f=>`<li>${esc(f)}</li>`).join('')}</ul>`;
 // 캐릭터·장면 그림. kind가 face면 얼굴 부분, 아니면 전신/장면 그림. 그림을 못 읽으면 이름 첫 글자가 보인다.
 // 그림을 바꾸면 ART_V를 올린다. 학교 사이트는 파일을 몇 시간씩 캐시해서, 같은 이름이면 예전 그림이 보일 수 있다.
-const ART_V='20261126-diversity';
+const ART_V='20261126-diversity-all';
 // 상황별 장면 그림 매핑(장면 제목 기준). 등록되지 않은 장면은 기본 인물 그림으로 폴백한다.
 const SCENE_ART={
   haiti:{
     '“너희 때문에 우리 학교가”':{img:'haiti-noon',pos:'50% 28%'},
-    '두 개의 봉투':{img:'haiti-evening',pos:'50% 45%'},
+    '두 개의 봉투':{img:'haiti-evening',pos:'50% 62%'},
   },
   ghana:{
-    '밭에서 만난 아마':{img:'ghana-noon-a',pos:'50% 10%'},
-    '친구의 비밀':{img:'ghana-noon-b',pos:'50% 25%'},
-    '중간상인의 저울':{img:'ghana-evening',pos:'50% 25%'},
+    '밭에서 만난 아마':{img:'ghana-noon-a',pos:'50% 38%'},
+    '친구의 비밀':{img:'ghana-noon-b',pos:'50% 30%'},
+    '중간상인의 저울':{img:'ghana-evening',pos:'50% 35%'},
   },
   sudan:{
-    '꽉 찬 교실의 앞자리':{img:'sudan-noon-a',pos:'50% 22%'},
-    '반 배정 시험과 서류 마감':{img:'sudan-noon-b',pos:'50% 38%'},
-    '우물 줄 끝에서':{img:'sudan-evening',pos:'50% 12%'},
+    '꽉 찬 교실의 앞자리':{img:'sudan-noon-a',pos:'50% 28%'},
+    '반 배정 시험과 서류 마감':{img:'sudan-noon-b',pos:'50% 62%'},
+    '우물 줄 끝에서':{img:'sudan-evening',pos:'50% 28%'},
   },
   rohingya:{
-    '증명서가 없는 공부':{img:'rohingya-noon-a',pos:'50% 10%'},
-    '하미다의 바느질 일감':{img:'rohingya-noon-b',pos:'50% 42%'},
-    '오빠의 어깨':{img:'rohingya-evening',pos:'50% 30%'},
+    '증명서가 없는 공부':{img:'rohingya-noon-a',pos:'50% 30%'},
+    '하미다의 바느질 일감':{img:'rohingya-noon-b',pos:'50% 65%'},
+    '오빠의 어깨':{img:'rohingya-evening',pos:'50% 55%'},
   },
   congo:{
-    '하나둘 서명하는 이웃들':{img:'congo-noon-a',pos:'50% 38%'},
-    '돈으로 계산되지 않는 것':{img:'congo-noon-b',pos:'50% 42%'},
-    '할머니의 무덤':{img:'congo-evening',pos:'50% 20%'},
+    '하나둘 서명하는 이웃들':{img:'congo-noon-a',pos:'50% 50%'},
+    '돈으로 계산되지 않는 것':{img:'congo-noon-b',pos:'50% 52%'},
+    '할머니의 무덤':{img:'congo-evening',pos:'50% 58%'},
   },
   qatar:{
-    '“30분만 더”':{img:'qatar-noon',pos:'50% 28%'},
-    '떠날까, 버틸까':{img:'qatar-evening',pos:'50% 28%'},
+    '“30분만 더”':{img:'qatar-noon',pos:'50% 35%'},
+    '떠날까, 버틸까':{img:'qatar-evening',pos:'50% 45%'},
   },
   tuvalu:{
-    '떠날까, 남을까':{img:'tuvalu-noon-a',pos:'50% 38%'},
-    '보충 시험과 모래주머니':{img:'tuvalu-noon-b',pos:'50% 24%'},
-    '빗물 탱크의 마지막 물':{img:'tuvalu-evening-aa',pos:'50% 42%'},
-    '할머니의 빵나무':{img:'tuvalu-evening-ab',pos:'50% 42%'},
-    '선생님의 추천서':{img:'tuvalu-evening-ba',pos:'50% 38%'},
-    '밤 밀물':{img:'tuvalu-evening-bb',pos:'50% 42%'},
+    '떠날까, 남을까':{img:'tuvalu-noon-a',pos:'50% 55%'},
+    '보충 시험과 모래주머니':{img:'tuvalu-noon-b',pos:'50% 38%'},
+    '빗물 탱크의 마지막 물':{img:'tuvalu-evening-aa',pos:'50% 34%'},
+    '할머니의 빵나무':{img:'tuvalu-evening-ab',pos:'50% 62%'},
+    '선생님의 추천서':{img:'tuvalu-evening-ba',pos:'50% 62%'},
+    '밤 밀물':{img:'tuvalu-evening-bb',pos:'50% 50%'},
   },
   pakistan:{
-    '멈춰 버린 선풍기':{img:'pakistan-noon',pos:'50% 34%'},
-    '오늘 일당 1,200루피':{img:'pakistan-evening-a',pos:'50% 38%'},
-    '밤 교대 자리':{img:'pakistan-evening-b',pos:'50% 38%'},
+    '멈춰 버린 선풍기':{img:'pakistan-noon',pos:'50% 28%'},
+    '오늘 일당 1,200루피':{img:'pakistan-evening-a',pos:'50% 48%'},
+    '밤 교대 자리':{img:'pakistan-evening-b',pos:'50% 48%'},
   },
   bangladesh:{
     '동아리 지원금 투표':{img:'bangladesh-noon',pos:'50% 44%'},
@@ -142,17 +142,17 @@ const SCENE_ART={
   },
   somalia:{
     '시장에 염소를 팔까':{img:'somalia-noon',pos:'50% 34%'},
-    '옆집 아샤의 빈 그릇':{img:'somalia-evening-a',pos:'50% 44%'},
+    '옆집 아샤의 빈 그릇':{img:'somalia-evening-a',pos:'50% 34%'},
     '먼 우물로 가는 길':{img:'somalia-evening-b',pos:'50% 42%'},
   },
   gaza:{
-    '급수차가 왔다':{img:'gaza-noon',pos:'50% 42%'},
-    '빵 두 장과 물 한 통':{img:'gaza-evening-a',pos:'50% 40%'},
-    '할아버지 텐트 앞':{img:'gaza-evening-b',pos:'50% 42%'},
+    '급수차가 왔다':{img:'gaza-noon',pos:'50% 45%'},
+    '빵 두 장과 물 한 통':{img:'gaza-evening-a',pos:'50% 42%'},
+    '할아버지 텐트 앞':{img:'gaza-evening-b',pos:'50% 45%'},
   },
   afghanistan:{
-    '이웃 언니의 귓속말':{img:'afghanistan-noon',pos:'50% 28%'},
-    '사촌 언니의 전화':{img:'afghanistan-evening',pos:'50% 15%'},
+    '이웃 언니의 귓속말':{img:'afghanistan-noon',pos:'50% 32%'},
+    '사촌 언니의 전화':{img:'afghanistan-evening',pos:'50% 32%'},
   },
 };
 const artSrc=(id,kind)=>`assets/characters/${id}${kind==='face'?'-face':''}.webp?v=${ART_V}`;
