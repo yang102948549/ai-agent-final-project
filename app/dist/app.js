@@ -219,8 +219,8 @@ let disposeAlbum=()=>{};
 function mountHeroAlbum(){
   const album=app.querySelector('.hero-album');if(!album)return;
   const track=album.querySelector('.album-track'),button=album.querySelector('.album-toggle');
-  const motion=matchMedia('(prefers-reduced-motion: reduce)');
-  let paused=motion.matches,visible=true,ready=false,disposed=false;
+  // 홈 사진 흐름은 OS 설정과 무관하게 자동 시작하고 사용자가 직접 일시정지한다.
+  let paused=false,visible=true,ready=false,disposed=false;
   const update=()=>{
     track.style.animationPlayState=paused||!visible||document.hidden||!ready?'paused':'running';
     button.setAttribute('aria-pressed',String(paused));
@@ -228,14 +228,12 @@ function mountHeroAlbum(){
     button.textContent=paused?'▷ 재생':'Ⅱ 일시정지';
   };
   button.onclick=()=>{paused=!paused;update();};
-  const change=()=>{paused=motion.matches;update();};
-  motion.addEventListener('change',change);
   document.addEventListener('visibilitychange',update);
   const observer=new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;update();});
   observer.observe(album);
   Promise.allSettled([...album.querySelectorAll('.album-group:first-child img')].map(img=>img.decode())).then(()=>{if(!disposed){ready=true;update();}});
   update();
-  disposeAlbum=()=>{disposed=true;observer.disconnect();motion.removeEventListener('change',change);document.removeEventListener('visibilitychange',update);};
+  disposeAlbum=()=>{disposed=true;observer.disconnect();document.removeEventListener('visibilitychange',update);};
 }
 function home(){const r=state.run,c=current();return `<section class="title-screen">
   ${heroAlbum()}

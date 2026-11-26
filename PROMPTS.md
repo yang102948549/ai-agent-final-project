@@ -442,3 +442,23 @@
 - 공개한 대표 화면 — [배포 전 PC](screenshots/2026-11-26-deploy-min-length/before-desktop-fields.png) · [배포 후 PC](screenshots/2026-11-26-deploy-min-length/after-desktop-fields.png) · [배포 전 모바일](screenshots/2026-11-26-deploy-min-length/before-mobile-fields.png) · [배포 후 모바일](screenshots/2026-11-26-deploy-min-length/after-mobile-fields.png) · [배포 후 문장 틀](screenshots/2026-11-26-deploy-min-length/after-mobile-starter.png)
 - 대화 캡처 — [배포 요청](screenshots/conversations/2026-11-26-min-length/01-request-deploy.png) · [배포 후 검증](screenshots/conversations/2026-11-26-min-length/02-after-deploy.png)
 - 변경 파일 — `PROMPTS.md`, `CHECKLIST.md`, `conversations/README.md`, `screenshots/2026-11-26-deploy-min-length/`, `screenshots/conversations/2026-11-26-min-length/`. 사이트 저장소는 onischool-release `722093a`.
+
+
+## 2026-11-26-paseo-workflow
+
+- 실제 요청 — “현재 이 paseo 대화창 화면도 캡쳐해서 이런 식으로 작업하고 있다는 걸 알 수 있게 해줘”
+- 한 일 — computer-use로 현재 Paseo 창을 확인하고 실제 창 캡처 2장을 저장했다. 대화와 코드/실행 작업을 함께 보여주는 원본을 보존하고 공개본에는 이전 캡처 속 개인정보·전송 전 입력·외부 문서 주소를 명시적으로 가렸다. 화면이나 발화를 합성하지 않았다.
+- 원본 — `local-assets/conversations/2026-11-26-paseo-workflow/paseo-window-original.png`, `paseo-workflow-original.png`, 각 1536×816. 2026-11-26 촬영. 후자가 최종 대표 원본이다.
+- 공개본 — [Paseo 작업 방식](screenshots/conversations/2026-11-26-paseo-workflow/paseo-workflow-redacted.png), 1536×816. 저장 후 다시 열어 가림과 실제 대화·작업 화면을 확인했다.
+- 제한 — 창 선택/접근성 조회가 지연되고 사용자 입력 감지로 확대·스크롤이 중단됐다. 반환된 창 해상도 그대로 저장했으며 1920×1080 모니터 원본으로 확대하거나 완료 처리하지 않았다. 모니터 원본 재촬영은 남아 있다. 앱 화면 수정이 없는 증거 정리이므로 이 항목의 전후 앱 화면 확인은 비대상이다.
+
+## 2026-11-26-hero-autoplay
+
+- 실제 요청 — “그리고 히어로 섹션에서 캐릭터들이 움직이는게 자동 재생이 되어야 해. 지금은 재생을 눌러야 애니메이션이 동작해”
+- 원인·수정 — OS 동작 줄이기가 켜지면 `paused=motion.matches`로 시작하던 조건을 제거했다. 사용자 명시 요청에 따라 설정과 무관하게 사진 디코드 후 자동 재생한다. 수동 일시정지/재생, 탭 숨김·화면 밖 정지, 화면 종료 정리는 유지했다.
+- 검증 — Playwright의 `reducedMotion: reduce`에서 데스크톱·모바일 모두 최초 정지를 재현했다. 수정 후 클릭 없이 transform이 변하는지, 일시정지 후 고정되는지, 재생 후 다시 변하는지를 `check-hero-autoplay.mjs`로 확인해 PASS. `node validate.cjs` PASS(12명·47장면·94선택·96경로). 기존 `check-hero-album.mjs`의 동작 줄이기 기대값도 자동 재생에 맞게 수정했다.
+- 화면 — 기본 홈, API 차단, 동일한 reduced-motion 조건. `local-assets/screenshots/2026-11-26-hero-autoplay/before-desktop-reduced.png`·`after-desktop-reduced.png` 1440×900, `before-mobile-reduced.png`·`after-mobile-reduced.png` 780×1688. 전은 라이브, 후는 로컬 http://127.0.0.1:4191/ 이며 화면을 각각 열어 최초 ‘재생’ 표시가 ‘일시정지’로 바뀌고 사진 위치가 이동함을 확인했다. 별도 `before-desktop.png`·`before-mobile.png`는 기본 OS 설정 촬영으로 재현용 reduced 파일과 구별한다.
+- 배포 — 기존 다른 작업을 보존하며 onischool-release의 app.js와 캐시 해시만 갱신하고 `a75fa3f`를 푸시했다. 라이브 검증 결과는 아래에 추가한다.
+
+- 라이브 검증 — `app.js?v=6973754653` 반영. `check-hero-autoplay.mjs https://onischool.net/anotherday/`의 데스크톱·모바일 자동 재생 및 일시정지/재생 모두 PASS. 라이브 후 화면은 `local-assets/screenshots/2026-11-26-hero-autoplay-live/after-desktop-reduced.png`(1440×900), `after-mobile-reduced.png`(780×1688)에 보존하고 각각 직접 열어 확인했다.
+- 공개 전후 — [PC 전](screenshots/2026-11-26-hero-autoplay/before-desktop-reduced.png) · [PC 후](screenshots/2026-11-26-hero-autoplay/after-desktop-reduced.png) · [모바일 전](screenshots/2026-11-26-hero-autoplay/before-mobile-reduced.png) · [모바일 후](screenshots/2026-11-26-hero-autoplay/after-mobile-reduced.png).

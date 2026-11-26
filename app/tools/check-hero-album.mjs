@@ -30,8 +30,7 @@ for(let i=0;i<4;i++){
 assert.equal(seen.size,12);
 const seam=await page.evaluate(()=>{const e=document.querySelector('.album-track'),groups=e.children;return Math.abs(groups[1].getBoundingClientRect().left-groups[0].getBoundingClientRect().left-e.getBoundingClientRect().width/2);});assert(seam<.1);
 await page.locator('.album-toggle').click();await page.waitForTimeout(100);const moving=await matrix();await page.waitForTimeout(150);assert.notEqual(await matrix(),moving);
-await page.emulateMedia({reducedMotion:'reduce'});await page.waitForFunction(()=>document.querySelector('.album-toggle').getAttribute('aria-pressed')==='true');assert.equal(await page.locator('.album-toggle').getAttribute('aria-pressed'),'true');
-await page.locator('.album-toggle').click();assert.equal(await page.locator('.album-toggle').getAttribute('aria-pressed'),'false');
+await page.emulateMedia({reducedMotion:'reduce'});await page.waitForTimeout(100);assert.equal(await page.locator('.album-toggle').getAttribute('aria-pressed'),'false');
 await page.emulateMedia({reducedMotion:'no-preference'});
 for(const width of [1920,1024,901,900,768,390,320]){
  await page.setViewportSize({width,height:900});await page.waitForTimeout(70);
@@ -44,5 +43,5 @@ await page.locator('.tile[data-start="tuvalu"]').click();await page.waitForTimeo
 await page.locator('#brand').click();assert.equal(await page.locator('.hero-album').count(),1);
 await page.locator('[data-action="random"]').click();await page.getByRole('button',{name:'새로 시작',exact:true}).click();await page.waitForTimeout(300);assert.equal(await page.locator('.hero-album').count(),0);
 assert.deepEqual(errors,[]);
-console.log(JSON.stringify({result:'PASS',geometry,allPeople:[...seen],seam,checks:['pause/resume','reduced motion and override','7 viewport widths','atlas and character entry','home remount','game start','no JS errors']}));
+console.log(JSON.stringify({result:'PASS',geometry,allPeople:[...seen],seam,checks:['pause/resume','autoplay regardless of motion preference','7 viewport widths','atlas and character entry','home remount','game start','no JS errors']}));
 await browser.close();
