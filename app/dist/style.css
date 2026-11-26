@@ -915,15 +915,16 @@ select:focus-visible{outline:2px solid var(--tone);outline-offset:2px}
 }
 
 /* ---------- 갤러리 하트 (인스타그램처럼) ---------- */
-.heart{--heart:#ed4956;display:inline-flex;align-items:center;gap:5px;min-height:40px;padding:6px 10px;border:0;background:none;color:var(--ink);font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.heart svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linejoin:round;transition:transform .12s}
+/* 글보다 앞서지 않게: 카드 아래 작은 정보 글자(13px·회색)와 같은 무게로. 누르는 칸은 40px 그대로 */
+.heart{--heart:#ed4956;display:inline-flex;align-items:center;gap:4px;min-height:40px;padding:6px 8px;border:0;background:none;color:var(--muted);font-size:13px;font-weight:500;font-variant-numeric:tabular-nums;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.heart svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linejoin:round;transition:transform .12s}
 .heart:hover svg{transform:scale(1.08)}
 .heart:active svg{transform:scale(.88)}
 .heart.on svg{fill:var(--heart);stroke:var(--heart)}
 .heart:focus-visible{outline:2px solid var(--tone);outline-offset:2px}
 .heart.pop svg{animation:heart-pop .45s cubic-bezier(.2,1.4,.4,1)}
 @keyframes heart-pop{0%{transform:scale(1)}30%{transform:scale(.8)}60%{transform:scale(1.28)}100%{transform:scale(1)}}
-.gcard-foot{padding-right:56px}
+.gcard-foot{padding-right:48px}
 .gcard-heart{position:absolute;right:6px;bottom:10px}
 .work-acts{flex:none;display:flex;align-items:center;gap:4px}
 .work-acts .btn{white-space:nowrap}

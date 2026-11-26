@@ -607,3 +607,16 @@
 - 공개한 대표 화면 — [배포 전](screenshots/2026-11-26-deploy-gallery-hearts/before-desktop.png) · [배포 후](screenshots/2026-11-26-deploy-gallery-hearts/after-desktop.png) · [배포 후 모바일](screenshots/2026-11-26-deploy-gallery-hearts/after-mobile.png) · [배포 후 크게 보기](screenshots/2026-11-26-deploy-gallery-hearts/after-desktop-open.png)
 - 변경 파일 — `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-deploy-gallery-hearts/`. 사이트 저장소 `d3f0dc8`, Worker 버전 `2312ce80`.
 - 푸시 — 사용자 요청에 따라 과제 저장소 main을 origin에 푸시했다.
+
+## 2026-11-26-heart-size
+
+- 실제 요청 — “하트가 너무 크고 굵어. 메모에 맞게 하트 크기를 작게 조정하고 라인굵기도 조정해줘. 지금은 게시글보다 하트가 눈에 더 잘보여.”
+- 진행 기록
+  1. 수정 전 촬영 — 로컬, 가짜 API(예시 3장), 코피 카드에 하트를 누른 상태. `before-*.png`는 하트 24px·선 1.9·숫자 14px 굵게(검정)라 카드 아래 정보보다 하트가 먼저 보인다.
+  2. 수정 — 하트를 카드 아래 작은 정보 글자(13px·회색)와 같은 무게로 맞췄다. 아이콘 24→16px, 선 1.9→1.6(16px에서 약 1px), 숫자 14px 굵게 검정 → 13px 보통 회색. 누르는 칸은 높이 40px을 그대로 두었다(손가락으로 누르기 쉽게). 켜진 하트의 빨강, 톡 튀는 동작, 두 번 톡 큰 하트는 그대로다. 변경 파일은 `app/dist/style.css`뿐이다.
+  3. 검증 — `check-gallery-hearts.mjs` ALL PASS(모바일 누르는 칸 44×40).
+  4. 수정 후 촬영 — `after-*.png`(작은 회색 하트와 숫자, 켜진 하트만 빨강), `after-mobile-open.png`(크게 보기 막대도 같은 크기). 열어 잘림·가림 없음을 확인했다. 원본 `local-assets/screenshots/2026-11-26-heart-size/`, 데스크톱 1440×900·모바일 780×1688.
+  5. 대화 캡처 — 찍지 않았다. 위 실제 요청 발췌로 대신한다.
+- 공개한 대표 화면 — [전](screenshots/2026-11-26-heart-size/before-desktop.png) · [후](screenshots/2026-11-26-heart-size/after-desktop.png) · [전 모바일](screenshots/2026-11-26-heart-size/before-mobile.png) · [후 모바일](screenshots/2026-11-26-heart-size/after-mobile.png) · [후 모바일 크게 보기](screenshots/2026-11-26-heart-size/after-mobile-open.png)
+- 변경 파일 — `app/dist/style.css`, `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-heart-size/`.
+- 배포 — 아직 하지 않았다.
