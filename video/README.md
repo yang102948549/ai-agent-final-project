@@ -18,8 +18,8 @@
 ```text
 video/
 ├── README.md                 # 폴더 구성, 미리보기·렌더링 명령 안내
-├── TRAILER-PLAN.md           # 트레일러 영상(30~60초) 기획·스토리보드 초안
-├── PROCESS-PLAN.md           # 과정 소개 영상(2~3분) 기획·스토리보드 (추후 작성)
+├── TRAILER-PLAN.md           # 트레일러 영상(30~60초) 제작 PRD
+├── PROCESS-PLAN.md           # 과정 소개 영상(2~3분) 초안 틀 (기획·스토리보드)
 ├── package.json              # Remotion 의존성 및 render:trailer / render:process 스크립트
 ├── package-lock.json         # 의존성 잠금 파일
 ├── tsconfig.json             # TypeScript 설정

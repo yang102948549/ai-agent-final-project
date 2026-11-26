@@ -560,3 +560,17 @@
 - 공개한 대표 화면 — [배포 전 질문·조사](screenshots/2026-11-26-deploy-genre-writing/before-desktop-lab.png) · [배포 후 질문·조사](screenshots/2026-11-26-deploy-genre-writing/after-desktop-lab.png) · [배포 후 모바일 편지](screenshots/2026-11-26-deploy-genre-writing/after-mobile-letter.png) · [배포 후 성격 체크](screenshots/2026-11-26-deploy-genre-writing/after-desktop-article-check.png)
 - 변경 파일 — `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-deploy-genre-writing/`. 사이트 저장소 `695130d`.
 - 푸시 — 사용자 요청에 따라 과제 저장소 main을 origin에 푸시했다.
+
+
+## 2026-11-26-process-video-plan
+
+- 실제 요청 — “작업영상 초안도 생각해보자. 왜냐하면 기존 프로젝트에서 수정하는 거기 때문에 어떻게 작업을 시작했는지 어떤 작업과정을 거치고 있는지 영상으로 어떻게 드러낼지가 중요해”
+- 한 일 — 기존 프로젝트(`global-life-simulator` `5f5f7b9`) 수정 개발의 시작과 작업 과정을 명확히 보여 주는 **과정 소개 영상(2분 38초, 4,740 frames @ 30fps)** 초안 틀을 `video/PROCESS-PLAN.md`로 작성하고 `video/README.md`를 갱신했다.
+  - **Act 1 (시작과 출발선, 26초)**: 기록·검증 규칙(`DEVELOPMENT.md`, `CLAUDE.md`, `CHECKLIST.md`, `PROMPTS.md`) 수립과 원본 기준선(`baseline`) 진단, 첫 분기 요청 대화 캡처(`01-request.png`).
+  - **Act 2 (작업 방식, 18초)**: Paseo 3창 멀티 에이전트 병렬 협업(`paseo-workflow-redacted.png`)과 핸드오프 분담, 전/후 캡처 + Playwright 자동 검증 5단계 루프.
+  - **Act 3 (수정 전/후 5대 라운드, 90초)**: ① 선택별 갈래 시나리오(8명·47장면·96경로), ② 2D 삽화 → 12명 실사풍·디테일 보완·35장 상황 이미지, ③ 12명 히어로 사진 앨범·높이 정렬·자동 재생, ④ 이름 입력 제거·돌아보기 문장 틀·최소 20자, ⑤ 형식 선선택·장르별 쓰기·성격 체크 6기준. 각 라운드에 실제 AI 요청 원문·전/후 배포 화면·바꾼 이유를 연결했다.
+  - **Act 4 (검증·배포·성과 요약, 24초)**: 정량 Before/After 대시보드와 라이브 배포 주소·저장소 안내.
+- 변경 파일 — `video/PROCESS-PLAN.md`(신규), `video/README.md`, `PROMPTS.md`.
+- 검증 — `video/PROCESS-PLAN.md`에 매핑한 대화·전후 앱 캡처 43개 경로 존재 확인(누락 0건). 문서 전용 작업이므로 앱 UI 전후 촬영은 비대상이다.
+- 대화 캡처 — 촬영하지 못했다(대기). 위 실제 요청 발췌로 대신한다.
+- 배포 — 문서 작업이므로 사이트 배포 비대상. 로컬 커밋까지 수행.
