@@ -503,3 +503,15 @@
 - 검증 — 문서 내 참조한 기존 앱 캡처 및 상황 이미지 11개 경로 존재 확인(모두 True). 문서 전용 작업이므로 앱 UI 전후 촬영은 비대상이다.
 - 대화 캡처 — 촬영하지 못했다(대기). 위 실제 요청 발췌로 대신한다.
 - 배포 — 문서 작업이므로 사이트 배포 비대상. `d050d8f`는 원격 푸시 완료, `video/` PRD 커밋은 로컬 커밋까지 수행.
+
+## 2026-11-26-deploy-no-nickname
+
+- 실제 요청 — “작업후 커밋 배포 해줘”
+- 진행 기록
+  1. 배포 전 라이브 촬영 — `https://onischool.net/anotherday/`, 가나 코피, AI 차단. `before-*-join.png`에 ‘플레이어 등록’ 이름 입력 팝업, `before-*-letter.png`에 ‘익명 드림’을 확인했다.
+  2. 배포 — `app/`에서 `npm run validate` PASS, `node sync-onischool.cjs`(66개 파일, 바뀐 파일 app.js·style.css·index.html). 배포본 app.js가 과제 저장소 `d9c16a0`의 app.js와 같은지 해시로 확인한 뒤 onischool-release `f65d635`를 origin main에 푸시했다. 새 해시 `app.js?v=403931cb72`.
+  3. 라이브 검증 — 약 20초 뒤 해시 반영. 라이브에서 `check-no-nickname.mjs` 9항목, `check-min-length.mjs` 15항목 모두 ALL PASS. `after-*-join.png`(누르면 바로 ‘“오늘 하루만 같이 가자”’ 아침 장면), `after-*-letter.png`(‘코피 드림’)를 열어 잘림·가림 없음을 확인했다. 원본은 `local-assets/screenshots/2026-11-26-deploy-no-nickname/`, 데스크톱 1440×900·모바일 780×1688.
+  4. 대화 캡처 — (12:00) 전체 화면 1920×1080 `local-assets/conversations/2026-11-26-no-nickname/02-after-deploy-full.png`.
+- 공개한 대표 화면 — [배포 전 시작](screenshots/2026-11-26-deploy-no-nickname/before-desktop-join.png) · [배포 후 시작](screenshots/2026-11-26-deploy-no-nickname/after-desktop-join.png) · [배포 후 모바일](screenshots/2026-11-26-deploy-no-nickname/after-mobile-join.png) · [배포 전 편지](screenshots/2026-11-26-deploy-no-nickname/before-desktop-letter.png) · [배포 후 편지](screenshots/2026-11-26-deploy-no-nickname/after-desktop-letter.png)
+- 대화 캡처 — [배포 후 장면](screenshots/conversations/2026-11-26-no-nickname/02-after-deploy.png)
+- 변경 파일 — `PROMPTS.md`, `CHECKLIST.md`, `conversations/README.md`, `screenshots/2026-11-26-deploy-no-nickname/`, `screenshots/conversations/2026-11-26-no-nickname/02-after-deploy.png`. 사이트 저장소 `f65d635`.
