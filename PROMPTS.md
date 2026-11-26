@@ -763,7 +763,7 @@
 - 공개한 대표 화면 — [전](screenshots/2026-11-26-no-question-field/before-desktop-lab.png) · [후](screenshots/2026-11-26-no-question-field/after-desktop-lab.png) · [전 모바일](screenshots/2026-11-26-no-question-field/before-mobile-lab.png) · [후 모바일](screenshots/2026-11-26-no-question-field/after-mobile-lab.png)
 - 대화 캡처 — 사용자가 첨부한 화면 외에는 찍지 않았다(캡처 대기).
 - 변경 파일 — `app/dist/app.js`, `app/dist/ai.js`, `app/tools/check-ask-record.mjs`(새로), `app/tools/check-genre-writing.mjs`, `app/tools/check-min-length.mjs`, `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-no-question-field/`.
-- 배포 — 아직 하지 않았다.
+- 배포 — 2026-11-26 `2026-11-26-deploy-no-question-field`에서 배포·검증했다(사이트 `ebc0e88`, 최종 `8b5d2cb`).
 
 ## 2026-11-26-scene-diversity
 
@@ -801,3 +801,16 @@
 - 공개한 대표 화면 — [배포후 목록](screenshots/2026-11-26-deploy-character-diversity/after-desktop-atlas.png) · [배포후 모바일 목록](screenshots/2026-11-26-deploy-character-diversity/after-mobile-atlas.png) · [그라스 낮 전](screenshots/2026-11-26-deploy-character-diversity/before-desktop-congo-noon-a.png) · [그라스 낮 후](screenshots/2026-11-26-deploy-character-diversity/after-desktop-congo-noon-a.png) · [그라스 낮 모바일 후](screenshots/2026-11-26-deploy-character-diversity/after-mobile-congo-noon-a.png) · [암나 낮 전](screenshots/2026-11-26-deploy-character-diversity/before-desktop-sudan-noon-a.png) · [암나 낮 후](screenshots/2026-11-26-deploy-character-diversity/after-desktop-sudan-noon-a.png) · [암나 낮 모바일 후](screenshots/2026-11-26-deploy-character-diversity/after-mobile-sudan-noon-a.png) · [람 낮 전](screenshots/2026-11-26-deploy-character-diversity/before-desktop-qatar-noon.png) · [람 낮 후](screenshots/2026-11-26-deploy-character-diversity/after-desktop-qatar-noon.png) · [람 낮 모바일 후](screenshots/2026-11-26-deploy-character-diversity/after-mobile-qatar-noon.png) · [히어로 앨범](screenshots/2026-11-26-deploy-character-diversity/phase-3-desktop-aligned.png)
 - 변경 파일 — `CHECKLIST.md`, `PROMPTS.md`, `screenshots/2026-11-26-deploy-character-diversity/`. 사이트 저장소 `8b5d2cb`.
 - 푸시 — 사용자 요청에 따라 과제 저장소 `origin main`에 푸시했다.
+
+## 2026-11-26-deploy-no-question-field
+
+- 실제 요청
+  - “이미지 수정이 완료 커밋 되면 배포하도록 하자”
+  - “이미지 수정이 완료되었기 때문에 질문하기 피드백 대화 수정 작업을 읽어서 커밋 중단되었던 부분을 파악하여 다시 이어서 커밋해줘”
+- 중단 지점 파악 — 이전 세션은 캐릭터 이미지 커밋(`e6b7d62`)을 확인한 뒤 사이트 저장소에 `ebc0e88`(질문 칸 제거·AI 질문 기록 + 그 시점 캐릭터 이미지)을 배포하고 라이브 검사 5개를 통과시켰다. 그러나 사용자가 이미지 작업이 끝날 때까지 기다리라고 해서 배포 후 화면 확인, 이 기록, CHECKLIST 배포 확인 칸 갱신은 하지 않은 채 멈췄다. 그 뒤 이미지 세션이 사이트 `8b5d2cb`로 최종 이미지를 배포하고 과제 저장소를 푸시했다(`3dfe828`은 이때 함께 원격에 올라감). 이번 작업은 남은 라이브 확인과 기록만 이어서 했다. 배포를 다시 하지는 않았다.
+- 배포 상태 확인 — 사이트 저장소 `anotherday/app.js`·`ai.js`·`style.css`가 과제 저장소 `app/dist`와 같다(`cmp`). `index.html`은 배포 때 넣는 버전 해시만 다르다. 라이브 `app.js?v=92392f2baf`가 사이트 저장소 `index.html`과 같다.
+- 라이브 검증 — `https://onischool.net/anotherday/`에서 `check-ask-record`·`check-feedback-edit`·`check-genre-writing`·`check-min-length`·`check-no-nickname` 5개 ALL PASS(`ebc0e88` 배포 직후 1회, 최종 `8b5d2cb` 상태에서 다시 1회).
+- 화면 — 데스크톱 1440×900, 모바일 780×1688. `capture-coach.mjs`로 찍었다. `local-assets/screenshots/2026-11-26-deploy-no-question-field/`에 배포 전 `before-*` 10장, `ebc0e88` 배포 직후 `after-*` 10장(중간 단계 캐릭터 이미지라 대표 화면에서 뺌), 최종 사이트 `final-*` 10장을 보관했다. before-desktop-lab, final-desktop-lab, final-mobile-lab을 직접 열어 봤다. 배포 전에는 ‘내가 알아볼 질문(필수)’ 칸이 있었다. 배포 후에는 그 칸 없이 조언 → 자료 열어 보기 → AI 묻기로 이어지고, ‘내가 물어본 것은 저절로 기록돼요’ 안내와 새 시오네 사진이 보인다. 글자·버튼 잘림은 없었다.
+- 공개한 대표 화면 — [배포 전](screenshots/2026-11-26-deploy-no-question-field/before-desktop-lab.png) · [배포 전 모바일](screenshots/2026-11-26-deploy-no-question-field/before-mobile-lab.png) · [배포 후](screenshots/2026-11-26-deploy-no-question-field/final-desktop-lab.png) · [배포 후 모바일](screenshots/2026-11-26-deploy-no-question-field/final-mobile-lab.png)
+- 대화 캡처 — 찍지 않았다(캡처 대기). 위 실제 요청 발췌로 대신한다.
+- 변경 파일 — `PROMPTS.md`, `CHECKLIST.md`(질문 칸 없애기 행 배포 확인), `screenshots/2026-11-26-deploy-no-question-field/`. 사이트 저장소 `ebc0e88`(이후 `8b5d2cb`에 포함).
