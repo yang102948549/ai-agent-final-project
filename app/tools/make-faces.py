@@ -33,13 +33,14 @@ DROP = 0.12    # 얼굴 가운데보다 조금 아래를 중심으로(목과 어
 def main(ids):
     for cid in ids:
         img = Image.open(ROOT / f'{cid}.webp').convert('RGB')
-        cx, cy, w = FACES[cid]
+        ratio = img.width / 900.0
+        cx, cy, w = [v * ratio for v in FACES[cid]]
         side = int(w * SCALE)
         cy += w * DROP
         left = int(max(0, min(img.width - side, cx - side / 2)))
         top = int(max(0, min(img.height - side, cy - side / 2)))
         out = img.crop((left, top, left + side, top + side)).resize((SIZE, SIZE), Image.LANCZOS)
-        out.save(ROOT / f'{cid}-face.webp', 'WEBP', quality=88, method=6)
+        out.save(ROOT / f'{cid}-face.webp', 'WEBP', quality=76, method=6)
         print(f'{cid}: ({left},{top}) 한 변 {side}px → {SIZE}×{SIZE}')
 
 

@@ -814,3 +814,22 @@
 - 공개한 대표 화면 — [배포 전](screenshots/2026-11-26-deploy-no-question-field/before-desktop-lab.png) · [배포 전 모바일](screenshots/2026-11-26-deploy-no-question-field/before-mobile-lab.png) · [배포 후](screenshots/2026-11-26-deploy-no-question-field/final-desktop-lab.png) · [배포 후 모바일](screenshots/2026-11-26-deploy-no-question-field/final-mobile-lab.png)
 - 대화 캡처 — 찍지 않았다(캡처 대기). 위 실제 요청 발췌로 대신한다.
 - 변경 파일 — `PROMPTS.md`, `CHECKLIST.md`(질문 칸 없애기 행 배포 확인), `screenshots/2026-11-26-deploy-no-question-field/`. 사이트 저장소 `ebc0e88`(이후 `8b5d2cb`에 포함).
+
+## 2026-11-26-image-loading-opt
+
+- 실제 요청
+  - “사이트 접속시 이미지 로딩이 걸리는데 해결방안은?”
+  - “적용해서 커밋 푸시 배포해줘”
+- 변경 이유 — 35mm 다큐멘터리 실사풍 교체 뒤 전체 WebP 59장 용량이 4,781.3KB(캐릭터+얼굴 24장 1,351.8KB, 장면 35장 3,429.4KB)에 달했고, 첫 화면 진입 시 히어로 앨범이 12장 전체 디코딩 완료까지 멈춰 있는 동시에 400ms 뒤 `preloadArt()`가 24장을 한꺼번에 요청해 초기 대역폭 경합이 발생했다. 또한 캐릭터 선택 시 해당 인물의 낮·저녁 분기 이미지 2~6장을 동시에 요청해 당장 필요한 장면 이미지 로딩이 늦어졌다.
+- AI에 추가로 내린 지시와 판단
+  1. **실제 표시 해상도(2x 레티나) 맞춤 WebP 재인코딩(총 용량 44.6% 절감)**: 카드 표시 폭(최대 330~340px)의 2배 레티나 해상도에 맞춰 캐릭터 전신 12장은 `660×884`(`quality=68`), 얼굴 썸네일 12장은 `200×200`(`quality=74`), 상황별 장면 35장은 `660×880`(`quality=68`)으로 재인코딩해 전체 용량을 `4,781.3KB → 2,649.8KB`(캐릭터+얼굴 752.0KB, 장면 1,897.7KB, 평균 44.9KB/장)로 줄였다. `app/tools/make-faces.py`도 변경된 전신 이미지 폭에 비례(`img.width / 900.0`)하도록 보정했다.
+  2. **히어로 앨범 상위 4장 즉시 시작 + 동시 2장 순차 배경 프리로드 큐(`enqueuePreload`)**: `mountHeroAlbum()`에서 12장 전체가 아니라 첫 화면에 보이는 상위 4장(`bangladesh`, `ghana`, `tuvalu`, `gaza`)만 디코딩되면 즉시 앨범 애니메이션을 시작(`ready=true`)하도록 바꾸고, 개별 이미지가 디코딩되는 즉시 `.art.is-loaded`를 부여해 쉬머 노출 시간을 줄였다. 초기 4장이 끝난 뒤에만 나머지 히어로 8장과 얼굴 썸네일 12장을 동시 요청 수 2개(`preloadActive < 2`)로 제한한 `enqueuePreload` 큐로 순차 로드한다.
+  3. **도달 가능한 다음 단계 우선 장면 프리로드**: `preloadCaseScenes(id)`에서 모든 분기 이미지를 한꺼번에 요청하던 방식을 바꿔 현재 단계(`step`)와 바로 다음 단계(`step + 1`)의 도달 가능한 장면만 우선 프리로드하고 나머지 분기는 배경 큐에 넣었다. 특히 사용자가 `lock(c, n)`으로 선택지를 확정하는 즉시 다음 단계의 확정된 분기 장면(`sceneSrc(nextC, state.run.step + 1)`)을 `high` 우선순위로 프리로드해, 브리핑 카드를 읽고 ‘다음 장면 →’을 누를 때는 이미 디코딩이 끝나 있도록 했다.
+  4. **캐시 버전 갱신 및 라이브 배포**: `ART_V`와 `app/dist/index.html`의 `<link rel="preload">` 4개를 `20261126-fast`로 올리고 `node sync-onischool.cjs`로 사이트 저장소(`onischool-release`)에 동기화해 커밋(`c647967`)·푸시했다.
+- 변경 파일 — `app/dist/app.js`, `app/dist/index.html`, `app/tools/make-faces.py`, `app/dist/assets/characters/*.webp`(24장), `app/dist/assets/scenes/*.webp`(35장), `CHECKLIST.md`, `PROMPTS.md`, `screenshots/2026-11-26-image-loading-opt/`. 사이트 저장소 `c647967`.
+- 검증
+  - `node validate.cjs` 및 `node --check dist/app.js` → `PASS`
+  - 로컬 및 라이브 `node tools/check-hero-album.mjs https://onischool.net/anotherday/` → `PASS` (12명 노출, 이음새 오차 0px, 텍스트·사진 높이 오차 0px, 7개 화면 폭 넘침·겹침 없음, JS 오류 0건)
+  - 전후 화면 캡처(`local-assets/screenshots/2026-11-26-image-loading-opt/`의 `before-desktop.png` 1440×900, `before-mobile.png` 390×844, `after-desktop.png` 1440×900, `after-mobile.png` 390×844, `after-desktop-atlas.png` 1440×900, `after-mobile-atlas.png` 390×844, `after-desktop-scene.png` 1440×900, `hero/phase-0~3-desktop-aligned.png`)를 각각 직접 열어 화질 저하 없이 선명하게 렌더링되고 글자나 버튼 가림이 없음을 확인했다.
+- 공개한 대표 화면 — [PC 전](screenshots/2026-11-26-image-loading-opt/before-desktop.png) · [PC 후](screenshots/2026-11-26-image-loading-opt/after-desktop.png) · [모바일 전](screenshots/2026-11-26-image-loading-opt/before-mobile.png) · [모바일 후](screenshots/2026-11-26-image-loading-opt/after-mobile.png) · [목록 PC](screenshots/2026-11-26-image-loading-opt/after-desktop-atlas.png) · [목록 모바일](screenshots/2026-11-26-image-loading-opt/after-mobile-atlas.png)
+- 대화 캡처 — 찍지 않았다(캡처 대기). 위 실제 요청 발췌로 대신한다.

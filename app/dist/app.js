@@ -92,7 +92,7 @@ const sourceList=c=>`<ul class="sources">${c.sources.map(s=>`<li><a href="${esc(
 const facts=c=>`<ul class="facts">${c.facts.map(f=>`<li>${esc(f)}</li>`).join('')}</ul>`;
 // 캐릭터·장면 그림. kind가 face면 얼굴 부분, 아니면 전신/장면 그림. 그림을 못 읽으면 이름 첫 글자가 보인다.
 // 그림을 바꾸면 ART_V를 올린다. 학교 사이트는 파일을 몇 시간씩 캐시해서, 같은 이름이면 예전 그림이 보일 수 있다.
-const ART_V='20261126-diversity-all';
+const ART_V='20261126-fast';
 // 상황별 장면 그림 매핑(장면 제목 기준). 등록되지 않은 장면은 기본 인물 그림으로 폴백한다.
 const SCENE_ART={
   haiti:{
@@ -159,15 +159,22 @@ const artSrc=(id,kind)=>`assets/characters/${id}${kind==='face'?'-face':''}.webp
 const sceneMeta=(c,step)=>{const s=c.scenes[step];return s?.img?s:SCENE_ART[c.id]?.[s?.title]||null;};
 const sceneSrc=(c,step)=>{const m=sceneMeta(c,step);return m?.img?`assets/scenes/${m.img}.webp?v=${ART_V}`:artSrc(c.id,'card');};
 const scenePos=(c,step)=>sceneMeta(c,step)?.pos||'';
-const loadedSrc=new Set(),imgPromises=new Map();
+const loadedSrc=new Set(),imgPromises=new Map(),preloadQueue=[];
+let preloadActive=0;
+function markLoadedInDom(src){
+  document.querySelectorAll('.art img').forEach(el=>{if(el.getAttribute('src')===src)el.closest('.art')?.classList.add('is-loaded');});
+}
 function preloadUrl(src,priority=''){
   if(!src)return Promise.resolve();
-  if(imgPromises.has(src))return imgPromises.get(src);
+  if(imgPromises.has(src)){
+    if(loadedSrc.has(src))markLoadedInDom(src);
+    return imgPromises.get(src);
+  }
   const p=new Promise(res=>{
     const img=new Image();
     img.decoding='async';
     if(priority&&'fetchPriority' in img)img.fetchPriority=priority;
-    const ok=()=>{loadedSrc.add(src);(img.decode?img.decode().catch(()=>{}):Promise.resolve()).then(res);};
+    const ok=()=>{loadedSrc.add(src);markLoadedInDom(src);(img.decode?img.decode().catch(()=>{}):Promise.resolve()).then(res);};
     img.onload=ok;img.onerror=res;
     img.src=src;
     if(img.complete&&img.naturalWidth)ok();
@@ -175,12 +182,38 @@ function preloadUrl(src,priority=''){
   imgPromises.set(src,p);
   return p;
 }
+function pumpPreload(){
+  while(preloadActive<2&&preloadQueue.length){
+    const src=preloadQueue.shift();
+    if(!src||loadedSrc.has(src)||imgPromises.has(src))continue;
+    preloadActive++;
+    preloadUrl(src,'low').finally(()=>{preloadActive--;pumpPreload();});
+  }
+}
+function enqueuePreload(urls){
+  for(const u of urls){if(u&&!loadedSrc.has(u)&&!imgPromises.has(u)&&!preloadQueue.includes(u))preloadQueue.push(u);}
+  pumpPreload();
+}
+function sceneStepUrls(id,stepIdx,choiceIdx=null){
+  const raw=cases.find(x=>x.id===id);
+  if(!raw)return [];
+  const slot=raw.scenes[stepIdx];
+  if(!slot)return [];
+  const items=Array.isArray(slot)?(Number.isInteger(choiceIdx)&&slot[choiceIdx]?[slot[choiceIdx]]:slot):[slot];
+  return items.map(s=>{const img=s.img||SCENE_ART[id]?.[s.title]?.img;return img?`assets/scenes/${img}.webp?v=${ART_V}`:artSrc(id,'card');}).filter(Boolean);
+}
 function preloadCaseScenes(id){
   const raw=cases.find(x=>x.id===id);
   if(!raw)return;
-  preloadUrl(artSrc(id,'card'));
-  const all=raw.scenes.flatMap(s=>Array.isArray(s)?s:[s]);
-  for(const s of all){const img=s.img||SCENE_ART[id]?.[s.title]?.img;if(img)preloadUrl(`assets/scenes/${img}.webp?v=${ART_V}`);}
+  const step=state.run?.id===id?(state.run.step||0):0;
+  const choices=state.run?.id===id?(state.run.choices||[null,null,null]):[null,null,null];
+  preloadUrl(artSrc(id,'card'),'high');
+  preloadUrl(artSrc(id,'face'),'high');
+  for(const u of sceneStepUrls(id,step,step>0?choices[step-1]:null))preloadUrl(u,'high');
+  const nextUrls=step<2?sceneStepUrls(id,step+1,choices[step]):[];
+  for(const u of nextUrls)preloadUrl(u);
+  const rest=raw.scenes.flatMap(s=>Array.isArray(s)?s:[s]).map(s=>{const img=s.img||SCENE_ART[id]?.[s.title]?.img;return img?`assets/scenes/${img}.webp?v=${ART_V}`:'';}).filter(Boolean);
+  enqueuePreload(rest);
 }
 function waitSceneImage(c,step,cap=1500){
   return Promise.race([preloadUrl(sceneSrc(c,step),'high'),wait(cap)]);
@@ -197,10 +230,14 @@ function art(c,kind='card',extra='',opts={}){
 function sceneArt(c,step,kind='card',extra='',opts={}){
   return artHtml(sceneSrc(c,step),[...c.name][0],kind,extra,{tone:TONE[c.id]||DEFAULT_TONE,pos:scenePos(c,step),...opts});
 }
-// 서버가 멀어 그림 한 장마다 1초 가까이 걸리므로, 첫 화면 뒤에 기본 인물 그림을 미리 받아 둔다.
-// 상황별 장면 그림은 캐릭터를 고른 시점에 해당 인물 것만 먼저 받는다.
+// 서버가 멀어 그림 한 장마다 시간이 걸리므로, 첫 화면 히어로 상위 4장 뒤에는 동시 2장씩 순차 큐로 미리 받아 둔다.
+// 상황별 장면 그림은 캐릭터를 고른 시점에 현재·다음 단계 갈래만 먼저 받고 나머지는 배경 큐에 넣는다.
 function preloadArt(){
-  for(const kind of ['face','card'])for(const c of cases)preloadUrl(artSrc(c.id,kind));
+  const urls=[];
+  for(const id of ALBUM_IDS.slice(4))urls.push(artSrc(id,'card'));
+  for(const c of cases)urls.push(artSrc(c.id,'face'));
+  for(const c of cases)urls.push(artSrc(c.id,'card'));
+  enqueuePreload(urls);
 }
 function field(name,label,placeholder='',required=false,help=''){return `<label class="field"><span>${esc(label)}${required?' <em>필수</em>':''}</span>${help?`<small>${esc(help)}</small>`:''}<textarea data-field="${name}" name="${name}" maxlength="4000" ${required?'required':''} placeholder="${esc(placeholder)}">${esc(fields()[name]||'')}</textarea>${required?countEl(name):''}</label>`;}
 function tile(c){const i=cases.indexOf(c),done=state.completed.includes(c.id);return `<button class="tile" data-start="${c.id}" style="--tone:${TONE[c.id]}">${art(c,'card')}<span class="tile-body"><span class="tile-meta">${esc(c.theme)}${done?' · 완료':''}</span><strong>${esc(c.name)}</strong><span class="tile-title">${esc(c.title)}</span><span class="tile-desc">${esc(c.summary)}</span></span></button>`;}
@@ -231,7 +268,13 @@ function mountHeroAlbum(){
   document.addEventListener('visibilitychange',update);
   const observer=new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;update();});
   observer.observe(album);
-  Promise.allSettled([...album.querySelectorAll('.album-group:first-child img')].map(img=>img.decode())).then(()=>{if(!disposed){ready=true;update();}});
+  const firstGroupImgs=[...album.querySelectorAll('.album-group:first-child img')];
+  firstGroupImgs.forEach(img=>{
+    const mark=()=>{const s=img.getAttribute('src');if(s){loadedSrc.add(s);markLoadedInDom(s);}};
+    if(img.complete&&img.naturalWidth)mark();
+    else img.decode?.().then(mark).catch(()=>{});
+  });
+  Promise.allSettled(firstGroupImgs.slice(0,4).map(img=>img.decode())).then(()=>{if(!disposed){ready=true;update();}preloadArt();});
   update();
   disposeAlbum=()=>{disposed=true;observer.disconnect();document.removeEventListener('visibilitychange',update);};
 }
@@ -513,7 +556,9 @@ function talkFoot(c,s,ch){
 }
 function lock(c,n){
   state.run.choices[state.run.step]=n;
-  save();render();
+  save();
+  if(state.run.step<2){const nextC=current();if(nextC)preloadUrl(sceneSrc(nextC,state.run.step+1),'high');}
+  render();
   window.scrollTo({top:0,behavior:reduceMotion?'auto':'smooth'});
 }
 async function say(c,text){
@@ -1113,6 +1158,6 @@ document.addEventListener('error',e=>{const img=e.target;if(img?.tagName==='IMG'
 document.querySelector('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();});
 renderStatus();
 render();
-const startPreload=()=>setTimeout(preloadArt,400);
+const startPreload=()=>setTimeout(()=>{if(view!=='home')preloadArt();},1200);
 if(document.readyState==='complete')startPreload();else addEventListener('load',startPreload,{once:true});
 })();
