@@ -632,3 +632,16 @@
 - 공개한 대표 화면 — [배포 전](screenshots/2026-11-26-deploy-heart-size/before-desktop.png) · [배포 후](screenshots/2026-11-26-deploy-heart-size/after-desktop.png) · [배포 후 모바일](screenshots/2026-11-26-deploy-heart-size/after-mobile.png)
 - 변경 파일 — `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-deploy-heart-size/`. 사이트 저장소 `e8c44d9`.
 - 푸시 — 사용자 요청에 따라 과제 저장소 main을 origin에 푸시했다.
+
+
+## 2026-11-26-opening-chips
+
+- 실제 요청 — “이런 식으로 전 캐릭터들의 첫 상황에서의 칩들을 다시 분석해줘.” → “수정해서 커밋 배포해줘”
+- 사용자 기준 — “첫 상황은 현장 감독에게서 문자가 와서 고민하는 상황인거잖아? 이런 식의 칩 텍스트들을 물어보는거야”
+- 변경 — 12명 첫 칩 36개를 핵심 사건에 대한 반응, 선택의 조건·시간·비용·위험 질문, 갈등 표현으로 정리했다. 모든 path는 none 유지. 저장된 칩뿐 아니라 AI 첫 칩 생성 지침에도 같은 기준을 추가했다.
+- 변경 파일 — app/dist/precomputed.js, app/dist/ai.js, app/tools/check-opening-chips.mjs, PROMPTS.md, CHECKLIST.md, screenshots/2026-11-26-opening-chips/.
+- 검증 — 전체 12명·47장면·94선택·96경로 validate 통과. PC 1440×900, 모바일 390×844 CSS 픽셀(저장 780×1688), AI 연결 모의, 첫 시작 경로로 12명씩 대본·칩 3개·none·가로 넘침·JS 오류 확인. 아시프 전후 4장을 각각 열어 문구 및 잘림·가림 없음 확인. 원본 local-assets/screenshots/2026-11-26-opening-chips/.
+- 재시도 — 최초 API 404 모의에서는 AI 미연결 선택지가 표시되어 칩 대기 시간 초과. configured:true로 고쳐 통과. 검증 스크립트는 최초 잘못된 작업 경로에서 실패해 app/에서 다시 실행했다.
+- 공개 화면 — [PC 전](screenshots/2026-11-26-opening-chips/before-desktop.png) · [PC 후](screenshots/2026-11-26-opening-chips/after-desktop.png) · [모바일 전](screenshots/2026-11-26-opening-chips/before-mobile.png) · [모바일 후](screenshots/2026-11-26-opening-chips/after-mobile.png).
+- 대화 캡처 — 실제 발췌를 위에 기록. 이번 작업의 대화 창 원본 캡처는 미확보, 캡처 대기. 앱 전후 캡처와 구별한다.
+- 배포 확인 — 배포 후 추가 기록. 실시간 AI 응답 품질은 이번 정적 첫 칩 검증 범위 밖이다.
