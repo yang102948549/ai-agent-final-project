@@ -6,7 +6,7 @@ const url = i > 0 ? process.argv[i + 1] : 'http://127.0.0.1:4173/';
 const KEY = 'global-life-lab-v1';
 const base = { id: 'ghana', step: 0, choices: [null, null, null], fields: {}, chats: [0, 1, 2].map(() => ({ log: [], api: [] })), startedAt: '2026-11-25T00:00:00.000Z' };
 const long = '해발이 낮은 섬이라 바닷물이 땅으로 들어와 농사와 식수가 어렵습니다.';
-const browser = await chromium.launch();
+const browser = await chromium.launch(process.env.PW_CHROME ? { executablePath: process.env.PW_CHROME } : {});
 const fails = []; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails.push(m); };
 async function open(run, me) {
   const page = await (await browser.newContext({ viewport: { width: 1440, height: 900 }, locale: 'ko-KR' })).newPage();

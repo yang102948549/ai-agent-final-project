@@ -20,9 +20,8 @@ const view = () => page.evaluate(k => JSON.parse(localStorage.getItem(k)).run.vi
 ok(await page.getByText('무엇을 골라도 그대로였던 어려움은?').isVisible(), '돌아보기 두 번째 질문이 구체적인 문장으로 바뀜');
 await page.fill('[data-field=feeling]', '가족');
 ok((await page.locator('[data-count=feeling]').innerText()).includes('2 / 20자'), '글자 수 표시: 2 / 20자');
-await page.locator('[data-starter="1"]').click();
-ok((await page.inputValue('[data-field=constraint]')).startsWith('집에 돈이 부족해서'), '문장 틀을 누르면 칸에 들어감');
-ok(!(await page.inputValue('[data-field=constraint]')).includes('____') && (await page.locator('[data-count=constraint]').innerText()).includes('좋아요'), '예시 문장은 빈칸 없는 온전한 문장으로 들어감');
+ok(await page.locator('[data-starter]').count() === 0 && (await page.locator('.tips').innerText()).includes('돈이 부족해서'), '눌러 넣는 문장 대신 생각할 거리 조언');
+await page.fill('[data-field=constraint]', '집에 돈이 부족해서');
 await page.click('#reflection-form button[type=submit]');
 ok((await dialogShown()).includes('20자'), '19자 이하면 넘어가지 않고 안내');
 ok(await view() === 'reflect', '돌아보기 화면에 머무름');
@@ -38,7 +37,7 @@ ok(await page.locator('[data-field=question]').count() === 0, '글의 종류를 
 await page.click('[data-action=to-plan]');
 ok((await dialogShown()).includes('먼저 골라') && await view() === 'lab', '종류를 안 고르면 결과물로 못 감');
 await page.click('[data-format=letter]'); await page.waitForTimeout(300);
-await page.locator('[data-frame="1"]').click();
+await page.fill('[data-field=question]', '왜 그럴까?');
 await page.click('[data-action=to-plan]');
 ok((await dialogShown()).length > 0 && await view() === 'lab', '질문 빈칸·알게 된 것 부족이면 결과물로 못 감');
 await page.fill('[data-field=question]', '시오네 같은 사람이 섬에 남으려면 정부가 무엇을 해야 할까?');

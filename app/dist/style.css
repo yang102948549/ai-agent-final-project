@@ -934,3 +934,33 @@ select:focus-visible{outline:2px solid var(--tone);outline-offset:2px}
 .heart-burst svg{width:100%;height:100%;fill:#ed4956;stroke:#fff;stroke-width:1.2;filter:drop-shadow(0 6px 20px rgba(237,73,86,.45))}
 @keyframes heart-burst{0%{transform:scale(0);opacity:0}15%{transform:scale(1.2);opacity:1}30%{transform:scale(.95)}45%{transform:scale(1.05)}75%{transform:scale(1);opacity:1}100%{transform:scale(1) translateY(-24px);opacity:0}}
 @media (prefers-reduced-motion:reduce){.heart.pop svg,.heart-burst{animation:none}}
+
+/* ---------- 쓰는 법 조언(누르는 칩 대신 읽는 조언) ---------- */
+.tips{list-style:none;margin:12px 0 0;padding:12px 16px;border-left:3px solid var(--tone);background:color-mix(in srgb,var(--tone) 6%,var(--paper));display:grid;gap:6px;font-size:14px;line-height:1.55;color:var(--ink)}
+.tips li{position:relative;padding-left:14px}
+.tips li::before{content:"";position:absolute;left:0;top:.7em;width:5px;height:5px;border-radius:50%;background:var(--tone)}
+.tips li b{color:var(--tone);font-weight:700;margin-right:6px}
+.part .tips{margin-bottom:4px}
+.tip-ref{margin:14px 0 0;font-size:14px;color:var(--muted);line-height:1.55}
+.tip-ref b{display:block;font-size:12px;letter-spacing:.02em;color:var(--ink);margin-bottom:2px}
+
+/* ---------- 피드백 보며 고치기 ---------- */
+.rv-panel .tool-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.modal-box.rv-edit{width:min(1080px,100%);max-height:92vh;padding:0;display:flex;flex-direction:column;overflow:hidden;background:var(--card)}
+.rv-edit-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 22px;border-bottom:1px solid var(--line)}
+.rv-edit-head h2{margin:0;font-size:20px}
+.rv-edit-grid{display:grid;grid-template-columns:320px 1fr;min-height:0;flex:1}
+.rv-edit-fb{padding:18px 20px;background:var(--paper);overflow:auto;display:flex;flex-direction:column;gap:12px;border-right:1px solid var(--line)}
+.rv-edit-fb .label{margin:0}
+.rv-edit-body{padding:4px 22px 18px;overflow:auto}
+.rv-edit-foot{display:flex;justify-content:flex-end;gap:8px;padding:12px 22px;border-top:1px solid var(--line)}
+@media (max-width:760px){
+  .modal-box.rv-edit{max-height:96vh}
+  .rv-edit-grid{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .rv-edit-fb{max-height:32vh;border-right:0;border-bottom:1px solid var(--line);padding:14px 16px}
+  .rv-edit-body{padding:0 16px 16px}
+  .rv-edit-head,.rv-edit-foot{padding:12px 16px}
+  .rv-edit-foot .btn{flex:none}
+  .rv-edit-foot .btn:last-child{flex:1;white-space:nowrap}
+}
+.rv-edit-head .btn{flex:none;width:auto}

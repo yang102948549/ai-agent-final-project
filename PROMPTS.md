@@ -678,3 +678,16 @@
 - 공개한 대표 화면 — [배포 전](screenshots/2026-11-26-deploy-full-sentences/before-desktop-lab.png) · [배포 후](screenshots/2026-11-26-deploy-full-sentences/after-desktop-lab.png) · [배포 후 모바일 돌아보기](screenshots/2026-11-26-deploy-full-sentences/after-mobile-reflect.png) · [배포 후 결과물](screenshots/2026-11-26-deploy-full-sentences/after-desktop-plan.png)
 - 변경 파일 — `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-deploy-full-sentences/`. 사이트 저장소 `8a23d58`.
 - 푸시 — 사용자 요청에 따라 과제 저장소 main을 origin에 푸시했다.
+
+## 2026-11-26-writing-coach
+
+- 실제 요청 — “예시를 어떻게 하는지 어디에 보내는지 예시 문장을 통째로 제시하는 게 아니라 이런 식으로 쓰라는 지도 및 조언처럼 해줘. 왜냐하면 이용자들이 생각안하고 이 칩들을 바로 선택해서 제출할 수 있거든. 그리고 피드백 대화시 피드백을 통해 내 글을 직접 고칠 수 있어야 하는데 이 단계에서는 고칠 수 있는 방식이 이 창 안에서는 없어. 즉, 피드백 대화를 통해 내가 작성한 글을 다시 수정할 수 있는 단계로 넘어갈 수 있어야 해. 다시 위로 올라가서 수정하는건 다소 불편하거든”
+- 변경
+  1. 눌러 넣는 문장 칩을 모두 없애고 읽는 조언 목록(`.tips`)으로 바꿨다. 돌아보기는 원인 갈래 5개(시설·돈·제도·안전·자연)마다 무엇을 떠올릴지, 질문·조사는 글 종류별로 질문을 만드는 방향 3개와 ‘이야기가 던진 질문’(참고용 글, 누를 수 없음), 결과물은 칸마다 쓰는 조언을 보인다. ‘어디에 보내는지’는 문장 대신 그 이야기의 관련 기관 목록(예: 주민·투발루 정부·기후재정 지원국·국제기구)을 보여 주고 고르게 했다. 이전 작업에서 문장 틀용으로 만든 주제 낱말·자료 이름·기관 고르기 함수와 클릭 처리 코드는 지웠다.
+  2. 피드백 대화에 ‘피드백 보며 내 글 고치기’ 버튼을 두고, 누르면 창이 열린다. 왼쪽(모바일은 위쪽, 화면 높이의 32%까지)에 마지막 피드백, 오른쪽에 글의 모든 칸이 있고 글자 수도 바로 갱신된다. ‘고친 글 다시 보여 주기’를 누르면 창을 닫고 고친 글로 다시 피드백을 요청한다. 닫으면 결과물 화면이 고친 글로 다시 그려지고 피드백 대화 위치로 돌아온다. 같은 칸이 화면에 두 개 생기므로 글자 수 표시는 모두 갱신하도록 바꿨다.
+- 검증 — 새 `tools/check-feedback-edit.mjs`(PC·모바일 각 10항목: 창 열림, 피드백 표시, 4칸 편집, 글자 수 갱신, 화면 안 넘침, 닫은 뒤 반영·저장, 다시 보여 주기 요청에 고친 글 포함, JS 오류 없음) ALL PASS. `check-genre-writing`(칩 없음·조언 표시로 항목 교체)·`check-min-length`·`check-no-nickname` ALL PASS, `npm run validate` PASS. `check-no-nickname`은 Playwright 브라우저가 없어 처음엔 실행되지 않았고, 설치된 Chrome(`PW_CHROME`)을 쓰도록 고쳐 다시 돌렸다.
+- 화면 — `app/tools/capture-coach.mjs`로 시오네·신문 기사 예시 글과 예시 피드백(선생님·시오네 두 마디, 실제 AI 응답 아님)을 넣어 같은 조건에서 촬영. 원본 `local-assets/screenshots/2026-11-26-writing-coach/`(데스크톱 1440×900, 모바일 780×1688). 전 8장, 후 10장(고치기 창은 새 화면이라 후만 있음). 처음 찍은 모바일 고치기 창에서 머리의 ‘닫기’가 가로로 늘어나고 아래 버튼 글자가 두 줄로 깨져 고친 뒤 후 화면을 다시 찍었다. 다시 찍은 화면을 열어 잘림·가림이 없음을 확인했다. 질문·조사 화면은 전후 기준 요소가 달라(전: 묻기 칸, 후: 조언 목록) 스크롤 위치가 다르다.
+- 공개한 대표 화면 — [전 결과물](screenshots/2026-11-26-writing-coach/before-desktop-plan.png) · [후 결과물](screenshots/2026-11-26-writing-coach/after-desktop-plan.png) · [전 돌아보기](screenshots/2026-11-26-writing-coach/before-mobile-reflect.png) · [후 돌아보기](screenshots/2026-11-26-writing-coach/after-mobile-reflect.png) · [전 질문·조사](screenshots/2026-11-26-writing-coach/before-desktop-lab.png) · [후 질문·조사](screenshots/2026-11-26-writing-coach/after-desktop-lab.png) · [전 피드백](screenshots/2026-11-26-writing-coach/before-mobile-review.png) · [후 피드백](screenshots/2026-11-26-writing-coach/after-mobile-review.png) · [고치기 창](screenshots/2026-11-26-writing-coach/after-desktop-review-edit.png) · [고치기 창 모바일](screenshots/2026-11-26-writing-coach/after-mobile-review-edit.png)
+- 대화 캡처 — 찍지 않았다(캡처 대기). 위 실제 요청 발췌로 대신한다.
+- 변경 파일 — `app/dist/app.js`, `app/dist/style.css`, `app/tools/check-feedback-edit.mjs`(새로), `app/tools/capture-coach.mjs`(새로), `app/tools/check-genre-writing.mjs`, `app/tools/check-min-length.mjs`, `app/tools/check-no-nickname.mjs`, `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-writing-coach/`.
+- 배포 — 아직 하지 않았다.

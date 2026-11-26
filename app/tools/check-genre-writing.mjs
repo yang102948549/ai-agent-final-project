@@ -22,13 +22,13 @@ async function open(seed) {
 // 1) 질문·조사: 종류를 먼저 고르고, 종류마다 질문 틀이 다르다
 let page = await open(seedOf({}));
 ok(await page.locator('.formats').isVisible() && await page.locator('.pick-first').isVisible(), '질문·조사 맨 앞에 글 종류 고르기, 고르기 전엔 안내만');
-const framesFor = async k => { await page.click(`[data-format=${k}]`); await page.waitForTimeout(250); return page.locator('[data-frame]').allInnerTexts(); };
+const framesFor = async k => { await page.click(`[data-format=${k}]`); await page.waitForTimeout(250); return page.locator('.sec .tips li').allInnerTexts(); };
 const fa = await framesFor('article'), fp = await framesFor('policy'), fl = await framesFor('letter');
-ok(fa.some(t => t.includes('꼭 알아야 할 사실')), '기사: 독자가 알아야 할 사실을 찾는 질문');
-ok([...fa, ...fp, ...fl].every(t => !t.includes('____')), '질문 예시에 빈칸 없이 온전한 문장');
+ok(fa.some(t => t.includes('숫자로')), '기사: 숫자로 답할 수 있게 묻는 조언');
+ok(await page.locator('[data-frame]').count() === 0, '완성된 질문을 눌러 넣는 칩이 없고 조언만 보임');
 ok(await page.locator('.sec h2', { hasText: '질문하고 알아보기' }).count() === 1 && await page.locator('.sec h2', { hasText: '나의 질문' }).count() === 0, '나의 질문과 알아보기가 한 단계로 합쳐짐');
-ok(fp.some(t => t.includes('정책이나 노력')), '제안서: 이미 있는 정책과 부족한 점을 찾는 질문 틀');
-ok(fl.some(t => t.includes('편지를 받는 사람')), '편지: 받을 사람이 알아야 할 것을 찾는 질문');
+ok(fp.some(t => t.includes('정책이나 지원')), '제안서: 이미 있는 정책과 부족한 점을 묻는 조언');
+ok(fl.some(t => t.includes('편지를 받을 한 곳') && t.includes('투발루 정부')), '편지: 관련된 곳 가운데 받을 사람부터 정하라는 조언');
 ok((await page.locator('[data-field=notes]').locator('xpath=..').innerText()).includes('편지 받을 사람'), '알게 된 것 안내도 종류에 맞게 바뀜');
 await page.close();
 
@@ -40,17 +40,14 @@ ok(await page.locator('.formats').count() === 0, '이미 고른 종류는 다시
 ok((await page.locator('h1').innerText()).includes('신문을 펼친 많은 사람'), '제목에 읽는 사람이 드러남');
 const sum = async () => { const n = await page.locator('.gc-sum b').innerText(); const miss = await page.locator('.gc-list li:not(.ok)').allInnerTexts(); if (miss.length) console.log('  아직:', miss.join(' / ').replace(/s+/g, ' ')); return n; };
 ok(await sum() === '0', '빈 기사는 성격 체크 0개');
-await page.locator('[data-gstarter="a_lead:0"]').click();
-const lead = await page.inputValue('[data-field=a_lead]');
-ok(lead.startsWith('투발루의 바이투푸섬에서 시오네'), '첫 문단 예시 문장이 칸에 들어감: ' + lead.slice(0, 30));
+ok(await page.locator('[data-gstarter]').count() === 0 && await page.locator('.part .tips').count() === 4, '칸마다 눌러 넣는 예시 문장 대신 쓰는 조언');
+ok((await page.locator('.part').nth(1).locator('.tips').innerText()).includes('누가, 어디서, 무엇을'), '첫 문단 조언: 누가·어디서·무엇을');
 ok(!(await page.locator('.desk').innerText()).includes('____') && !(await page.locator('.desk').innerText()).includes('리드'), '결과물 칸에 빈칸과 ‘리드’ 용어가 없음');
 await page.fill('[data-field=a_title]', '바닷물에 잠기는 섬, 학교 가는 길도 사라진다');
 await page.fill('[data-field=a_lead]', '투발루의 바이투푸섬에서 시오네 씨는 바닷물이 차올라 학교에 가기 어려워지고 있다.');
 await page.fill('[data-field=a_body]', 'UN 뉴스 자료에 따르면 투발루는 해발이 낮아 바닷물이 땅으로 스며든다. 시오네 씨는 “섬을 떠나고 싶지 않다”라고 말했다.');
 await page.fill('[data-field=a_end]', '이 섬의 아이들이 학교에 계속 다니려면 국제 사회의 지원이 필요하다.');
 ok(await sum() === '6', '기사답게 쓰면 성격 체크 6/6이 바로 갱신됨');
-await page.locator('[data-gstarter="a_end:1"]').click();
-ok((await page.inputValue('[data-field=a_end]')).startsWith('이 섬의 아이들이') && (await page.inputValue('[data-field=a_end]')).includes('우리는 멀리 떨어진'), '쓰던 칸에 문장 틀을 누르면 지우지 않고 끝에 이어 붙임');
 await page.fill('[data-field=a_end]', '저는 이 섬의 아이들이 학교에 계속 다니려면 지원이 필요하다고 생각해요.');
 ok(await sum() === '5', '맺음에 ‘저는’이 들어가면 기자 자신의 말 기준이 빠짐 (6→5)');
 // 다른 글로 바꾸기
