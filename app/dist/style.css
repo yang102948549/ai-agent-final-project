@@ -517,15 +517,23 @@ textarea:focus,input:focus,select:focus{border-color:var(--tone);outline:none}
 }
 .modal-box.join .btn{background:var(--tone);border-color:var(--tone)}
 
-/* ---------- 홈: 첫 화면 ----------
-   PC: 왼쪽에 제목·소개·버튼, 오른쪽에 캐릭터 모자이크. 스크롤 없이 한 화면(창 높이)에 다 들어온다.
-   휴대폰: 낮은 그림 띠 아래 제목·버튼. */
-.title-screen{display:grid;grid-template-columns:minmax(440px,46%) 1fr;width:100vw;margin:-24px 0 -24px calc(50% - 50vw);height:calc(100dvh - var(--topbar));min-height:520px}
-.title-body{grid-column:1;grid-row:1;display:flex;flex-direction:column;justify-content:center;padding:clamp(28px,6vh,72px) clamp(24px,4vw,64px)}
-.mosaic{grid-column:2;grid-row:1;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);grid-template-areas:"p1 p1 t1" "t3 p4 p2" "p5 p5 t2";height:100%;min-height:0}
-.m-cell{position:relative;overflow:hidden;min-height:0}
-.m-cell .art{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;border-radius:0}
-.m-cell .art img{object-position:50% 22%;animation:drift 18s ease-in-out infinite alternate}
+/* ---------- 홈: 텍스트 높이에 맞춘 열두 사람의 사진 앨범 ---------- */
+.title-screen{position:relative;display:grid;grid-template-columns:minmax(400px,40%) minmax(0,1fr);align-content:center;column-gap:clamp(20px,3vw,48px);width:100vw;margin:-24px 0 -24px calc(50% - 50vw);min-height:calc(100dvh - var(--topbar));padding:70px clamp(24px,4vw,64px) 90px}
+.title-body{grid-column:1;grid-row:1;display:flex;flex-direction:column;justify-content:center;min-width:0}
+.hero-album{grid-column:2;grid-row:1;position:relative;min-width:0;container-type:inline-size;isolation:isolate}
+.album-window{position:absolute;inset:0;overflow:hidden;contain:paint;mask-image:linear-gradient(to right,transparent,#000 7%,#000 93%,transparent);-webkit-mask-image:linear-gradient(to right,transparent,#000 7%,#000 93%,transparent)}
+.album-track{display:flex;width:max-content;height:100%;animation:albumFlow 96s linear infinite;animation-play-state:paused;will-change:transform}
+.album-group{display:flex;align-items:center;gap:16px;padding-right:16px;height:100%;flex:none}
+.album-photo{position:relative;flex:none;width:calc((100cqw - 32px)/3.3);height:100%;margin:0;overflow:hidden;background:#eee}
+.album-photo .art{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;border-radius:0}
+.album-photo .art img{object-fit:cover}
+.album-photo figcaption{position:absolute;inset:auto 0 0;padding:40px 14px 18px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.65));display:flex;flex-direction:column;gap:4px}
+.album-photo figcaption strong{font-family:var(--serif);font-size:20px}
+.album-photo figcaption span{font-size:12px}
+.album-controls{position:absolute;top:calc(100% + 14px);left:0;right:0;display:flex;justify-content:space-between;align-items:center;gap:12px;color:var(--muted);font-size:11px}
+.album-toggle{font:inherit;color:var(--ink-2);background:transparent;border:0;padding:8px;cursor:pointer;white-space:nowrap}
+.album-toggle:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+@keyframes albumFlow{to{transform:translateX(-50%)}}
 .title-body h1{font-family:var(--sans);font-size:clamp(56px,min(7vw,13vh),112px);line-height:.98;letter-spacing:-.06em;font-weight:800;margin:0}
 .title-body h1 .line{display:block;overflow:hidden;padding-bottom:.04em}
 .title-body h1 .line>span{display:block;animation:rise .9s cubic-bezier(.2,.8,.2,1) both}
@@ -537,16 +545,23 @@ textarea:focus,input:focus,select:focus{border-color:var(--tone);outline:none}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 @keyframes drift{from{transform:scale(1)}to{transform:scale(1.06)}}
 @media (max-width:900px){
-  .title-screen{display:flex;flex-direction:column;height:auto;min-height:calc(100dvh - var(--topbar))}
-  .mosaic{order:-1;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);grid-template-areas:"p1 p1 t1" "t3 p4 t2";height:clamp(170px,30dvh,400px);flex:none}
-  .mosaic .m-cell:not(.a-p1):not(.a-t1):not(.a-t2):not(.a-t3):not(.a-p4){display:none}
-  .title-body{justify-content:flex-start;padding:24px var(--gutter) 32px}
+  .title-screen{display:flex;flex-direction:column;height:auto;min-height:calc(100dvh - var(--topbar));padding:24px var(--gutter) 24px;gap:54px}
+  .hero-album{order:-1;height:clamp(190px,28dvh,300px);flex:none}
+  .album-photo{width:42cqw}
+  .album-group{gap:10px;padding-right:10px}
+  .album-photo figcaption{padding:30px 10px 12px}
+  .album-photo figcaption strong{font-size:17px}
+  .album-controls{top:calc(100% + 6px)}
+  .title-body{justify-content:flex-start;padding:0}
   .title-body h1{font-size:clamp(44px,13vw,72px)}
   .title-sub{font-size:15px;margin-top:14px;max-width:none}
   .title-actions{margin-top:20px}
   .title-actions .btn.big{padding:14px 22px}
 }
-html,body{overflow-x:clip} /* 홈 모자이크를 화면 끝까지 펼칠 때 가로 스크롤이 생기지 않게 */
+html,body{overflow-x:clip}
+@media (prefers-reduced-motion:reduce){
+  .title-body h1 .line>span,.title-sub,.title-actions{animation:none}
+}
 
 /* ---------- 명조와 고딕: 제목·이야기·대사는 명조(따뜻한 이야기책 느낌), 화면 조작과 설명은 고딕 ---------- */
 h1,h2,blockquote,.brand,.art-initial,.portrait figcaption strong,.tile strong,.slot strong,#select-status,.stage-art .wish,
@@ -858,7 +873,6 @@ select:focus-visible{outline:2px solid var(--tone);outline-offset:2px}
 .card-under .under-note{min-width:0;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* ---------- 저작권: 첫 화면에만. 넓은 화면은 왼쪽 아래, 휴대폰·태블릿은 맨 아래 오른쪽 ---------- */
-.title-body{position:relative}
 .title-copy{position:absolute;left:clamp(24px,4vw,64px);bottom:20px;margin:0;font-size:11px;color:var(--muted);white-space:nowrap}
 @media (max-width:900px){
   .title-body{flex:1}

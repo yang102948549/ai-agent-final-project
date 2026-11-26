@@ -195,12 +195,39 @@ function field(name,label,placeholder='',required=false,help=''){return `<label 
 function tile(c){const i=cases.indexOf(c),done=state.completed.includes(c.id);return `<button class="tile" data-start="${c.id}" style="--tone:${TONE[c.id]}">${art(c,'card')}<span class="tile-body"><span class="tile-meta">${esc(c.theme)}${done?' · 완료':''}</span><strong>${esc(c.name)}</strong><span class="tile-title">${esc(c.title)}</span><span class="tile-desc">${esc(c.summary)}</span></span></button>`;}
 
 /* ---------- 홈 · 목록 · 안내 ---------- */
-// 홈은 게임 타이틀 화면: 제목과 시작 버튼만.
-// 홈: 보고서 표지처럼. 위쪽은 초상과 캐릭터 색 타일을 틈 없이 붙인 모자이크, 아래는 큰 제목.
-// 첫 화면 모자이크: 캐릭터 4명과 색 칸 3개. 색은 캐릭터 그림에서 뽑은 키 컬러(TONE) 가운데 밝고 따뜻한 것(호단 호박색·시오네 청록·그라스 다홍)
-const MOSAIC=[['p','bangladesh','p1'],['t','somalia','t1'],['p','tuvalu','p2'],['t','congo','t2'],['t','tuvalu','t3'],['p','ghana','p4'],['p','gaza','p5']];
+// 열두 사람의 사진을 같은 순서로 두 번 배치해 앨범의 끝과 시작을 연결한다.
+const ALBUM_IDS=['bangladesh','ghana','tuvalu','gaza','afghanistan','pakistan','somalia','haiti','sudan','rohingya','congo','qatar'];
+function heroAlbum(){
+  const photos=ALBUM_IDS.map((id,i)=>{const c=cases.find(x=>x.id===id);return `<figure class="album-photo" data-person="${id}">${art(c,'card','',{priority:i<4?'high':'low',pos:'50% 24%'})}<figcaption><strong>${esc(c.name)}</strong><span>${esc(c.country)}</span></figcaption></figure>`;}).join('');
+  return `<div class="hero-album" role="region" aria-label="열두 사람의 사진 앨범">
+    <div class="album-window" aria-hidden="true"><div class="album-track"><div class="album-group">${photos}</div><div class="album-group">${photos}</div></div></div>
+    <div class="album-controls"><span>AI로 만든 가상 인물 이미지</span><button type="button" class="album-toggle" aria-label="사진 흐름 일시정지" aria-pressed="false">Ⅱ 일시정지</button></div>
+  </div>`;
+}
+let disposeAlbum=()=>{};
+function mountHeroAlbum(){
+  const album=app.querySelector('.hero-album');if(!album)return;
+  const track=album.querySelector('.album-track'),button=album.querySelector('.album-toggle');
+  const motion=matchMedia('(prefers-reduced-motion: reduce)');
+  let paused=motion.matches,visible=true,ready=false,disposed=false;
+  const update=()=>{
+    track.style.animationPlayState=paused||!visible||document.hidden||!ready?'paused':'running';
+    button.setAttribute('aria-pressed',String(paused));
+    button.setAttribute('aria-label',paused?'사진 흐름 재생':'사진 흐름 일시정지');
+    button.textContent=paused?'▷ 재생':'Ⅱ 일시정지';
+  };
+  button.onclick=()=>{paused=!paused;update();};
+  const change=()=>{paused=motion.matches;update();};
+  motion.addEventListener('change',change);
+  document.addEventListener('visibilitychange',update);
+  const observer=new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;update();});
+  observer.observe(album);
+  Promise.allSettled([...album.querySelectorAll('.album-group:first-child img')].map(img=>img.decode())).then(()=>{if(!disposed){ready=true;update();}});
+  update();
+  disposeAlbum=()=>{disposed=true;observer.disconnect();motion.removeEventListener('change',change);document.removeEventListener('visibilitychange',update);};
+}
 function home(){const r=state.run,c=current();return `<section class="title-screen">
-  <div class="mosaic" aria-hidden="true">${MOSAIC.map(([k,id,area])=>k==='p'?`<div class="m-cell a-${area}" style="grid-area:${area}">${art(cases.find(x=>x.id===id),'card','',{priority:area==='p1'||area==='p4'?'high':''})}</div>`:`<div class="m-cell m-tile a-${area}" style="grid-area:${area};background:${TONE[id]}"></div>`).join('')}</div>
+  ${heroAlbum()}
   <div class="title-body">
     <h1><span class="line"><span>다른 곳의</span></span><span class="line"><span>하루</span></span></h1>
     <p class="title-sub">같은 하늘 아래, 전혀 다른 하루.<br>지구 어딘가에 사는 누군가의 아침과 저녁을 <span class="keep">함께 걸어 봅니다.</span></p>
@@ -881,7 +908,9 @@ function render(){
   if(view==='chat'){openScene(c);ensureBrief(c);}
   if(view==='report'&&!FORMATS[fields().format])view='plan';
   const pages={home,atlas,guide,select,gallery:galleryView,intro:()=>intro(c),chat:()=>chat(c),reflect:()=>reflect(c),lab:()=>lab(c),plan:()=>plan(c),report:()=>report(c)};
+  disposeAlbum();
   app.innerHTML=(pages[view]||home)();
+  if(view==='home')mountHeroAlbum();
   app.querySelectorAll('.art img').forEach(img=>{if(img.complete&&img.naturalWidth){loadedSrc.add(img.getAttribute('src'));img.closest('.art')?.classList.add('is-loaded');}});
   if(c&&(view==='intro'||view==='chat'))preloadCaseScenes(c.id);
   document.body.classList.toggle('is-game',['home','select','intro','chat','reflect','lab','plan','report'].includes(view));
