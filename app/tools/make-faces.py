@@ -12,18 +12,18 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parent.parent / 'dist' / 'assets' / 'characters'
 FACES = {
-    'tuvalu': (430, 280, 165),
-    'pakistan': (490, 290, 165),
-    'bangladesh': (484, 275, 150),
-    'somalia': (450, 325, 150),
-    'gaza': (457, 325, 165),
-    'haiti': (455, 330, 215),
-    'ghana': (455, 290, 165),
-    'sudan': (464, 305, 150),
-    'rohingya': (455, 300, 180),
-    'afghanistan': (518, 245, 135),
-    'congo': (470, 400, 170),
-    'qatar': (464, 340, 175),
+    'tuvalu': (460, 395, 160),
+    'pakistan': (515, 295, 175),
+    'bangladesh': (445, 340, 145),
+    'somalia': (450, 365, 130),
+    'gaza': (455, 320, 195),
+    'haiti': (485, 390, 185),
+    'ghana': (465, 365, 155),
+    'sudan': (455, 390, 185),
+    'rohingya': (455, 480, 150),
+    'afghanistan': (515, 425, 150),
+    'congo': (480, 495, 180),
+    'qatar': (465, 395, 195),
 }
 SIZE = 360
 SCALE = 2.2    # 잘라 낼 정사각형 한 변 = 얼굴 폭 × SCALE

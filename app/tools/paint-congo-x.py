@@ -15,7 +15,7 @@ random.seed(7)
 # 붓 자국 마스크: 두 획을 여러 겹의 조금씩 어긋난 선으로 그려 가장자리를 거칠게 만든다.
 mask = Image.new('L', (W, H), 0)
 d = ImageDraw.Draw(mask)
-cx, cy, r = 208, 598, 44
+cx, cy, r = 135, 530, 36
 strokes = [((cx - r, cy - r - 2), (cx + r, cy + r + 4)), ((cx + r + 2, cy - r), (cx - r - 3, cy + r + 2))]
 for (x0, y0), (x1, y1) in strokes:
     for _ in range(14):
