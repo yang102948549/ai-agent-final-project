@@ -850,4 +850,17 @@
 - 확인할 것 — 요청의 “돌아보기 활동에 대한 수정”이 정확히 어느 부분을 가리키는지 사용자에게 다시 묻는다(이번 수정은 결과물 문서 배치에 한정).
 - 대화 캡처 — 찍지 않았다(캡처 대기). 위 실제 요청 발췌로 대신한다.
 - 변경 파일 — `app/dist/app.js`, `app/dist/style.css`, `app/tools/capture-docs.mjs`(새로), `app/tools/check-doc-layout.mjs`(새로), `app/tools/check-gallery-hearts.mjs`, `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-doc-layout/`.
-- 배포 — 아직 하지 않았다.
+- 배포 — 2026-11-26 `2026-11-26-deploy-doc-layout`에서 배포했다(사이트 `213807c`).
+
+## 2026-11-26-deploy-doc-layout
+
+- 실제 요청 — “커밋 푸시 배포해줘”
+- 진행 기록
+  1. 배포 전 라이브 촬영 — `capture-docs.mjs --url https://onischool.net/anotherday/`로 `before-*` 12장을 찍었다(데스크톱 1440×900·모바일 780×1688, 문서 전체 요소 캡처 포함).
+  2. 배포 — `npm run validate` PASS 후 `node sync-onischool.cjs`(66개 파일)를 돌렸다. 사이트 저장소에 다른 세션의 `c647967`(WebP 경량화·프리로드)이 먼저 올라가 있었다. 그 변경은 과제 저장소 `76308c4`에도 들어 있어 동기화 차이가 이번 변경(`app.js`, `style.css`, `index.html` 버전 해시)뿐임을 확인했다. 되돌린 것은 없다. `node --check` 통과 후 `213807c` 커밋·푸시, 새 해시 `app.js?v=76c41f32ec`가 약 15초 뒤 반영됐다.
+  3. 라이브 검증 — 실제 주소로 `check-doc-layout`·`check-genre-writing`·`check-feedback-edit`·`check-ask-record`·`check-gallery-hearts` 5개를 돌려 ALL PASS. 라이브 `style.css`에 `np-spread`가 있음을 확인했다.
+  4. 배포 후 촬영 — 같은 조건으로 `after-*` 12장을 찍었다. 직접 연 화면은 after-desktop-article(676×1397), after-mobile-gallery-article(780×1688), before-desktop-gallery-article(1440×900)이다. 배포 전에는 본문이 사진 옆 단에서 바람·함께 생각해 볼 것과 섞여 있었다. 배포 후에는 왼쪽에 사진과 바람, 오른쪽에 본문 한 단, 아래에 함께 생각해 볼 것이 놓였다. 모바일은 차례로 쌓이고 잘림이 없었다.
+- 원본 — `local-assets/screenshots/2026-11-26-deploy-doc-layout/`
+- 공개한 대표 화면 — [배포 전 갤러리](screenshots/2026-11-26-deploy-doc-layout/before-desktop-gallery-article.png) · [배포 후](screenshots/2026-11-26-deploy-doc-layout/after-desktop-article.png) · [배포 후 모바일 갤러리](screenshots/2026-11-26-deploy-doc-layout/after-mobile-gallery-article.png)
+- 대화 캡처 — 찍지 않았다(캡처 대기). 위 실제 요청 발췌로 대신한다.
+- 변경 파일 — `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-deploy-doc-layout/`. 사이트 저장소 `213807c`.
