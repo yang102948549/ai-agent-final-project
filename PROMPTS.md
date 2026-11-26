@@ -477,4 +477,13 @@
 - 공개한 대표 화면 — [전 · 이름 입력 팝업](screenshots/2026-11-26-no-nickname/before-desktop-join.png) · [후 · 바로 아침 장면](screenshots/2026-11-26-no-nickname/after-desktop-join.png) · [후 모바일](screenshots/2026-11-26-no-nickname/after-mobile-join.png) · [전 모바일 장면](screenshots/2026-11-26-no-nickname/before-mobile-chat.png) · [후 돌아보기](screenshots/2026-11-26-no-nickname/after-desktop-reflect.png)
 - 대화 캡처 — [요청 장면](screenshots/conversations/2026-11-26-no-nickname/01-request.png)
 - 변경 파일 — `app/dist/app.js`, `app/dist/style.css`, `app/tools/check-no-nickname.mjs`(신규), `PROMPTS.md`, `CHECKLIST.md`, `conversations/README.md`, `screenshots/2026-11-26-no-nickname/`, `screenshots/conversations/2026-11-26-no-nickname/`.
-- 배포 — 아직 하지 않았다.
+- 배포 — 아래 `2026-11-26-letter-sign`과 함께 배포했다.
+
+## 2026-11-26-letter-sign
+
+- 실제 요청 — “편지쓰기에서 드림은 해당인물의 이름을 넣으면 돼. 마리암 드림, 코피 드림 이렇게 말이야” / 이어서 “작업후 커밋 배포 해줘”
+- 한 일 — 편지 서식의 맺음 줄을 제출자 이름(없으면 ‘익명’) 대신 인물 이름으로 바꿨다(`${c.name} 드림`). 신문 기자·정책 제안자는 이전 작업대로 제출 칸 정보를 쓴다. 갤러리에서 보는 편지도 같은 서식이라 인물 이름으로 나온다.
+- 검증 — `node --check` PASS. `check-no-nickname.mjs`의 편지 서명 항목을 “코피 드림”(제출 칸이 비었을 때와 채웠을 때 모두)으로 바꿔 9항목 ALL PASS.
+- 화면 — 로컬, 가나 코피·편지 형식·예시 문장, AI 차단, 맺음 줄로 스크롤. 원본 `local-assets/screenshots/2026-11-26-letter-sign/` before/after-desktop(1440×900)·mobile(780×1688), 아프가니스탄 마리암 `after-*-afghanistan.png`. 열어 보니 전 ‘익명 드림’ → 후 ‘코피 드림’, ‘마리암 드림’이 잘림 없이 보였다.
+- 공개한 대표 화면 — [전](screenshots/2026-11-26-letter-sign/before-desktop.png) · [후 코피](screenshots/2026-11-26-letter-sign/after-desktop.png) · [후 모바일](screenshots/2026-11-26-letter-sign/after-mobile.png) · [후 마리암](screenshots/2026-11-26-letter-sign/after-desktop-afghanistan.png)
+- 변경 파일 — `app/dist/app.js`, `app/tools/check-no-nickname.mjs`, `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-letter-sign/`.

@@ -797,7 +797,7 @@ function docLetter(c,f){return `<article class="doc doc-letter">
   <p class="lt-to">${esc(f.l_to||'받는 분께')}</p>
   <div class="lt-body">${paras(f.l_learned)}${paras(f.l_ask)}${paras(f.l_me)}</div>
   <p class="lt-date">${longDate(f)}</p>
-  <p class="lt-from">${esc(f.nickname||'익명')} 드림</p>
+  <p class="lt-from">${esc(c.name)} 드림</p>
   <footer class="lt-ps"><p>덧붙임 · 이 편지는 ${esc(c.country)} ${esc(c.region)}의 상황을 다룬 수업에서 썼습니다. 제가 읽은 자료: ${c.sources.map(s=>esc(s.title)).join(', ')}</p>${fictionNote(c)}</footer>
 </article>`;}
 const DOCS={article:docArticle,policy:docPolicy,letter:docLetter};
