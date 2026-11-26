@@ -619,4 +619,16 @@
   5. 대화 캡처 — 찍지 않았다. 위 실제 요청 발췌로 대신한다.
 - 공개한 대표 화면 — [전](screenshots/2026-11-26-heart-size/before-desktop.png) · [후](screenshots/2026-11-26-heart-size/after-desktop.png) · [전 모바일](screenshots/2026-11-26-heart-size/before-mobile.png) · [후 모바일](screenshots/2026-11-26-heart-size/after-mobile.png) · [후 모바일 크게 보기](screenshots/2026-11-26-heart-size/after-mobile-open.png)
 - 변경 파일 — `app/dist/style.css`, `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-heart-size/`.
-- 배포 — 아직 하지 않았다.
+- 배포 — 2026-11-26 `2026-11-26-deploy-heart-size`에서 배포했다(사이트 `e8c44d9`).
+
+## 2026-11-26-deploy-heart-size
+
+- 실제 요청 — “커밋 푸시 배포해줘”
+- 진행 기록
+  1. 배포 전 라이브 촬영 — 가짜 API(예시 3장)로 `https://onischool.net/anotherday/` 갤러리, `before-*.png`는 큰 하트(24px)다.
+  2. 배포 — `npm run validate` PASS, `node sync-onischool.cjs`(바뀐 파일 style.css·index.html), 배포본이 과제 저장소 `3008dde`와 해시로 같은지 확인한 뒤 onischool-release `e8c44d9`를 origin main에 푸시했다. Worker는 바뀌지 않아 다시 올리지 않았다. 새 해시 `style.css?v=98a7e53b38`, 약 30초 뒤 반영.
+  3. 라이브 검증 — `check-gallery-hearts.mjs` ALL PASS(모바일 누르는 칸 44×40). `after-*.png`에서 작은 회색 하트와 켜진 하트만 빨강인 것을 열어 확인했다. 원본 `local-assets/screenshots/2026-11-26-deploy-heart-size/`, 데스크톱 1440×900·모바일 780×1688.
+  4. 대화 캡처 — 찍지 않았다. 위 실제 요청 발췌로 대신한다.
+- 공개한 대표 화면 — [배포 전](screenshots/2026-11-26-deploy-heart-size/before-desktop.png) · [배포 후](screenshots/2026-11-26-deploy-heart-size/after-desktop.png) · [배포 후 모바일](screenshots/2026-11-26-deploy-heart-size/after-mobile.png)
+- 변경 파일 — `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-deploy-heart-size/`. 사이트 저장소 `e8c44d9`.
+- 푸시 — 사용자 요청에 따라 과제 저장소 main을 origin에 푸시했다.
