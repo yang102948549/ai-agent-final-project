@@ -855,7 +855,8 @@ const docNo=f=>{const d=f._ts?new Date(f._ts):new Date(state.run?.finishedAt||Da
 const factBox=c=>`<ul>${c.facts.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p class="doc-src">출처 · ${c.sources.map(s=>`${esc(s.title)} (${esc(s.date)})`).join(' · ')}</p>`;
 const fictionNote=c=>`<p class="doc-note">이 글은 중학교 도덕 수업 ‘다른 곳의 하루’에서 학생이 쓴 학습 결과물입니다. ${esc(c.name)}의 이야기와 장면은 실제 자료를 바탕으로 꾸민 가상 시뮬레이션입니다.</p>`;
 
-// 신문 기사: 일간지 1면처럼 가운데 제호 → 발행 정보 띠 → 섹션 머리 → 제목 → 바이라인 → 리드 → 사진과 설명 → 2단 본문 → 해설 → 팩트 체크
+// 신문 기사: 가운데 제호 → 발행 정보 띠 → 섹션 머리 → 제목 → 바이라인 → 리드 → [왼쪽: 인물 사진과 바람 | 오른쪽: 학생 본문] → 함께 생각해 볼 것 → 팩트 체크
+// 본문을 사진과 섞어 두 단으로 흘리면 학생 글이 사진 밑과 옆 단으로 끊겨 읽기 어려워서, 학생 본문은 한 단으로 끊김 없이 둔다.
 function docArticle(c,f){return `<article class="doc doc-article">
   <header class="np-mast"><p class="np-name">지구촌 탐구 신문</p>
     <p class="np-issue"><span>제1호</span><span>${longDate(f)}</span><span>국제</span></p></header>
@@ -863,12 +864,14 @@ function docArticle(c,f){return `<article class="doc doc-article">
   <h1 class="np-title">${esc(f.a_title||'제목 없음')}</h1>
   <p class="np-byline"><b>${esc(f.nickname||'익명')} 기자</b><span>${esc(c.region)}</span></p>
   <div class="np-lead">${paras(f.a_lead)}</div>
-  <div class="np-cols">
-    <figure class="np-photo"><img src="${artSrc(c.id)}" alt="" loading="lazy"><figcaption>이야기 속 인물 ${esc(c.name)}(${esc(c.role)}). 실제 자료를 바탕으로 꾸민 가상 인물이며, 이미지는 AI로 만들었다(실제 사진이 아님).</figcaption></figure>
-    ${paras(f.a_body)}
-    <blockquote class="np-quote">“${esc(c.wish)}”<cite>— ${esc(c.name)}(가상 인물)의 바람</cite></blockquote>
-    <section class="np-opinion"><h3>함께 생각해 볼 것</h3>${paras(f.a_end)}</section>
+  <div class="np-spread">
+    <aside class="np-side">
+      <figure class="np-photo"><img src="${artSrc(c.id)}" alt="" loading="lazy"><figcaption>이야기 속 인물 ${esc(c.name)}(${esc(c.role)}). 실제 자료를 바탕으로 꾸민 가상 인물이며, 이미지는 AI로 만들었다(실제 사진이 아님).</figcaption></figure>
+      <blockquote class="np-quote">“${esc(c.wish)}”<cite>— ${esc(c.name)}(가상 인물)의 바람</cite></blockquote>
+    </aside>
+    <div class="np-story">${paras(f.a_body)}</div>
   </div>
+  <section class="np-opinion"><h3>함께 생각해 볼 것</h3>${paras(f.a_end)}</section>
   <aside class="np-box"><h4>팩트 체크</h4>${factBox(c)}</aside>
   <footer class="np-foot">지구촌 탐구 신문 · 학생 기자가 직접 조사해 쓴 학습 신문입니다. ${fictionNote(c)}</footer>
 </article>`;}

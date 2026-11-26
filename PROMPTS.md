@@ -833,3 +833,21 @@
   - 전후 화면 캡처(`local-assets/screenshots/2026-11-26-image-loading-opt/`의 `before-desktop.png` 1440×900, `before-mobile.png` 390×844, `after-desktop.png` 1440×900, `after-mobile.png` 390×844, `after-desktop-atlas.png` 1440×900, `after-mobile-atlas.png` 390×844, `after-desktop-scene.png` 1440×900, `hero/phase-0~3-desktop-aligned.png`)를 각각 직접 열어 화질 저하 없이 선명하게 렌더링되고 글자나 버튼 가림이 없음을 확인했다.
 - 공개한 대표 화면 — [PC 전](screenshots/2026-11-26-image-loading-opt/before-desktop.png) · [PC 후](screenshots/2026-11-26-image-loading-opt/after-desktop.png) · [모바일 전](screenshots/2026-11-26-image-loading-opt/before-mobile.png) · [모바일 후](screenshots/2026-11-26-image-loading-opt/after-mobile.png) · [목록 PC](screenshots/2026-11-26-image-loading-opt/after-desktop-atlas.png) · [목록 모바일](screenshots/2026-11-26-image-loading-opt/after-mobile-atlas.png)
 - 대화 캡처 — 찍지 않았다(캡처 대기). 위 실제 요청 발췌로 대신한다.
+
+## 2026-11-26-doc-layout
+
+- 실제 요청 — “한글로 대답해. 지금 수정을 요구한건 돌아보기 활동에 대한 수정을 의미해. 그리고 신문기사와 편지, 정책제안서 제시했을 시 학생들이 작성한 글이 짤려서 보이거나 제대로 보이지 않는 경우가 있어. 레이아웃을 한번 살펴봐야해 특히 신문기사 같은 경우 사진 등의 이미지로 인해 학생이 작성한 기사가 잘 안보여. 인물 밑에 인물의 바람을 넣고 오른쪽에 학생이 작성한 기사 내용을 넣는게 레이아웃 배치가 맞아. 그리고 함께 생각해볼것은 밑에 제시하는게 좋아.”
+- 살펴본 것 — 완성 화면과 갤러리 크게 보기에서 세 형식을 데스크톱 1440px·모바일 390px로 열고 가로 넘침을 재었다. 세 형식 모두 가로 넘침은 없었다. 신문 기사는 사진·본문·바람·함께 생각해 볼 것을 CSS 두 단(`column-count:2`)으로 흘려서, 학생 본문이 사진 밑 왼쪽 단에서 시작해 오른쪽 단 위로 이어졌다. 그래서 글이 중간에 끊긴 것처럼 보였다. 정책 제안서와 편지는 한 단이라 끝까지 보였다. 처음 찍은 문서 화면에서 윗부분이 가려진 것은 위에 붙은 메뉴 막대가 덮은 촬영 문제였다. 촬영 도구에서 메뉴 막대를 고정하지 않게 바꿔 다시 찍었다(`before-full-*`).
+- 변경
+  1. 신문 기사(`docArticle`)를 왼쪽 `np-side`(인물 사진과 그 아래 인물의 바람)와 오른쪽 `np-story`(학생 본문 한 단)로 나누었다. ‘함께 생각해 볼 것’은 그 아래 전체 폭으로 옮겼다. 그 다음이 팩트 체크다.
+  2. 문서 폭에 맞추는 컨테이너 쿼리를 썼다. 문서 안쪽 폭이 520px 이하이면(모바일) 사진 → 바람 → 본문 → 함께 생각해 볼 것 차례로 쌓는다. 완성 화면은 왼쪽에 인물 그림이 있어 문서가 좁아도 두 칸이 유지된다.
+  3. 옛 `np-cols` 두 단 규칙(화면·모바일·인쇄)을 지웠다.
+- 검증
+  - 새 `tools/check-doc-layout.mjs`: 1440px에서 학생 본문이 인물 오른쪽, 바람이 사진 아래, 본문 칸에는 학생 글만 있음, 함께 생각해 볼 것이 아래에 있음을 확인한다. 390px에서는 차례로 쌓이는지 확인한다. 세 형식 모두 가로 넘침이 없는지도 본다. 결과 ALL PASS.
+  - `check-genre-writing`·`check-feedback-edit`·`check-ask-record`·`check-gallery-hearts` ALL PASS, `npm run validate` PASS. `check-gallery-hearts`가 Chrome 경로 설정(`PW_CHROME`)을 읽지 않아 처음에 실행 오류가 났다. 실행 줄만 고쳐 다시 돌렸다.
+- 화면 — 새 `tools/capture-docs.mjs`로 찍었다(투발루 예시 글, 갤러리는 가짜 API). 문서 전체는 요소 캡처, 갤러리는 데스크톱 1440×900·모바일 780×1688이다. 원본은 `local-assets/screenshots/2026-11-26-doc-layout/`에 있다(`before-*` 12장, `before-full-*` 6장, `after-*` 12장). 다음 화면을 직접 열어 확인했다: after-desktop-article(676×1397), after-mobile-article(644×3960), after-desktop-gallery-article, after-desktop-policy, after-mobile-gallery-letter. 왼쪽에 사진과 바람, 오른쪽에 본문이 있고 함께 생각해 볼 것이 아래에 있다. 모바일은 차례로 쌓인다. 정책 제안서·편지는 잘림이 없었다. 갤러리 크게 보기에서는 본문이 짧으면 오른쪽 아래가 비어 보인다.
+- 공개한 대표 화면 — [전](screenshots/2026-11-26-doc-layout/before-full-desktop-article.png) · [후](screenshots/2026-11-26-doc-layout/after-desktop-article.png) · [갤러리 전](screenshots/2026-11-26-doc-layout/before-desktop-gallery-article.png) · [갤러리 후](screenshots/2026-11-26-doc-layout/after-desktop-gallery-article.png) · [모바일 전](screenshots/2026-11-26-doc-layout/before-full-mobile-article.png) · [모바일 후](screenshots/2026-11-26-doc-layout/after-mobile-article.png)
+- 확인할 것 — 요청의 “돌아보기 활동에 대한 수정”이 정확히 어느 부분을 가리키는지 사용자에게 다시 묻는다(이번 수정은 결과물 문서 배치에 한정).
+- 대화 캡처 — 찍지 않았다(캡처 대기). 위 실제 요청 발췌로 대신한다.
+- 변경 파일 — `app/dist/app.js`, `app/dist/style.css`, `app/tools/capture-docs.mjs`(새로), `app/tools/check-doc-layout.mjs`(새로), `app/tools/check-gallery-hearts.mjs`, `PROMPTS.md`, `CHECKLIST.md`, `screenshots/2026-11-26-doc-layout/`.
+- 배포 — 아직 하지 않았다.

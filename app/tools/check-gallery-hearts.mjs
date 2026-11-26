@@ -4,7 +4,7 @@ import { chromium } from 'playwright';
 import { mockGallery } from './gallery-mock.mjs';
 const i = process.argv.indexOf('--url');
 const url = i > 0 ? process.argv[i + 1] : 'http://127.0.0.1:4173/';
-const browser = await chromium.launch();
+const browser = await chromium.launch(process.env.PW_CHROME ? { executablePath: process.env.PW_CHROME } : {});
 const fails = []; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails.push(m); };
 const errors = [];
 async function open(opts = {}, ctxOpts = {}) {

@@ -643,15 +643,25 @@ h1,h2,.brand,.portrait figcaption strong,.tile strong,.life h2{font-weight:700;l
 .np-byline{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:14px;padding:8px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:13px;color:var(--muted)}
 .np-byline b{color:var(--ink)}
 .np-lead{margin-top:18px;font-size:17.5px;font-weight:600;line-height:1.75}
-.np-cols{column-count:2;column-gap:32px;column-rule:1px solid var(--line);margin-top:20px;font-size:15.5px;line-height:1.85}
-.np-cols>p{text-indent:.8em}
-.np-photo{margin:0 0 14px;break-inside:avoid}
+/* 왼쪽: 인물 사진과 바람, 오른쪽: 학생 본문(한 단). 문서 폭이 좁으면 사진 → 바람 → 본문 차례로 쌓는다. */
+.doc-article{container-type:inline-size}
+.np-spread{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,8fr);margin-top:22px;align-items:start}
+.np-side{padding-right:24px}
+.np-story{padding-left:24px;border-left:1px solid var(--line);font-size:16px;line-height:1.9}
+.np-story>p{text-indent:.8em}
+.np-story>p+p{margin-top:12px}
+@container (max-width:520px){
+  .np-spread{grid-template-columns:minmax(0,1fr)}
+  .np-side{padding-right:0}
+  .np-story{padding-left:0;border-left:0;margin-top:20px;font-size:15.5px}
+}
+.np-photo{margin:0;break-inside:avoid}
 .np-photo img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;object-position:50% 22%;background:var(--paper-2)}
 .np-photo figcaption{font-size:12px;line-height:1.55;color:var(--muted);padding:6px 0;border-bottom:1px solid var(--line);text-align:left}
-.np-quote{break-inside:avoid;margin:18px 0;padding:14px 0 12px;border-top:3px solid var(--tone);border-bottom:1px solid var(--line);font-family:var(--serif);font-size:19px;line-height:1.5;text-align:left;color:var(--ink)}
+.np-quote{break-inside:avoid;margin:16px 0 0;padding:14px 0 12px;border-top:3px solid var(--tone);border-bottom:1px solid var(--line);font-family:var(--serif);font-size:19px;line-height:1.5;text-align:left;color:var(--ink)}
 .np-quote cite{display:block;margin-top:8px;font-family:var(--sans);font-size:12px;font-style:normal;color:var(--muted)}
-.np-opinion{break-inside:avoid;background:var(--card);padding:14px 16px;margin-top:6px;text-align:left}
-.np-opinion h3{font-size:14px;color:var(--tone);margin-bottom:4px}
+.np-opinion{break-inside:avoid;background:var(--card);padding:16px 20px;margin-top:24px;border-left:3px solid var(--tone);text-align:left;font-size:15.5px;line-height:1.8}
+.np-opinion h3{font-size:14px;color:var(--tone);margin-bottom:6px}
 .np-box{margin-top:24px;border:2px solid var(--ink);padding:16px 18px;font-size:14px;break-inside:avoid}
 .np-box h4{display:inline-block;font-size:13px;color:var(--white);background:var(--ink);padding:2px 10px;margin-bottom:10px}
 .np-box ul{margin:0;padding-left:0;list-style:none}
@@ -699,7 +709,6 @@ h1,h2,.brand,.portrait figcaption strong,.tile strong,.life h2{font-weight:700;l
 
 @media (max-width:640px){
   .formats{grid-template-columns:1fr}
-  .np-cols{column-count:1;text-align:left}
   .np-issue{font-size:11px}
   .np-issue span:last-child{display:none}
   .np-lead{font-size:16.5px}
@@ -717,7 +726,6 @@ h1,h2,.brand,.portrait figcaption strong,.tile strong,.life h2{font-weight:700;l
   .doc{box-shadow:none}
   .pb-band{margin:0;padding:10px 16px}
   .appendix{break-before:page;background:none;padding:0}
-  .np-cols{column-count:2}
 }
 
 /* ---------- 제출 ---------- */
