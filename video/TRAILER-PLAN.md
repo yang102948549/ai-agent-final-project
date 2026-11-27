@@ -79,21 +79,21 @@
 
 시간대마다 4명이 서로 다른 주제를 맡도록 나눴다. 아침 장면 그림은 앱에 없으므로 아침 4명은 인물 초상화를 쓴다.
 
-| 순서 | 시간대 | 인물 · 나이 · 사는 곳 | 장면 제목 | 주제 | 매체 | 에셋 |
+| 순서 | 시간대 | 인물 · 나이 · 사는 곳 | 장면 제목 | 주제 | 매체 | 에셋 (확정 경로) |
 |---:|---|---|---|---|---|---|
-| 1 | 아침 | 아시프 · 36살 · 파키스탄 자코바바드 | 「오전 6시, 이미 38도」 | 환경 | **영상(5s→3.5s)** | `clips/01-pakistan.mp4` (`characters/pakistan.webp`) |
-| 2 | 아침 | 루파 · 13살 · 방글라데시 해안 마을 | 「빈 물항아리와 발표날」 | 물 | 사진(Ken Burns) | `characters/bangladesh.webp` |
-| 3 | 아침 | 마리암 · 13살 · 아프가니스탄 | 「오빠의 새 가방」 | 인권 | 사진(Ken Burns) | `characters/afghanistan.webp` |
-| 4 | 아침 | 시오네 · 13살 · 투발루 바이투푸섬 | 「바닷물이 들어온 시험날」 | 환경 | **영상(5s→4.0s)** | `clips/04-tuvalu.mp4` (`characters/tuvalu.webp`) |
-| — | 선택 | 시오네의 갈림길 | 「떠날까, 남을까」 / 「보충 시험과 모래주머니」 | 환경 | 사진(Ken Burns) | `scenes/tuvalu-noon-a.webp`, `tuvalu-noon-b.webp` |
-| 5 | 낮 | 라마 · 14살 · 팔레스타인 가자지구 | 「급수차가 왔다」 | 물 | **영상(5s→3.5s)** | `clips/05-gaza-noon.mp4` (`scenes/gaza-noon.webp`) |
-| 6 | 낮 | 코피 · 13살 · 가나 카카오 마을 | 「밭에서 만난 아마」 | 빈곤 | 사진(Ken Burns) | `scenes/ghana-noon-a.webp` |
-| 7 | 낮 | 람 · 24살 · 카타르 공사장 | 「“30분만 더”」 | 인권 | 사진(Ken Burns) | `scenes/qatar-noon.webp` |
-| 8 | 낮 | 호단 · 15살 · 소말리아 | 「시장에 염소를 팔까」 | 물 | **영상(5s→3.5s)** | `clips/08-somalia-noon.mp4` (`scenes/somalia-noon.webp`) |
-| 9 | 저녁 | 나데주 · 15살 · 아이티 포르토프랭스 | 「두 개의 봉투」 | 빈곤 | 사진(Ken Burns) | `scenes/haiti-evening.webp` |
-| 10 | 저녁 | 암나 · 14살 · 수단에서 차드로 | 「우물 줄 끝에서」 | 난민 | **영상(5s→3.5s)** | `clips/10-sudan-evening.mp4` (`scenes/sudan-evening.webp`) |
-| 11 | 저녁 | 누르 · 13살 · 콕스바자르 난민캠프 | 「오빠의 어깨」 | 난민 | 사진(Ken Burns) | `scenes/rohingya-evening.webp` |
-| 12 | 저녁 | 그라스 · 14살 · 콩고민주공화국 콜웨지 | 「할머니의 무덤」 | 인권 | **영상(5s→3.5s)** | `clips/12-congo-evening.mp4` (`scenes/congo-evening.webp`) |
+| 1 | 아침 | 아시프 · 36살 · 파키스탄 자코바바드 | 「오전 6시, 이미 38도」 | 환경 | **영상(8s→3.5s)** | `local-assets/video/clips/01-pakistan.mp4` |
+| 2 | 아침 | 루파 · 13살 · 방글라데시 해안 마을 | 「빈 물항아리와 발표날」 | 물 | 사진(Ken Burns) | `app/dist/assets/characters/bangladesh.webp` |
+| 3 | 아침 | 마리암 · 13살 · 아프가니스탄 | 「오빠의 새 가방」 | 인권 | 사진(Ken Burns) | `app/dist/assets/characters/afghanistan.webp` |
+| 4 | 아침 | 시오네 · 13살 · 투발루 바이투푸섬 | 「바닷물이 들어온 시험날」 | 환경 | **영상(8s→4.0s)** | `local-assets/video/clips/04-tuvalu.mp4` |
+| — | 선택 | 시오네의 갈림길 | 「떠날까, 남을까」 / 「보충 시험과 모래주머니」 | 환경 | 사진(Ken Burns) | `app/dist/assets/scenes/tuvalu-noon-a.webp`, `tuvalu-noon-b.webp` |
+| 5 | 낮 | 라마 · 14살 · 팔레스타인 가자지구 | 「급수차가 왔다」 | 물 | **영상(8s→3.5s)** | `local-assets/video/clips/05-gaza-noon.mp4` |
+| 6 | 낮 | 코피 · 13살 · 가나 카카오 마을 | 「밭에서 만난 아마」 | 빈곤 | 사진(Ken Burns) | `app/dist/assets/scenes/ghana-noon-a.webp` |
+| 7 | 낮 | 람 · 24살 · 카타르 공사장 | 「“30분만 더”」 | 인권 | 사진(Ken Burns) | `app/dist/assets/scenes/qatar-noon.webp` |
+| 8 | 낮 | 호단 · 15살 · 소말리아 | 「시장에 염소를 팔까」 | 물 | **영상(8s→3.5s)** | `local-assets/video/clips/08-somalia-noon.mp4` |
+| 9 | 저녁 | 나데주 · 15살 · 아이티 포르토프랭스 | 「두 개의 봉투」 | 빈곤 | 사진(Ken Burns) | `app/dist/assets/scenes/haiti-evening.webp` |
+| 10 | 저녁 | 암나 · 14살 · 수단에서 차드로 | 「우물 줄 끝에서」 | 난민 | **영상(8s→3.5s)** | `local-assets/video/clips/10-sudan-evening.mp4` |
+| 11 | 저녁 | 누르 · 13살 · 콕스바자르 난민캠프 | 「오빠의 어깨」 | 난민 | 사진(Ken Burns) | `app/dist/assets/scenes/rohingya-evening.webp` |
+| 12 | 저녁 | 그라스 · 14살 · 콩고민주공화국 콜웨지 | 「할머니의 무덤」 | 인권 | **영상(8s→3.5s)** | `local-assets/video/clips/12-congo-evening.mp4` |
 
 - 마지막 장면에는 12명의 얼굴(`characters/*-face.webp`)이 모두 다시 모인다.
 - 아시프(36살)와 람(24살)은 어른이다. "12명의 또래"라고 묶어 부르지 않고 "열두 사람"이라고 쓴다.
@@ -202,22 +202,21 @@
 - 4절 표의 그림 14장(초상화 4장 + 장면 10장)과 얼굴 12장을 `app/dist/assets/`에서 `video/public/art/`로 복사해 쓴다.
 - 제작 전에 그림 14장을 하나씩 열어 확인한다. 장면 제목과 그림 내용이 맞는지, 3:4 배치에서 얼굴·소품이 잘리지 않는지 본다.
 
-### 7.1 움직이는 인물 영상 클립 규격 (6개 균형안)
+### 7.1 움직이는 인물 영상 클립 확정 경로 (6개 균형안 · 생성 완료)
 
 시간대마다 **영상 2컷 + 정지(Ken Burns) 2컷**을 교차 배치해 리듬과 강약을 만든다. S3 갈림길 2컷과 S6 마무리 12명 얼굴 격자는 정지 이미지를 유지한다.
 
-- **생성 길이**: **클립당 5초** — 실제 컷 길이(3.5초, 시오네는 4.0초)와 앞뒤 디졸브(0.3초)를 안정적으로 덮고, 시작·끝의 미세한 흔들림을 피해 가장 자연스러운 중간 **3.5~4.0초** 구간만 트리밍해 쓴다.
-- **비율·해상도·오디오**: **3:4 세로**(없으면 9:16 생성 후 중앙 3:4 크롭), 24~30fps, **무음(Audio Off)** — 장소별 소리와 BGM은 Remotion에서 별도 믹싱한다.
-- **기준 원본**: 저해상도 얼굴 썸네일(`-face.webp`, 200×200) 대신 `local-assets/`의 고해상도 3:4 PNG 원본을 사용한다. 생성된 MP4는 `local-assets/video/clips/`에 원본 보관하고, 경량 적용본을 `video/public/clips/`에 둔다.
+- **확정 클립 폴더**: 저장소 루트 기준 **`local-assets/video/clips/`** (Git 제외 폴더 — 최종 확정본 6편만 보관, 이전 테스트 파일 정리 완료)
+- **생성 규격**: Google Flow **`Veo 3.1 - Fast`**, **8초 · 720p · 9:16 세로 · 무음 동영상** (편집·렌더링 시 반드시 `muted` 적용, 오른쪽 `810×1080` 3:4 영역에 `object-fit: cover`로 배치하고 가장 자연스러운 **3.5~4.0초** 구간만 트리밍해 사용)
 
-| 번호 | 인물(컷) | 원본 PNG (`local-assets/` 기준) | 5초 생성 프롬프트 (영문 권장) |
-|---:|---|---|---|
-| 1 | **아시프** (아침 1) | `photoreal-characters/diversity-20261126/pakistan.png` | Subtle documentary 35mm film motion, 5 seconds. Static camera with very gentle slow push-in. The man slowly lowers his right hand from his forehead, blinks naturally, and takes a calm breath while looking slightly off-camera into the heat. The ends of his teal scarf sway gently in the hot dry wind. Workers in the blurred brickyard background move very slightly. Realistic skin texture, natural daylight, no distortion, no sudden movement. |
-| 2 | **시오네** (아침 4) | `photoreal-characters/diversity-20261126/tuvalu.png` | Subtle documentary 35mm film motion, 5 seconds. Static camera with very slow gentle push-in. The boy blinks naturally, gives a gentle warm slight smile, and subtly adjusts his grip on the blue notebook. Tropical sea breeze softly sways the palm leaves in the background and his shirt sleeves, creating tiny gentle ripples on the rainwater puddle behind him. Natural overcast coastal daylight, realistic face consistency. |
-| 3 | **라마** (낮 1) | `scene-images/diversity-20261126/gaza-noon.png` | Subtle documentary 35mm film motion, 5 seconds. Static handheld documentary camera with minimal breathing motion. The teenage girl in the headscarf looks attentively at the elderly man, blinks naturally, and gives a small thoughtful nod. The elderly man shifts his weight slightly while holding the heavy white jerrycans. The two young children beside her blink and hold her jacket sleeve gently. People in the water truck line behind move subtly, light breeze moves the fabric of her scarf. |
-| 4 | **호단** (낮 4) | `scene-images/diversity-20261126/somalia-noon.png` | Subtle documentary 35mm film motion, 5 seconds. Static camera with very gentle slow push-in. The father on the left speaks calmly with a slight natural hand gesture. The girl in the center listens thoughtfully, blinking and slowly shifting her gaze from her father toward the woman on the right. The goats in the foreground subtly twitch their ears and turn their heads slightly. Dry desert breeze gently rustles their patterned shawls. |
-| 5 | **암나** (저녁 2) | `scene-images/diversity-20261126/sudan-evening.png` | Subtle documentary 35mm film motion, 5 seconds. Static camera in warm late afternoon golden light. The girl holding the white jerrycan listens closely, blinking naturally and giving a quiet, empathetic slight nod while keeping her arms around the container. The older woman on the right moves her raised hands gently as she speaks softly. Warm evening breeze lightly moves the girl's purple patterned shawl and distant camp silhouettes. |
-| 6 | **그라스** (저녁 4) | `scene-images/diversity-20261126/congo-evening.png` | Subtle documentary 35mm film motion, 5 seconds. Static camera with very slow gentle push-in in warm low-light interior. The kerosene lamp flame on the wooden table flickers softly, casting gentle warm light across their faces. The pastor on the left gestures calmly with his hands as he speaks. The teenage girl in the center blinks naturally, takes a quiet breath, and slowly nods while listening. The parents on the right listen steadily, distant hill lights outside the window stay still. |
+| 번호 | 콘티 구간 (인물) | 사용할 영상 클립 경로 (확정본) | 용량 | 기준 원본 PNG (`local-assets/`) | 권장 활용 메모 |
+|---:|---|---|---:|---|---|
+| 1 | **S2-1 아침** · 아시프 (`120–225f`, 3.5s) | `local-assets/video/clips/01-pakistan.mp4` | 3.85 MB | `photoreal-characters/diversity-20261126/pakistan.png` | 이마에서 손을 내리며 침착하게 호흡 (`0.5s~4.0s` 권장) |
+| 2 | **S2-4 아침** · 시오네 (`435–555f`, 4.0s) | `local-assets/video/clips/04-tuvalu.mp4` | 2.15 MB | `photoreal-characters/diversity-20261126/tuvalu.png` | 입을 다문 잔잔한 미소 + 부드러운 줌인 (`0.5s~4.5s` 권장) |
+| 3 | **S4-1 낮** · 라마 (`720–825f`, 3.5s) | `local-assets/video/clips/05-gaza-noon.mp4` | 2.24 MB | `scene-images/diversity-20261126/gaza-noon.png` | 할아버지를 바라보며 고개 끄덕임 (`0.5s~4.0s` 권장) |
+| 4 | **S4-4 낮** · 호단 (`1035–1140f`, 3.5s) | `local-assets/video/clips/08-somalia-noon.mp4` | 6.35 MB | `scene-images/diversity-20261126/somalia-noon.png` | 시선 이동과 염소 움직임, 입 다문 상태 (`0.5s~4.0s` 권장) |
+| 5 | **S5-2 저녁** · 암나 (`1245–1350f`, 3.5s) | `local-assets/video/clips/10-sudan-evening.mp4` | 3.73 MB | `scene-images/diversity-20261126/sudan-evening.png` | 물통을 안고 이웃 말 경청 (`4.0s~7.5s` 또는 `0.0s~3.5s`) |
+| 6 | **S5-4 저녁** · 그라스 (`1455–1560f`, 3.5s) | `local-assets/video/clips/12-congo-evening.mp4` | 2.49 MB | `scene-images/diversity-20261126/congo-evening.png` | 등유 램프 불빛 아래 경청 (`4.5s~8.0s` 또는 `0.0s~3.5s`, `muted` 필수) |
 
 ---
 
