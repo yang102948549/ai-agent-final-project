@@ -63,6 +63,7 @@ video/
 | 2026-11-27 | [trailer-worklog](../PROMPTS.md#2026-11-27-trailer-worklog) | "선택에 따라 하루가 달라집니다." 문구, 이 목차 신설 |
 | 2026-11-27 | [trailer-hyperframes-v1](../PROMPTS.md#2026-11-27-trailer-hyperframes-v1) | HyperFrames로 트레일러 초안 v1 제작([trailer/](trailer/), 검토 [trailer/REVIEW.md](trailer/REVIEW.md)) |
 | 2026-11-27 | [trailer-conti-v2](../PROMPTS.md#2026-11-27-trailer-conti-v2) | v1을 보고 콘티를 다시 짬: 세 사람의 하루 + 앱 이용 장면 + 웃는 시오네와 앱 첫 화면 |
+| 2026-11-27 | [trailer-v2](../PROMPTS.md#2026-11-27-trailer-v2) | 배포 사이트 앱 화면 녹화 6개(REC-01~06)와 콘티 v2로 트레일러 v2 렌더 |
 
 ### 기록과 자료가 놓이는 곳
 
@@ -73,5 +74,6 @@ video/
 | 결정 장면 대화 캡처(공개 선별본) | `screenshots/conversations/<작업ID>/`, 설명은 [conversations/README.md](../conversations/README.md) | 커밋 |
 | 대화 캡처 원본 | `local-assets/conversations/<작업ID>/` | 제외 |
 | 인물 영상 클립 원본 | `local-assets/video/clips/` | 제외 |
+| 앱 화면 녹화 원본 | `local-assets/video/app-recordings/` — `node video/trailer/tools/record-app.mjs`로 다시 녹화 | 제외 |
 | 트레일러 HyperFrames 프로젝트 | [trailer/](trailer/) — 클립은 `bash video/trailer/tools/prepare-assets.sh`로 다시 만든다 | 커밋(클립 제외) |
 | 렌더링한 MP4 | `local-assets/video/` | 제외 |

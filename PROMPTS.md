@@ -1126,3 +1126,33 @@
 - 검증 — 문서 전용 변경이라 앱 화면 촬영은 비대상이다. 장면 경계가 맞물려 합계 1,785f가 되는지 계산했다. 문장마다 머무는 프레임을 규칙(글자 수 ÷ 8 + 1초)과 대조했다. S2 인물 문장만 3.8초로 기준(4.1초)보다 약간 짧아, 렌더 후 체감 확인 항목으로 남겼다.
 - 대화 캡처 — 찍지 않았다(캡처 대기). 위 실제 요청 발췌로 대신한다.
 - 변경 파일 — `video/TRAILER-PLAN.md`, `video/README.md`, `PROMPTS.md`
+
+## 2026-11-27-trailer-v2
+
+- 실제 요청 — “응 바로 진행해줘” (콘티 v2 확정 뒤 앱 화면 녹화와 영상 재제작 진행)
+- 앱 화면 녹화 — 새 `video/trailer/tools/record-app.mjs`로 배포 사이트(`onischool.net/anotherday`)를 녹화했다.
+  - 방식: Playwright(설치된 Chrome)로 조작하며 Chrome 화면 전송(CDP screencast)으로 1440×900 프레임을 받는다. 커서는 페이지에 그려 넣고 천천히 움직인다. AI 응답 대기(약 10초)는 녹화를 멈춰 뺐다.
+  - REC-01: 캐릭터 고르기(열두 명의 하루) 화면을 훑는다.
+  - REC-02: 아시프 낮 「멈춰 버린 선풍기」에서 A를 누르면 결과가 나온다(AI 미연결 상태 화면).
+  - REC-03: 답 칩을 누르면 어머니의 실제 AI 대답(“아시프야, 너 일하러 가야지…”)이 이어진다. 대답이 장면에 맞는지 확인했다.
+  - REC-04a/b: 시오네 돌아보기 입력 / 신문 기사 결과물. 예시 작성본이다.
+  - REC-05: 갤러리. `app/tools/gallery-mock.mjs` 예시 데이터로 가로채 실제 학생 글이 찍히지 않는다.
+  - REC-06: 앱 첫 화면(커서 없음).
+- 녹화 검토와 다시 녹화 — 녹화마다 처음·중간·끝 프레임을 열어 봤다. 두 개를 고쳐 다시 녹화했다.
+  - REC-04a: 입력 칸이 화면 아래 끝에 걸려 있었다 → 320px 더 내려 가운데로 옮겼다.
+  - REC-06: 커서가 보였다 → 커서 없이 녹화했다.
+  - 고르기 클릭 결과(4.87초)와 AI 대답(4.33초)이 나타나는 시각은 장면 변화 감지로 재서 각 장면의 잘라 쓰는 시작점으로 썼다.
+- 영상 — v1 장면 파일(morning·noon·evening·choice·titlecard)과 쓰지 않는 그림·얼굴을 지웠다.
+  - `tools/build-scenes.mjs`가 people·app-reveal·app-choice·app-chat·app-write·app-gallery·sione·app-home을 만든다. opening·closing은 시간을 콘티에 맞췄다.
+  - 클립은 세 사람(1.0초부터 4.9초)과 시오네 끝 4.6초(웃는 얼굴로 끝남)로 다시 만들었다.
+  - 시오네 → 앱 첫 화면은 0.3초 겹쳐 넘어가고, 앨범 속 시오네 카드로 이어진다.
+  - `hyperframes check` 오류 0건이다. 시오네 글이 겹침 구간에 남는 문제는 스냅숏으로 찾아 고쳤다.
+  - `local-assets/video/trailer-v2.mp4`로 렌더링했다(59.5초, 1920×1080, 30fps, 25.5MB, 무음).
+  - MP4에서 프레임 8장을 뽑아 고르기 클릭 → 결과, 칩 → AI 대답, 기사, 갤러리를 직접 확인했다. 앱 틀 안 변화량도 쟀다(고르기 10.35, 대화 2.93, 갤러리 0.05).
+- 남은 확인 — 실시간 재생 체감 속도, 앱 속 작은 글자의 가독성(1344×840 축소), 갤러리 장면이 거의 정지인 점, 음원(무음). 자세한 내용은 [video/trailer/REVIEW.md](video/trailer/REVIEW.md)에 있다. 앱 코드 변경이 없어 앱 화면 전후 촬영은 비대상이다.
+- 대화 캡처 — `local-assets/conversations/2026-11-27-trailer-v2/full-screen-01.png`(2026-11-27 21:32, 4480×1080)와 Paseo 모니터만 잘라 낸 `paseo-monitor-01.png`(1920×1080). 직접 열어 보니 Paseo 3분할 창이 담겼다.
+  - 왼쪽: Antigravity(Gemini) 클립 정리 기록
+  - 가운데: Claude Code의 시오네 겹침 수정과 v2 렌더링
+  - 오른쪽: Codex 작업 기록 분석
+  - 세 에이전트가 함께 일하는 장면이지만 로컬 경로가 보여 공개 선별본은 만들지 않았다.
+- 변경 파일 — `video/trailer/`(index.html, compositions/ 10개, tools/record-app.mjs·build-scenes.mjs·prepare-assets.sh, REVIEW.md, .gitignore, v1 파일 삭제), `video/README.md`, `PROMPTS.md`

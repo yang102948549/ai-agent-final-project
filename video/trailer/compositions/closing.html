@@ -8,16 +8,16 @@
   </style>
   <div id="root" data-composition-id="closing" data-width="1920" data-height="1080" data-duration="3.5">
     <div id="closing-dark"></div>
-    <div id="closing-copy" class="clip" data-start="0" data-duration="3.5" data-track-index="1">
+    <div id="closing-copy" class="clip" data-hold data-start="0" data-duration="3.5" data-track-index="1">
       <p id="closing-l1" class="line">내일,</p>
       <p id="closing-l2" class="line">우리들의 하루는 어떻게 될까요?</p>
     </div>
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
-    tl.fromTo("#closing-dark", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 0);
-    tl.fromTo("#closing-l1", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.5);
-    tl.fromTo("#closing-l2", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.8);
+    tl.fromTo("#closing-dark", { opacity: 0 }, { opacity: 1, duration: 0.33, ease: "power2.inOut" }, 0);
+    tl.fromTo("#closing-l1", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.33);
+    tl.fromTo("#closing-l2", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.53);
     window.__timelines["closing"] = tl;
   </script>
 </template>

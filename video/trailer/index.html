@@ -5,42 +5,27 @@
     <meta name="viewport" content="width=1920, height=1080" />
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
     <style>
-      @font-face { font-family: "Pretendard"; src: url("assets/fonts/PretendardVariable.woff2") format("woff2"); font-weight: 100 900; }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #f4f3ef; }
-      #root { position: relative; width: 100%; height: 100%; font-family: "Pretendard", sans-serif; }
-      #daybar { position: absolute; left: 110px; top: 56px; width: 900px; height: 40px; z-index: 50; }
-      .daylabel { position: absolute; left: 0; top: 0; font-size: 28px; font-weight: 500; color: #5c5c5c; letter-spacing: -0.01em; line-height: 40px; }
-      #daybar-track { position: absolute; left: 90px; top: 19px; width: 810px; height: 2px; background: #dcdad3; }
-      #daybar-fill { position: absolute; left: 0; top: 0; width: 810px; height: 2px; background: #111111; transform-origin: 0 50%; }
+      #root { position: relative; width: 100%; height: 100%; }
     </style>
   </head>
   <body>
-    <!-- 「다른 곳의 하루」 트레일러 초안 · video/TRAILER-PLAN.md 콘티 기준 · 59.5초 -->
+    <!-- 「다른 곳의 하루」 트레일러 v2 · video/TRAILER-PLAN.md 콘티 v2 · 59.5초 -->
     <div id="root" data-composition-id="main" data-start="0" data-duration="59.5" data-width="1920" data-height="1080">
       <div id="opening" data-composition-id="opening" data-composition-src="compositions/opening.html" data-start="0" data-duration="4" data-track-index="0" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
-      <div id="morning" data-composition-id="morning" data-composition-src="compositions/morning.html" data-start="4" data-duration="14" data-track-index="0" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
-      <div id="choice" data-composition-id="choice" data-composition-src="compositions/choice.html" data-start="18" data-duration="6" data-track-index="0" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
-      <div id="noon" data-composition-id="noon" data-composition-src="compositions/noon.html" data-start="24" data-duration="14" data-track-index="0" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
-      <div id="evening" data-composition-id="evening" data-composition-src="compositions/evening.html" data-start="38" data-duration="14" data-track-index="0" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
-      <div id="titlecard" data-composition-id="titlecard" data-composition-src="compositions/titlecard.html" data-start="52" data-duration="4.5" data-track-index="0" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
-      <div id="closing" data-composition-id="closing" data-composition-src="compositions/closing.html" data-start="56" data-duration="3.5" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080" style="z-index: 60"></div>
-
-      <div id="daybar" class="clip" data-start="4" data-duration="48" data-track-index="2">
-        <p id="day-morning" class="daylabel clip" data-start="4" data-duration="20" data-track-index="3">아침</p>
-        <p id="day-noon" class="daylabel clip" data-start="24" data-duration="14" data-track-index="3">낮</p>
-        <p id="day-evening" class="daylabel clip" data-start="38" data-duration="14" data-track-index="3">저녁</p>
-        <div id="daybar-track"><div id="daybar-fill"></div></div>
-      </div>
+      <div id="people" data-composition-id="people" data-composition-src="compositions/people.html" data-start="4" data-duration="13.8" data-track-index="0" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="app-reveal" data-composition-id="app-reveal" data-composition-src="compositions/app-reveal.html" data-start="17.8" data-duration="5.8" data-track-index="0" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="app-choice" data-composition-id="app-choice" data-composition-src="compositions/app-choice.html" data-start="23.6" data-duration="7.8" data-track-index="0" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="app-chat" data-composition-id="app-chat" data-composition-src="compositions/app-chat.html" data-start="31.4" data-duration="6.2" data-track-index="0" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="app-write" data-composition-id="app-write" data-composition-src="compositions/app-write.html" data-start="37.6" data-duration="6.8" data-track-index="0" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="app-gallery" data-composition-id="app-gallery" data-composition-src="compositions/app-gallery.html" data-start="44.4" data-duration="4.2" data-track-index="0" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="sione" data-composition-id="sione" data-composition-src="compositions/sione.html" data-start="48.6" data-duration="4.3" data-track-index="0" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="app-home" data-composition-id="app-home" data-composition-src="compositions/app-home.html" data-start="52.3" data-duration="4.2" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080" style="z-index: 20"></div>
+      <div id="closing" data-composition-id="closing" data-composition-src="compositions/closing.html" data-start="56" data-duration="3.5" data-track-index="2" data-track-kind="graphics" data-width="1920" data-height="1080" style="z-index: 30"></div>
     </div>
     <script>
       const tl = gsap.timeline({ paused: true });
-      tl.fromTo("#daybar-track", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" }, 4.3);
-      tl.fromTo("#daybar-fill", { scaleX: 0 }, { scaleX: 1, duration: 47.7, ease: "none" }, 4.3);
-      tl.fromTo("#day-morning", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" }, 4.3);
-      tl.fromTo("#day-noon", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" }, 24.1);
-      tl.fromTo("#day-evening", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" }, 38.1);
-      tl.to("#daybar-track", { opacity: 0, duration: 0.3, ease: "power2.in" }, 51.6);
       window.__timelines["main"] = tl;
       tl.seek(0);
     </script>
