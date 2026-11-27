@@ -92,7 +92,7 @@ const sourceList=c=>`<ul class="sources">${c.sources.map(s=>`<li><a href="${esc(
 const facts=c=>`<ul class="facts">${c.facts.map(f=>`<li>${esc(f)}</li>`).join('')}</ul>`;
 // 캐릭터·장면 그림. kind가 face면 얼굴 부분, 아니면 전신/장면 그림. 그림을 못 읽으면 이름 첫 글자가 보인다.
 // 그림을 바꾸면 ART_V를 올린다. 학교 사이트는 파일을 몇 시간씩 캐시해서, 같은 이름이면 예전 그림이 보일 수 있다.
-const ART_V='20261126-fast';
+const ART_V='20261128-frame';
 // 상황별 장면 그림 매핑(장면 제목 기준). 등록되지 않은 장면은 기본 인물 그림으로 폴백한다.
 const SCENE_ART={
   haiti:{

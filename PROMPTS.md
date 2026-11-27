@@ -1461,3 +1461,21 @@
 - 검증 — 문서 전용 수정으로 앱 화면 전후 촬영 비대상. `git diff --check` 통과, `video/CHECKLIST.md` 표 구문 및 작업 ID 링크 대조 완료. 대화 캡처는 격리 환경이어서 대기 상태를 유지한다.
 - 남은 항목 — `record-app.mjs` 브라우저 자체 확대 녹화 구현, `build-scenes.mjs` S11 전체 화면·S13 히어로 크기 반영, 스냅숏 확인 후 v3.1 재렌더링.
 - 변경 파일 — `video/TRAILER-PLAN-KOFI.md`, `video/TRAILER-PLAN.md`, `video/CHECKLIST.md`, `video/README.md`, `PROMPTS.md`.
+
+
+## 2026-11-28-portrait-framing-balance
+
+- 실제 요청
+  - “인물들 첫 이미지를 보면 라마만 다른 인물들과 다르게 배율이 커. 즉 다른 인물들은 조금 멀리서 찍은 듯한 느낌으로 배율이 비슷한데 라마만 가까이 찍은 느낌이야. 한번 검토해줘”
+  - “라마와 아시프 둘다 수정 진행해줘 수정 후 커밋 푸시”
+- 변경 이유와 한 일 — 12명 전체 대표 초상(`app/dist/assets/characters/*.webp`)을 육안 비교한 결과, 나머지 10명이 머리 위 여백 20~28%의 미디엄 샷인 반면 라마(`gaza.webp`, 여백 12%)와 아시프(`pakistan.webp`, 여백 14%)만 카메라가 가까워 홈 히어로 앨범과 캐릭터 목록에서 배율이 튀었다.
+  - 기존 고해상도 원본(`local-assets/photoreal-characters/diversity-20261126/gaza.png`, `pakistan.png`)의 얼굴·복장·소품·배경을 그대로 유지하고 `tuvalu.png`의 미디엄 샷 구도(머리 위 여백 ~22%, 허벅지 위)에 맞춰 2장을 재생성(`local-assets/photoreal-characters/framing-20261128/` 원본 보관)했다.
+  - 660×884 WebP(`gaza.webp` 41.7KB, `pakistan.webp` 66.4KB)와 200×200 얼굴 썸네일(`gaza-face.webp` 5.0KB, `pakistan-face.webp` 7.7KB)을 교체하고 `app/dist/app.js`·`app/dist/index.html`의 `ART_V`를 `20261128-frame`으로 올렸다.
+- 검증
+  - `cd app && node validate.cjs` → `PASS: 12 unique scenarios, 47 scenes, 94 choices, 96 complete choice paths; branched slots 13 ...`
+  - 로컬 http://127.0.0.1/ (API 차단)에서 PC(1440×900)·모바일(390×844, 2x 780×1688) 홈·캐릭터 목록 전후 촬영(`local-assets/screenshots/2026-11-28-portrait-framing-balance/`).
+  - 전후 PNG와 새 얼굴 썸네일 2장을 모두 직접 열어 확인한 결과, 캐릭터 목록 1행(시오네·아시프·루파·호단)과 2행(라마·나데주·코피·암나)의 얼굴 크기·눈높이·여백이 균일하게 정렬되었고 잘림·가림 없음.
+- 공개한 대표 화면 — [목록 전](screenshots/2026-11-28-portrait-framing-balance/before-desktop-atlas.png) · [목록 후](screenshots/2026-11-28-portrait-framing-balance/after-desktop-atlas.png) · [홈 전](screenshots/2026-11-28-portrait-framing-balance/before-desktop.png) · [홈 후](screenshots/2026-11-28-portrait-framing-balance/after-desktop.png) · [모바일 후](screenshots/2026-11-28-portrait-framing-balance/after-mobile.png)
+- 대화 캡처 — 이 세션은 격리 데스크톱(`exebox-*`) 환경이므로 Paseo 창 직접 촬영은 불가하며, 위 실제 요청 발췌로 기록하고 캡처 대기 상태를 유지한다.
+- 변경 파일 — `app/dist/assets/characters/gaza.webp`, `gaza-face.webp`, `pakistan.webp`, `pakistan-face.webp`, `app/dist/app.js`, `app/dist/index.html`, `screenshots/2026-11-28-portrait-framing-balance/`, `CHECKLIST.md`, `PROMPTS.md`.
+- 남은 항목 — `onischool-release` 동기화 및 라이브 배포 확인(사용자 요청 시 진행).
