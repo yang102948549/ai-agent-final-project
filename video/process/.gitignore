@@ -1,0 +1,8 @@
+# 원본(screenshots/, local-assets/, video/trailer/assets/fonts/)에서 복사하는 에셋과 작업 산출물은 Git에서 제외
+assets/clips/
+assets/screens/
+assets/conv/
+assets/fonts/
+.hyperframes/
+renders/
+node_modules/

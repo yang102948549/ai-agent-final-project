@@ -1248,3 +1248,18 @@
 - 영상 활용 — monitor-2.png는 세 도구의 병행 작업을 보여 주는 실제 증거 컷으로 사용 가능하다. 3분할 전체는 작업 환경 소개에 사용하고, 이 대화는 오른쪽 패널을 편집 단계에서 확대해 요청·결정 부분을 보여 준다. 사용자 경로·터미널 하단 정보가 있으므로 공개 전에 해당 영역을 제외하거나 가림 처리하고 가독성을 재검수해야 한다. 현재는 로컬 원본만 보존하며 screenshots/ 공개 선별본은 만들지 않았다. 앞선 worklog-guidance의 대화 캡처 대기는 이 후속 장면으로 보충하되 당시 결정 순간의 캡처로 취급하지 않는다.
 - 변경 파일 — PROMPTS.md, conversations/README.md. PNG 두 장은 Git 제외 local-assets에 보관한다. 다른 세션의 paseo.json 및 video/process/는 변경하거나 커밋하지 않는다.
 - 검증 — 저장 PNG 2장 재열람 완료, 최근 작업기록·커밋 대조 완료. 문서와 증거 수집 작업이므로 앱 전후 화면 검증은 비대상. 공개용 가림·선별과 영상 삽입은 남은 작업이다.
+
+
+## 2026-11-27-process-proto-and-spec
+
+- 실제 요청
+  - “프로토타입을 먼저 보여줘”
+  - “지금 이 방식을 작업영상콘티 md안에 정리해줘. 이런 방식으로 하되 콘티는 다듬어야 해”
+- 변경 이유와 한 일 — `video/process/`에 HyperFrames 기반 **에이전트 데스크탑 대화창 프로토타입(`p04-round1-branch.html`, 16초)**을 구현하고, 검증된 연출·기술 규격을 [video/PROCESS-PLAN.md](video/PROCESS-PLAN.md) 2.4절과 7절에 정리했다.
+  - 프로토타입 구현 및 보완: 순수 결정론 타이핑(`onUpdate: syncTyping`), `word-break: keep-all`, 상단 통계 색 `#176a67`(WCAG AA 4.5:1 이상 통과), `BEFORE → AFTER` 와이프 완료 시 `BEFORE` 배지 페이드아웃, 2차 ‘깎음’ 턴 2분할 비교 + 우측 하단 실제 Codex 캡처 증거 카드 컷인.
+  - `video/process/.gitignore`를 `video/trailer/.gitignore`와 동일한 규칙으로 구성해 복사 에셋·렌더 산출물을 Git에서 제외했다.
+- 검증
+  - `hyperframes check --json` 통과 (`check_exit=0`, lint·runtime·layout·contrast·craft 오류 0건).
+  - `hyperframes snapshot --at 1.8,4.9,6.5,8.8,13.5` 6장 및 렌더링된 `local-assets/video/process-proto-p04.mp4`(794.8 KB, 16.0s, 1920×1080, 30fps) 전 구간 직접 열어 육안 확인 완료. 앱 소스 변경이 없는 영상 프로토타입·문서 작업이므로 앱 화면 전후 촬영은 비대상이다.
+- 대화 캡처 — 이 세션은 격리 데스크톱(`exebox-*`) 환경이므로 Paseo 창 직접 촬영은 불가하며, 위 실제 요청 발췌로 기록하고 캡처 대기 상태를 유지한다.
+- 변경 파일 — `video/PROCESS-PLAN.md`, `video/process/index.html`, `video/process/package.json`, `video/process/hyperframes.json`, `video/process/.gitignore`, `video/process/compositions/p04-round1-branch.html`, `PROMPTS.md`.

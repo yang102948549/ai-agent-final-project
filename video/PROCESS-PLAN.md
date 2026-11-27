@@ -84,6 +84,20 @@
 | **⑤ 바꾼 이유 & 실제 캡처 컷인** | `12.5–15.7s` | 하단 **바꾼 이유** 띠가 고정 노출되고, 우측 하단에 실제 대화 캡처 썸네일이 `1.5s`간 증거로 등장 |
 | **⑥ 전환** | `15.7–16.0s` | `0.3s` 크로스 디졸브로 다음 라운드 이동 |
 
+### 2.4 검증 완료된 프로토타입 기준선 (`p04-round1-branch.html`)
+
+2026-11-27에 Round 1을 프로토타입으로 먼저 구현·렌더링해 **연출 방식과 기술 규격을 확정**했다. 앞으로 콘티를 다듬은 뒤 전체 씬(`P01`~`P11`)을 확장할 때도 아래 실측 규격을 그대로 따른다.
+
+- **기준 코드**: [video/process/compositions/p04-round1-branch.html](process/compositions/p04-round1-branch.html) (`hyperframes check --json` **오류 0건** 통과)
+- **검증 MP4**: `local-assets/video/process-proto-p04.mp4` (`16.0초` · `794.8 KB` · `1920×1080` · `30fps`, 프레임별 육안 검수 완료)
+- **확정된 구현 규칙 (필수 준수)**:
+  1. **순수 결정론 타이핑 (`onUpdate: syncTyping`)**: `tl.call()`이나 `setInterval`을 쓰지 않고, `gsap.timeline({ paused: true, onUpdate: syncTyping })`에서 `tl.time()`을 읽어 문자열을 직접 슬라이스한다. 임의 시점 시크(`snapshot --at`)와 병렬 프레임 렌더링에서도 타이핑이 절대 깨지지 않는다.
+  2. **한국어 어절 줄바꿈 (`word-break: keep-all`)**: 사용자 말풍선(`22px`), 프롬프트 입력창(`21px`), 에이전트 요약(`20px`), 바꾼 이유(`24px`)에 모두 `word-break: keep-all`을 적용해 한글 단어가 중간에 끊기지 않게 한다.
+  3. **WCAG AA 대비 준수**: 종이 바탕(`#f4f3ef`) 위의 강조 수치 텍스트는 `#1f7f7c`(4.31:1) 대신 **`#176a67`**(4.5:1 이상)을 사용한다.
+  4. **와이프 배지 전환**: `BEFORE → AFTER` 와이프(`clip-path: inset(0 100% 0 0) → inset(0 0% 0 0)`, `4px` 세로 `#1f7f7c` 선)가 완료되는 시점에 `BEFORE` 배지를 자연스럽게 페이드아웃해 `AFTER` 화면만 깔끔하게 남긴다.
+  5. **창·패널 실측 좌표**: 메인 창 `left: 96px, top: 76px, width: 1728px, height: 944px` (`border-radius: 16px`), 왼쪽 대화창 `560px`, 오른쪽 미리보기 `1168px` (Stage 1 와이프 `1104×690px` 16:10, Stage 2 2분할 카드 각 `540×338px`, 하단 `바꾼 이유` 띠 `1104×120px`, 우측 하단 실제 캡처 증거 카드 `396px`).
+  6. **로컬 렌더링 FFmpeg**: Windows WinGet 설치본(`Gyan.FFmpeg`)의 `bin` 경로를 세션 PATH에 연결해 `hyperframes render`를 실행한다.
+
 ---
 
 ## 3. 전체 타임라인 한눈에 보기 (총 2분 40초 · 160초 · 4,800 frames @ 30fps)
@@ -273,7 +287,7 @@ video/process/
 4. **결함·개인정보 0건**: `hyperframes check --json` 오류 0건, 실제 학생 정보·업무 메신저·API 키 노출 0건.
 
 ### 제작 순서
-1. **(완료)** 에이전트 데스크탑 대화창 UI + 타이핑 애니메이션 + Before/After 비교 콘티 확정 (이 문서).
-2. **(다음)** `video/process/` HyperFrames 프로젝트 초기화 + `tools/prepare-assets.mjs`로 선별 캡처·`trailer-v1/v2` 비교 클립 준비.
-3. **핵심 검증 먼저**: 공통 에이전트 대화창 컴포넌트(`p04-round1-branch.html` 1개)를 먼저 만들어 타이핑 속도·와이프 비교·가독성을 스냅숏으로 검증한 뒤 나머지 `p01`~`p11` 전개.
-4. `hyperframes check --json` + 씬별 스냅숏 검수 → `local-assets/video/process.mp4` 렌더링 및 전체 재생 확인 → `REVIEW.md` 작성·커밋.
+1. **(완료)** 에이전트 데스크탑 대화창 UI + 타이핑 애니메이션 + Before/After 비교 방식 설계.
+2. **(완료)** 핵심 프로토타입 1개 씬([p04-round1-branch.html](process/compositions/p04-round1-branch.html) · `process-proto-p04.mp4`) 구현, `hyperframes check` 0오류 및 프레임별 육안 검증으로 **연출 방식·구현 규격(2.4절) 확정**.
+3. **(다음 — 콘티 다듬기)** 확정된 대화창 방식을 기준으로 3~4절의 **씬별 콘티(라운드 구성, 들어갈 실제 발화·비교 화면, 전체 길이·리듬)**를 사용자와 함께 다듬어 최종 확정한다.
+4. **(예정)** 확정 콘티에 맞춰 `tools/prepare-assets.mjs`와 `P01`~`P11` 전체 구현 → `hyperframes check --json` + 씬별 스냅숏 검수 → `local-assets/video/process.mp4` 렌더링·전체 재생 확인 → `REVIEW.md` 작성·커밋.

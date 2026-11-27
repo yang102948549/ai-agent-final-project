@@ -1,0 +1,10 @@
+{
+  "name": "process",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npx --yes hyperframes@0.9.102 preview",
+    "check": "npx --yes hyperframes@0.9.102 check",
+    "render": "npx --yes hyperframes@0.9.102 render"
+  }
+}
