@@ -50,7 +50,10 @@
 | 31 | trailer-render-quality | 화면 | v2가 평균 약 3.4Mbps로 렌더되고 녹화 프레임도 JPEG라 앱 글자가 뭉개질 여지가 큼 | 고화질 규격: 녹화 PNG 2880×1800 → 중간 MP4 CRF 10 → 최종 `--quality delivery --video-bitrate 16M --max-bitrate 24M --video-frame-format png`(실측 12.43Mbps) | v3(B안) |
 | 32 | trailer-audio-plan | 소리 | v3(코피) 영상에 소리 트랙이 없어 화면 글만으로 전달됨 | 배경음악(HeyGen 음악 목록)과 이야기를 잇는 나레이션(Gemini TTS, 약 200자)을 넣기로 함. 대본은 결정 대기 | 콘티(B안 5절) |
 | 32 | trailer-v3-kofi | 화면 | B안 콘티에서 S2 코피가 정지 사진으로 계획되어 다른 인물 영상과 질감 차이가 남 | Google Flow Veo 3.1 Fast로 생성한 코피 무음 클립(`07-ghana-silent.mp4`)을 3:4 CRF 12로 가공해 S2 인물 영상으로 반영 | v3(B안) |
-| 33 | trailer-v3-kofi | 화면 | S11 세 가지 글 확대(`scale 1.32, y 40`) 시 신문 기사·정책 제안서 상단 제목이 틀 윗선에 살짝 잘림 | `scale 1.26, x -125, y 112`(편지 `y 100`)로 조정해 문서 제목과 본문이 잘림 없이 중앙에 오게 보정 | v3(B안) |
+| 33 | trailer-v3-kofi | 화면 | S11 세 가지 글 확대(`scale 1.32, y 40`) 시 신문 기사·정책 제안서 상단 제목이 틀 윗선에 살짝 잘림 | `scale 1.26, x -125, y 112`(편지 `y 100`)로 조정해 문서 제목과 본문이 잘림 없이 중앙에 오게 보정 | v3(B안) → 35번에서 바뀜 |
+| 34 | trailer-kofi-polish-spec | 화면 | 앱 확대 구간(S4·S7·S8·S9)에서 HyperFrames `transform: scale()`로 `<video>`를 늘리자 글자 선명도가 깨짐 | 녹화 단계(`record-app.mjs`)에서 HTML/브라우저 자체를 확대하며 `2880×1800` PNG로 녹화하고 HyperFrames는 `scale: 1` 1:1 출력으로 변경 | 콘티(v3.1 예정) |
+| 35 | trailer-kofi-polish-spec | 화면 | S11 세 가지 활동에서 오른쪽 문서만 확대해 왼쪽 인물 사진·이름 공간이 잘림 | S11 확대를 없애고 `scale: 1` 전체 화면(`1392×870`)으로 왼쪽 인물 이름·사진과 오른쪽 문서를 모두 노출 | 콘티(v3.1 예정) |
+| 36 | trailer-kofi-polish-spec | 화면 | S13 마지막 페이드아웃에서 12명이 작은 6×2 격자(`196×224`)로 축소되어 답답함 | 앱 원래 히어로 섹션의 큰 3:4 사진 카드 크기·비율을 그대로 살려 페이드인으로 들어온 뒤 타이틀과 함께 페이드아웃 | 콘티(v3.1 예정) |
 
 ### 버전별 영상
 

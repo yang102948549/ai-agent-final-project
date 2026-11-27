@@ -1447,3 +1447,17 @@
 - 남은 항목 — HeyGen 로그인, 대본 확정(S1 “오늘도/오늘” 포함), Gemini TTS 목소리 고르기, 생성 뒤 장면 길이 조정과 소리 측정·청취 확인.
 - 대화 캡처 — 찍지 않았다(캡처 대기). 위 실제 요청 발췌로 대신한다.
 - 변경 파일 — `video/TRAILER-PLAN-KOFI.md`, `video/CHECKLIST.md`, `video/README.md`, `PROMPTS.md`
+
+
+## 2026-11-28-trailer-kofi-polish-spec
+
+- 실제 요청
+  - “앱 화면을 확대해서 누르는 장면이 있는데 이때 확대본이 선명도가 깨져. html에서 확대하면서 녹화하면 되는 거 아닐까? 한번 검토해줘. 그리고 세가지 활동을 보여줄 때 옆에 인물 이름이 나오는 공간이 짤려 전체 화면이 다 나올 수 있게 해야 해. 그리고 마지막 페이드아웃 시 나오는 인물은 그냥 원래 히어로 섹션에 있었던 이미지 크기를 그대로 살려서 페이드 인으로 나와서 페이드아웃하면 돼. 바로 렌더링 하지 말고 검토해줘. 그리고 수정 내용 커밋 푸시하자”
+  - “수정내용 md 수정후 커밋 푸시”
+- 검토 및 문서 반영 내용 — 바로 렌더링하지 않고 세 가지 개선 명세를 [video/TRAILER-PLAN-KOFI.md](video/TRAILER-PLAN-KOFI.md), [video/TRAILER-PLAN.md](video/TRAILER-PLAN.md), [video/CHECKLIST.md](video/CHECKLIST.md)(34~36번), [video/README.md](video/README.md)에 반영했다.
+  1. **확대본 선명도 해결 (`S4 · S7 · S8 · S9`)**: `REC-K1~K4` 원본이 `2880×1800`이어도 HyperFrames에서 `1392×870` `<video>`에 CSS `transform: scale(1.55~1.65)`를 걸면 래스터 재확대로 글자가 뭉개진다. `record-app.mjs` 녹화 단계에서 HTML/브라우저 자체를 확대(벡터 폰트 네이티브 재래스터화)하며 녹화하고 HyperFrames에서는 `scale: 1` 1:1 픽셀 매핑으로 재생하도록 명세를 변경했다.
+  2. **세 가지 활동 전체 화면 (`S11`)**: `scale: 1.26` 확대로 왼쪽 인물 사진·이름(`시오네`·`마리암`·`코피`)이 잘리던 문제를 없애기 위해 `scale: 1` 전체 화면(`1392×870`) 노출로 변경했다.
+  3. **마지막 인물 히어로 크기 (`S13`)**: 작은 6×2 썸네일 격자(`196×224`) 대신 앱 원래 히어로 섹션(`app/design/hero-album.md`)의 큰 3:4 사진 카드 크기와 비율을 그대로 살려 페이드인 → 타이틀 → 검은 화면 페이드아웃으로 변경했다.
+- 검증 — 문서 전용 수정으로 앱 화면 전후 촬영 비대상. `git diff --check` 통과, `video/CHECKLIST.md` 표 구문 및 작업 ID 링크 대조 완료. 대화 캡처는 격리 환경이어서 대기 상태를 유지한다.
+- 남은 항목 — `record-app.mjs` 브라우저 자체 확대 녹화 구현, `build-scenes.mjs` S11 전체 화면·S13 히어로 크기 반영, 스냅숏 확인 후 v3.1 재렌더링.
+- 변경 파일 — `video/TRAILER-PLAN-KOFI.md`, `video/TRAILER-PLAN.md`, `video/CHECKLIST.md`, `video/README.md`, `PROMPTS.md`.

@@ -75,6 +75,7 @@ video/
 | 2026-11-27 | [trailer-render-quality](../PROMPTS.md#2026-11-27-trailer-render-quality) | 트레일러 PRD에 고화질 렌더링 규격(비트레이트·녹화 PNG·중간 파일 CRF) 추가 |
 | 2026-11-28 | [trailer-audio-plan](../PROMPTS.md#2026-11-28-trailer-audio-plan) | B안 영상의 배경음악·나레이션 방식 검토(목소리·음원·대본·믹스) |
 | 2026-11-27 | [trailer-v3-kofi](../PROMPTS.md#2026-11-27-trailer-v3-kofi) | 코피 B안 트레일러 v3 제작(2배 PNG 앱 녹화 7편, 코피 클립 반영, 16M 고화질 82.7초 렌더·검수) |
+| 2026-11-28 | [trailer-kofi-polish-spec](../PROMPTS.md#2026-11-28-trailer-kofi-polish-spec) | B안 v3.1 수정 명세 반영(브라우저 자체 확대 녹화, S11 전체 화면, S13 히어로 크기 페이드인/아웃) |
 
 ### 기록과 자료가 놓이는 곳
 
