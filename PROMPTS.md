@@ -927,3 +927,15 @@
 - 변경 이유와 한 일 — 과정 소개 영상(작업 영상)에서 어떤 도구(Paseo 3분할 멀티 에이전트 창: Codex · Claude Code · Antigravity CLI)로 어떻게 협업·검증하며 개발했는지를 시각적으로 보여 주기 위해, 사용자가 매번 따로 지시하지 않아도 에이전트가 주요 작업 단계마다 알아서 Paseo 작업 창을 캡처해 작업 폴더(`local-assets/conversations/<작업ID>/` 및 선별본 `screenshots/conversations/<작업ID>/`)에 넣도록 `CLAUDE.md`, 로컬 `AGENTS.md`, `conversations/README.md`, `PROMPTS.md`에 규칙과 기록을 명시했다.
 - 현재 세션 캡처 제약 기록 — 이 터미널(Antigravity CLI)은 Windows 격리 데스크톱(`exebox-*`) 안에서 실행되어 `CopyFromScreen`/`ImageGrab` 호출 시 실제 모니터(`Default` 데스크톱의 Paseo 창)에 접근할 수 없어 검은 화면만 반환된다(빈 테스트 캡처 파일은 즉시 삭제 완료). 따라서 `exebox-*` 격리 없이 실제 데스크톱(`Default`)에서 실행되는 세션(Claude Code 또는 Codex `cua_repl`)에서 Paseo 작업 창을 주기적으로 자동 캡처해 `local-assets/conversations/<작업ID>/`와 `screenshots/conversations/<작업ID>/`에 보충하도록 작업 지침을 동기화했다. 문서·규칙 갱신 작업이므로 앱 화면 전후 촬영은 비대상이다.
 - 변경 파일 — `CLAUDE.md`, `PROMPTS.md`, `conversations/README.md` (및 로컬 `AGENTS.md`).
+
+
+## 2026-11-27-architecture-readme
+
+- 실제 요청 — “현재 이 웹앱의 아키텍쳐를 소개하는 내용도 md로 정리해서 readme의 성격으로 올려줘. 즉, 프론트엔드는 어떤걸 활용, 백엔드는 어떻게 활용했는지”
+- 변경 이유와 한 일 — 포트폴리오 방문자와 평가자가 웹앱의 기술 구성을 한눈에 파악할 수 있도록 실제 소스(`app/dist/*`, `app/relay/worker.js`, `app/relay/wrangler.toml`, `app/HANDOFF.md`, `app/validate.cjs`, `app/sync-onischool.cjs`)를 대조해 [ARCHITECTURE.md](ARCHITECTURE.md)를 새로 작성하고, 루트 [README.md](README.md)에도 아키텍처 요약 절과 링크를 추가했다.
+  - 프론트엔드: Zero-build Vanilla HTML5·CSS3·ES6+ SPA 구조, 6개 핵심 파일 역할, `localStorage` 키(`global-life-lab-v1`, `anotherday-voter`), 59장 WebP(약 2.65MB) 및 단계별 순차 큐 프리로드 최적화
+  - 백엔드·DB: Cloudflare Pages Functions(`/anotherday/api/chat`, `/api/gallery`) 보안 게이트웨이, 중계 Worker(`anotherday-gemini-relay`)의 미국 동부(`enam`) 4샤드 `GeminiRelay` Durable Object(학교망 홍콩 경유 지역 차단 우회), 아시아·태평양(`apac`) `GalleryStore` Durable Object 내장 SQLite(`subs`, `hearts` 테이블)
+  - AI 및 배포: Google Gemini Interactions API(`v1beta/interactions`, `store: false`, JSON Schema 강제 출력, 4종 역할·안전 필터)와 `validate.cjs` · Playwright · `sync-onischool.cjs`(SHA-1 캐시 버스팅) · `wrangler deploy` 파이프라인을 Mermaid 구성도와 표로 정리했다.
+- 검증 — 문서 작성 전 `cd app && node validate.cjs` 실행(`PASS: 12 unique scenarios, 47 scenes, 94 choices, 96 complete choice paths; branched slots 13 ...`) 및 에셋·파일 크기 실측치와 문서 수치 일치 확인. 문서 전용 변경으로 앱 화면 전후 촬영은 비대상이다.
+- 대화 캡처 — 이 세션은 격리 데스크톱(`exebox-*`) 환경이므로 Paseo 창 직접 촬영은 불가하며, 위 실제 요청 발췌로 기록하고 캡처 대기 상태를 유지한다.
+- 변경 파일 — `ARCHITECTURE.md`(신규), `README.md`, `PROMPTS.md`.
