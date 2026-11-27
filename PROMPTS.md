@@ -1386,3 +1386,20 @@
   - `video/CHECKLIST.md` 31번과 `video/README.md` 목차에 한 줄씩 더했다.
 - 검증 — 문서 전용 변경. 옵션 이름은 설치된 HyperFrames 0.9.102의 `render --help` 출력과 대조했다. 예상 크기는 82초 × 비트레이트로 계산했다. 실제 화질은 v3 렌더 뒤 확인할 항목이다.
 - 변경 파일 — `video/TRAILER-PLAN.md`, `video/TRAILER-PLAN-KOFI.md`, `video/CHECKLIST.md`, `video/README.md`, `PROMPTS.md`
+
+
+## 2026-11-27-cleanup-lowres-captures
+
+- 실제 요청 — “paseo 캡쳐본이 해상도가 꺠져있는 것들이 있어 이를 파악해서 고해상도가 아닌 작업 캡쳐본 이미지들은 다 삭제해줘”
+- 변경 이유와 한 일 — `local-assets/conversations/`, `screenshots/conversations/`, `video/process/assets/conv/`의 모든 작업 캡처 PNG 해상도를 전수 측정해, 1920×1080 네이티브 해상도에 미달해 확대 시 깨지는 저해상도 캡처 6개 파일을 삭제하고 [video/PROCESS-PLAN.md](video/PROCESS-PLAN.md)의 Paseo 에셋 경로를 네이티브 `1920×1080` 고해상도 캡처(`local-assets/conversations/2026-11-27-paseo-worklog-review/monitor-2.png` · `2026-11-27-trailer-v2/paseo-monitor-01.png`)로 교체했다.
+  - 삭제된 저해상도 파일:
+    - `local-assets/conversations/2026-11-26-paseo-workflow/paseo-window-original.png` (`1536×816`)
+    - `local-assets/conversations/2026-11-26-paseo-workflow/paseo-workflow-original.png` (`1536×816`)
+    - `screenshots/conversations/2026-11-26-paseo-workflow/paseo-workflow-redacted.png` (`1536×816`)
+    - `video/process/assets/conv/paseo-workflow-redacted.png` (`1536×816`)
+    - `local-assets/conversations/2026-11-26-min-length/01-request-deploy-terminal.png` (`642×975`)
+    - `local-assets/conversations/2026-11-27-paseo-worklog-review/monitor-1.png` (`1707×1067`, 150% DPI 축소·개인 브라우저 탭 포함)
+  - 유지된 원본 픽셀 크롭: `2026-11-25-photoreal-characters/01-decision-terminal.png` (`1350×1080`, 1080p 원본에서 개인 메신저만 잘라낸 공개 증거).
+- 검증 — 삭제 후 잔존 Paseo 캡처 4종(`1920×1080`) 육안 선명도 확인 완료. 문서·에셋 정리 작업으로 앱 화면 전후 촬영 비대상.
+- 대화 캡처 — 이 세션은 격리 데스크톱(`exebox-*`) 환경이므로 Paseo 창 직접 촬영은 불가하며, 위 실제 요청 발췌로 기록하고 캡처 대기 상태를 유지한다.
+- 변경 파일 — `screenshots/conversations/2026-11-26-paseo-workflow/paseo-workflow-redacted.png`(삭제), `video/PROCESS-PLAN.md`, `PROMPTS.md`.

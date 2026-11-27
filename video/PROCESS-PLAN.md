@@ -152,9 +152,9 @@ Codex 데스크탑 및 Paseo 실제 캡처가 등장하는 구간(`P03` 작업 �
   - 좌측 상단 배지: `● REC · 실제 작업 화면 | Codex Desktop` (빨간 점 깜빡임)
   - 하단 자막 띠: **Codex 데스크탑 — 단일 기능 집중 설계와 라이브 검증**
 - **컷 2 (`0:26–0:33`, 7초) — 실제 Paseo 3분할 멀티 에이전트 전체화면 REC 컷인**:
-  - 에셋: `screenshots/conversations/2026-11-26-paseo-workflow/paseo-workflow-redacted.png` (`1920×1080` 전체화면)
+  - 에셋: `local-assets/conversations/2026-11-27-paseo-worklog-review/monitor-2.png` (`1920×1080` 네이티브 고해상도 전체화면, 보조 `local-assets/conversations/2026-11-27-trailer-v2/paseo-monitor-01.png`)
   - 좌측 상단 배지: `● REC · 실제 작업 화면 | Paseo 3분할 멀티 에이전트` (빨간 점 깜빡임)
-  - 연출: 좌·중·우 창 상단에 역할 라벨 순차 점등 — **Codex**(히어로·UI) · **Claude Code**(시나리오·글쓰기·배포) · **Antigravity CLI**(이미지·아키텍처·Veo 클립)
+  - 연출: 좌·중·우 창 상단에 역할 라벨 순차 점등 — **Antigravity CLI**(영상 콘티·클립) · **Claude Code**(체크리스트·트레일러) · **Codex**(작업기록·분석)
 - **컷 3 (`0:33–0:41`, 8초) — 매 작업 5단계 검증 루프**:
   - 연출: 종이 바탕 `#f4f3ef`로 복귀, 가로 5단계 카드 순차 점등: **`① 수정 전 캡처 → ② 구현 → ③ Playwright·validate 자동 검증 → ④ 수정 후 육안 확인 → ⑤ 커밋·라이브 배포`**
   - 하단 검증 뱃지: `PASS: 12 scenarios · 47 scenes · 96 paths`
