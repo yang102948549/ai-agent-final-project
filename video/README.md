@@ -47,6 +47,8 @@ video/
 
 ## 영상 제작 작업 기록
 
+> 영상을 고칠 때마다 "고치기 전 문제 → 고친 후"를 [CHECKLIST.md](CHECKLIST.md)에 한 줄씩 쌓는다. 아래 목차는 작업별 상세 기록(PROMPTS.md)으로 가는 길이다.
+
 영상 제작도 앱 개발과 같은 방식으로 기록한다. 작업마다 실제 요청, 바꾼 것, 이유, 검증 결과를 루트 [PROMPTS.md](../PROMPTS.md) 끝에 작업 ID 제목으로 쌓는다. 영상 관련 기록만 모아 보려면 아래 목차를 따라간다. 새 영상 작업을 기록하면 이 표에도 한 줄을 더한다.
 
 | 날짜 | 작업 ID | 한 일 |
@@ -66,12 +68,14 @@ video/
 | 2026-11-27 | [trailer-v2](../PROMPTS.md#2026-11-27-trailer-v2) | 배포 사이트 앱 화면 녹화 6개(REC-01~06)와 콘티 v2로 트레일러 v2 렌더 |
 | 2026-11-27 | [trailer-conti-v3](../PROMPTS.md#2026-11-27-trailer-conti-v3) | v2를 보고 콘티 v3: 2분 이내, 앱 녹화 2배 해상도와 확대, 상황 → A/B → 실제 선택, 세 가지 글 모두 |
 | 2026-11-27 | [trailer-conti-v3-1](../PROMPTS.md#2026-11-27-trailer-conti-v3-1) | 12명을 사진 썸네일(이름·나라·상황)로, 닫는 질문은 웃는 시오네와 함께, 끝은 12명 + 타이틀 + 페이드아웃 |
+| 2026-11-27 | [video-checklist](../PROMPTS.md#2026-11-27-video-checklist) | 영상 수정 체크리스트 [CHECKLIST.md](CHECKLIST.md) 신설, 트레일러 수정 22건 정리 |
 
 ### 기록과 자료가 놓이는 곳
 
 | 무엇 | 어디 | Git |
 |---|---|---|
 | 기획(PRD·콘티) | [TRAILER-PLAN.md](TRAILER-PLAN.md), [PROCESS-PLAN.md](PROCESS-PLAN.md) | 커밋 |
+| 영상 수정 체크리스트(고치기 전 → 고친 후) | [CHECKLIST.md](CHECKLIST.md) | 커밋 |
 | 작업 기록(요청·결정·검증) | [PROMPTS.md](../PROMPTS.md) — 위 목차 | 커밋 |
 | 결정 장면 대화 캡처(공개 선별본) | `screenshots/conversations/<작업ID>/`, 설명은 [conversations/README.md](../conversations/README.md) | 커밋 |
 | 대화 캡처 원본 | `local-assets/conversations/<작업ID>/` | 제외 |
