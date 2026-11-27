@@ -64,6 +64,7 @@ video/
 | 2026-11-27 | [trailer-hyperframes-v1](../PROMPTS.md#2026-11-27-trailer-hyperframes-v1) | HyperFrames로 트레일러 초안 v1 제작([trailer/](trailer/), 검토 [trailer/REVIEW.md](trailer/REVIEW.md)) |
 | 2026-11-27 | [trailer-conti-v2](../PROMPTS.md#2026-11-27-trailer-conti-v2) | v1을 보고 콘티를 다시 짬: 세 사람의 하루 + 앱 이용 장면 + 웃는 시오네와 앱 첫 화면 |
 | 2026-11-27 | [trailer-v2](../PROMPTS.md#2026-11-27-trailer-v2) | 배포 사이트 앱 화면 녹화 6개(REC-01~06)와 콘티 v2로 트레일러 v2 렌더 |
+| 2026-11-27 | [trailer-conti-v3](../PROMPTS.md#2026-11-27-trailer-conti-v3) | v2를 보고 콘티 v3: 2분 이내, 앱 녹화 2배 해상도와 확대, 상황 → A/B → 실제 선택, 세 가지 글 모두 |
 
 ### 기록과 자료가 놓이는 곳
 
