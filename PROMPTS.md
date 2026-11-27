@@ -1009,3 +1009,21 @@
 - 검증 — 문서 전용 변경이라 앱 화면 촬영은 비대상이다. 이전 문구가 남지 않았는지 검색했고, S3 안의 프레임이 540–720f 안에서 맞물리는지 계산했다.
 - 대화 캡처 — 찍지 않았다(캡처 대기). 위 실제 요청 발췌로 대신한다.
 - 변경 파일 — `video/TRAILER-PLAN.md`, `PROMPTS.md`
+
+
+## 2026-11-27-trailer-clips-gen
+
+- 실제 요청
+  - “md는 수정했기 때문에 콘티를 참고해서 인물영영상 제작을 진행하도록 하자”
+  - “api 이용해줘 env에 있는 키를 활용해서”
+- 변경 이유와 한 일 — [video/TRAILER-PLAN.md](video/TRAILER-PLAN.md)의 6개 균형안과 콘티에 따라 `.env`의 `GEMINI_API_KEY`로 Gemini Interactions API(`v1beta/interactions`)의 **`gemini-omni-1.2-flash`** 모델을 호출해 6개 인물 영상 클립(각 5초 · 720p · 9:16 세로)을 일괄 생성해 `local-assets/video/clips/`(Git 제외)에 저장했다.
+  - 생성 결과 (6/6 성공, 각 35~38초 소요):
+    1. `local-assets/video/clips/01-pakistan.mp4` (4.00 MB) — 아시프: 이마를 닦던 오른손을 천천히 내리며 숨을 고르고 스카프가 바람에 흔들림
+    2. `local-assets/video/clips/04-tuvalu.mp4` (2.28 MB) — 시오네: 잔잔하게 미소 지으며 파란 공책을 고쳐 쥐고 야자수·물웅덩이가 흔들림
+    3. `local-assets/video/clips/05-gaza-noon.mp4` (2.92 MB) — 라마: 물통을 든 할아버지를 바라보며 고개를 끄덕이고 동생이 팔을 꼭 잡음
+    4. `local-assets/video/clips/08-somalia-noon.mp4` (5.95 MB) — 호단: 아버지가 차분히 손짓하며 말하고 호단이 시선을 옮기며 경청, 염소 움직임 자연스러움
+    5. `local-assets/video/clips/10-sudan-evening.mp4` (3.25 MB) — 암나: 흰 물통을 안고 이웃의 말에 고개를 끄덕이며 경청
+    6. `local-assets/video/clips/12-congo-evening.mp4` (2.96 MB) — 그라스: 등유 램프 불꽃이 일렁이고 목사님 설명에 그라스가 차분히 고개를 끄덕임
+- 검증 — 6개 MP4 파일을 모두 직접 열어 프레임별 육안 검수 완료(얼굴·복장·소품 일관성 양호, 왜곡 없음). `08-somalia-noon`, `10-sudan-evening`, `12-congo-evening`에는 생성 모델의 영어 대사 오디오가 포함되어 있으므로 Remotion 조립 시 `<OffthreadVideo muted />`로 음소거 처리하고 `TRAILER-PLAN.md` 6절의 장소별 효과음·BGM을 별도 믹싱한다. 앱 소스 변경이 없는 영상 에셋 생성 작업이므로 앱 화면 전후 촬영은 비대상이다.
+- 대화 캡처 — 이 세션은 격리 데스크톱(`exebox-*`) 환경이므로 Paseo 창 직접 촬영은 불가하며, 위 실제 요청 발췌로 기록하고 캡처 대기 상태를 유지한다.
+- 변경 파일 — `PROMPTS.md` (생성 MP4 6개는 Git 제외 폴더 `local-assets/video/clips/`에 보관).
