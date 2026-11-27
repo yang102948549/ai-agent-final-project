@@ -1077,3 +1077,34 @@
 - 검증 — `local-assets/video/clips/` 하위 재귀 조회 결과 최종 MP4 6개만 존재함을 확인. 문서·로컬 파일 정리 작업으로 앱 화면 전후 촬영은 비대상이다.
 - 대화 캡처 — 이 세션은 격리 데스크톱(`exebox-*`) 환경이므로 Paseo 창 직접 촬영은 불가하며, 위 실제 요청 발췌로 기록하고 캡처 대기 상태를 유지한다.
 - 변경 파일 — `video/TRAILER-PLAN.md`, `PROMPTS.md`.
+
+## 2026-11-27-trailer-hyperframes-v1
+
+- 실제 요청 — “이제 영상클립을 참고하여 콘티를 근거로 하여 트레일러 초안을 만들거야. 폰트는 프리텐다드로 통일하고 최대한 잔잔하고 간결하게 만들거야. 그리고 콘티 md를 수정중인데 수정이 완료되는대로 트레일러 영상을 하이퍼프레임을 활용하여 만들어보자. md가 정리될때까지 기다려줘. md커밋 되면 바로 진행”
+- 진행
+  1. `video/TRAILER-PLAN.md`가 바뀌는 다음 커밋을 기다렸다(백그라운드 감시). 다른 세션의 `0958c1f`(확정 Veo 클립 6편 경로·콘티 매핑)가 커밋된 뒤 시작했다. 대화 캡처에서도 그 세션이 “콘티 md 커밋 완료”를 보고한 장면을 확인했다.
+  2. HyperFrames 플러그인(0.9.102)의 런처로 `video/trailer/`에 프로젝트를 만들었다(`init --skip-skills`). 사용 통계 전송(`events`)은 개인정보 보호를 위해 실행하지 않았다.
+  3. 에셋을 준비했다.
+     - Pretendard 가변 글꼴(woff2)을 받았다.
+     - `local-assets`의 900×1200 원본 PNG 8장을 JPG로 바꿨다(앱의 660×880 WebP보다 선명).
+     - 얼굴 12장을 준비했다.
+     - Veo 클립 6편은 9:16 원본의 1.0~6.0초를 잘라 3:4(위에서 60px)로 자르고 810×1080·30fps·무음으로 만들었다. 오른쪽 아래 생성기 표시도 이때 잘려 나간다.
+     - 클립(11MB)은 Git에서 빼고 `tools/prepare-assets.sh`로 다시 만들 수 있게 했다.
+  4. 콘티의 7개 장면을 `compositions/`에 만들었다.
+     - opening / choice / titlecard / closing은 직접 썼다.
+     - morning / noon / evening은 `tools/build-blocks.mjs`가 12명 데이터로 만든다.
+     - 루트 `index.html`에는 하루 막대(아침·낮·저녁)를 두었다.
+     - 모든 글은 Pretendard다. 글은 흐림이 걷히며 0.2초에 나타난 뒤 움직이지 않는다. 그림은 2%만 천천히 다가가고, 컷은 0.3초 겹쳐 바뀐다.
+  5. 검사와 수정
+     - `hyperframes check` 오류 0건.
+     - 이미지 패널 전체를 확대하던 방식이 겹침 경고를 내서, 안쪽 래퍼(`.kb`)만 확대하도록 바꿨다.
+     - 선택 장면 문구가 제목 안전 영역(아래 10%)을 넘어서, 갈래 그림을 600×800으로 줄이고 문구를 948px로 올렸다.
+     - 코피 그림(`ghana-noon-a`)이 「밭에서 만난 아마」 장면과 맞는지 대본·이미지 설계 문서로 확인했다.
+  6. `local-assets/video/trailer-v1.mp4`로 렌더링했다.
+     - 규격: 59.5초, 1920×1080, 30fps, H.264 yuv420p, 38.5MB, 무음.
+     - ffprobe로 규격을 확인하고, 8개 프레임을 뽑아 직접 봤다.
+     - 영상 컷 안의 움직임은 프레임 차이로 확인했다(아시프 37.6, 암나 25.1).
+- 콘티와 다르게 한 것 — 선택 장면의 갈래 제목 두 개를 빼고 한 줄만 남겼다. 시간대 빛 보정은 넣지 않았다. 하루 막대는 52초에 사라진다. 소리는 넣지 않았다(음원 미정, HeyGen 로그인 필요). 자세한 내용은 [video/trailer/REVIEW.md](video/trailer/REVIEW.md)에 있다.
+- 검증 한계 — 처음부터 끝까지 실시간으로 재생해 본 체감 속도는 아직 사용자 확인이 필요하다. 앱 코드 변경이 없어 앱 화면 전후 촬영은 비대상이다.
+- 대화 캡처 — `local-assets/conversations/2026-11-27-trailer-hyperframes-v1/full-screen-01.png`(2026-11-27 17:26, 4480×1080, 두 모니터)를 찍고, Paseo 모니터만 `paseo-monitor-01.png`(1920×1080)로 잘라 냈다. 직접 열어 보니 왼쪽 창(Antigravity·Gemini)이 콘티 MD 커밋·푸시를 끝내고, 오른쪽 창(Claude Code)이 HyperFrames 에셋을 만들고 렌더링을 확인하는 멀티 에이전트 협업 장면이 읽힌다. 로컬 경로가 보여 공개 선별본은 만들지 않았다.
+- 변경 파일 — `video/trailer/`(index.html, compositions/7개, tools/, assets/의 글꼴·그림·얼굴, REVIEW.md, .gitignore, HyperFrames 기본 파일), `video/TRAILER-PLAN.md`(8절 도구 변경 메모), `video/README.md`(목차·위치 표), `PROMPTS.md`

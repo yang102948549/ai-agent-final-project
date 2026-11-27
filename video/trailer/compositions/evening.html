@@ -1,0 +1,100 @@
+<template>
+  <style>
+    @font-face { font-family: "Pretendard"; src: url("assets/fonts/PretendardVariable.woff2") format("woff2"); font-weight: 100 900; }
+    #root { position: absolute; inset: 0; background: #f4f3ef; font-family: "Pretendard", sans-serif; overflow: hidden; }
+    .panel { position: absolute; left: 1110px; top: 0; width: 810px; height: 1080px; overflow: hidden; }
+    .kb { position: absolute; left: 0; top: 0; width: 810px; height: 1080px; transform-origin: 50% 40%; }
+    .media { position: absolute; left: 0; top: 0; width: 810px; height: 1080px; object-fit: cover; }
+    .text { position: absolute; left: 110px; top: 0; width: 900px; height: 1080px; display: flex; flex-direction: column; justify-content: center; }
+    .place { font-size: 34px; font-weight: 500; color: #5c5c5c; letter-spacing: -0.01em; line-height: 1.3; }
+    .name { font-size: 40px; font-weight: 600; color: #111111; letter-spacing: -0.01em; line-height: 1.3; margin-top: 6px; }
+    .title { font-size: 72px; font-weight: 600; color: #111111; letter-spacing: -0.03em; line-height: 1.22; margin-top: 44px; word-break: keep-all; }
+    .band { display: block; width: 72px; height: 5px; margin-top: 36px; transform-origin: 0 50%; }
+  </style>
+  <div id="root" data-composition-id="evening" data-width="1920" data-height="1080" data-duration="14">
+
+    <div id="evening-haiti-panel" class="panel" style="z-index:10">
+      <div id="evening-haiti-kb" class="kb" data-layout-allow-overflow>
+        <img id="evening-haiti-media" class="clip media" data-start="0" data-duration="3.8" data-track-index="0" src="assets/art/haiti-evening.jpg" alt="나데주" />
+      </div>
+    </div>
+    <div id="evening-haiti-text" class="clip text" data-start="0" data-duration="3.5" data-track-index="1" style="z-index:30">
+      <p id="evening-haiti-place" class="place">아이티 포르토프랭스</p>
+      <p id="evening-haiti-name" class="name">나데주, 15살</p>
+      <h2 id="evening-haiti-title" class="title">「두 개의 봉투」</h2>
+      <i id="evening-haiti-band" class="band" style="background:#a86a14"></i>
+    </div>
+
+    <div id="evening-sudan-panel" class="panel" style="z-index:11">
+      <div id="evening-sudan-kb" class="kb" data-layout-allow-overflow>
+        <video id="evening-sudan-media" class="clip media" data-start="3.5" data-duration="3.8" data-track-index="0" src="assets/clips/10-sudan-evening.mp4" muted playsinline></video>
+      </div>
+    </div>
+    <div id="evening-sudan-text" class="clip text" data-start="3.5" data-duration="3.5" data-track-index="1" style="z-index:31">
+      <p id="evening-sudan-place" class="place">수단에서 차드로</p>
+      <p id="evening-sudan-name" class="name">암나, 14살</p>
+      <h2 id="evening-sudan-title" class="title">「우물 줄 끝에서」</h2>
+      <i id="evening-sudan-band" class="band" style="background:#76589f"></i>
+    </div>
+
+    <div id="evening-rohingya-panel" class="panel" style="z-index:12">
+      <div id="evening-rohingya-kb" class="kb" data-layout-allow-overflow>
+        <img id="evening-rohingya-media" class="clip media" data-start="7" data-duration="3.8" data-track-index="0" src="assets/art/rohingya-evening.jpg" alt="누르" />
+      </div>
+    </div>
+    <div id="evening-rohingya-text" class="clip text" data-start="7" data-duration="3.5" data-track-index="1" style="z-index:32">
+      <p id="evening-rohingya-place" class="place">콕스바자르 난민캠프</p>
+      <p id="evening-rohingya-name" class="name">누르, 13살</p>
+      <h2 id="evening-rohingya-title" class="title">「오빠의 어깨」</h2>
+      <i id="evening-rohingya-band" class="band" style="background:#71519c"></i>
+    </div>
+
+    <div id="evening-congo-panel" class="panel" style="z-index:13">
+      <div id="evening-congo-kb" class="kb" data-layout-allow-overflow>
+        <video id="evening-congo-media" class="clip media" data-start="10.5" data-duration="3.5" data-track-index="0" src="assets/clips/12-congo-evening.mp4" muted playsinline></video>
+      </div>
+    </div>
+    <div id="evening-congo-text" class="clip text" data-start="10.5" data-duration="3.5" data-track-index="1" style="z-index:33">
+      <p id="evening-congo-place" class="place">콩고민주공화국 콜웨지</p>
+      <p id="evening-congo-name" class="name">그라스, 14살</p>
+      <h2 id="evening-congo-title" class="title">「할머니의 무덤」</h2>
+      <i id="evening-congo-band" class="band" style="background:#ad2843"></i>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+
+    tl.fromTo("#evening-haiti-panel", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.inOut" }, 0);
+    tl.fromTo("#evening-haiti-kb", { scale: 1 }, { scale: 1.02, duration: 3.8, ease: "none" }, 0);
+    tl.fromTo("#evening-haiti-place", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.5);
+    tl.fromTo("#evening-haiti-name", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.58);
+    tl.fromTo("#evening-haiti-title", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.7);
+    tl.fromTo("#evening-haiti-band", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "expo.out" }, 0.75);
+    tl.to(["#evening-haiti-place", "#evening-haiti-name", "#evening-haiti-title", "#evening-haiti-band"], { opacity: 0, duration: 0.2, ease: "power2.in" }, 3.25);
+
+    tl.fromTo("#evening-sudan-panel", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.inOut" }, 3.5);
+    tl.fromTo("#evening-sudan-kb", { scale: 1 }, { scale: 1.02, duration: 3.8, ease: "none" }, 3.5);
+    tl.fromTo("#evening-sudan-place", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 4);
+    tl.fromTo("#evening-sudan-name", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 4.08);
+    tl.fromTo("#evening-sudan-title", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 4.2);
+    tl.fromTo("#evening-sudan-band", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "expo.out" }, 4.25);
+    tl.to(["#evening-sudan-place", "#evening-sudan-name", "#evening-sudan-title", "#evening-sudan-band"], { opacity: 0, duration: 0.2, ease: "power2.in" }, 6.75);
+
+    tl.fromTo("#evening-rohingya-panel", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.inOut" }, 7);
+    tl.fromTo("#evening-rohingya-kb", { scale: 1 }, { scale: 1.02, duration: 3.8, ease: "none" }, 7);
+    tl.fromTo("#evening-rohingya-place", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 7.5);
+    tl.fromTo("#evening-rohingya-name", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 7.58);
+    tl.fromTo("#evening-rohingya-title", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 7.7);
+    tl.fromTo("#evening-rohingya-band", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "expo.out" }, 7.75);
+    tl.to(["#evening-rohingya-place", "#evening-rohingya-name", "#evening-rohingya-title", "#evening-rohingya-band"], { opacity: 0, duration: 0.2, ease: "power2.in" }, 10.25);
+
+    tl.fromTo("#evening-congo-panel", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.inOut" }, 10.5);
+    tl.fromTo("#evening-congo-kb", { scale: 1 }, { scale: 1.02, duration: 3.8, ease: "none" }, 10.5);
+    tl.fromTo("#evening-congo-place", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 11);
+    tl.fromTo("#evening-congo-name", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 11.08);
+    tl.fromTo("#evening-congo-title", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 11.2);
+    tl.fromTo("#evening-congo-band", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "expo.out" }, 11.25);
+    tl.to(["#evening-congo-place", "#evening-congo-name", "#evening-congo-title", "#evening-congo-band"], { opacity: 0, duration: 0.2, ease: "power2.in" }, 13.75);
+    window.__timelines["evening"] = tl;
+  </script>
+</template>

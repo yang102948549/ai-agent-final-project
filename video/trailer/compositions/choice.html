@@ -1,0 +1,52 @@
+<template>
+  <style>
+    @font-face { font-family: "Pretendard"; src: url("assets/fonts/PretendardVariable.woff2") format("woff2"); font-weight: 100 900; }
+    #root { position: absolute; inset: 0; background: #f4f3ef; font-family: "Pretendard", sans-serif; overflow: hidden; }
+    #choice-panel { position: absolute; left: 1110px; top: 0; width: 810px; height: 1080px; overflow: hidden; }
+    #choice-hold { position: absolute; left: 0; top: 0; width: 810px; height: 1080px; object-fit: cover; }
+    #choice-ask { position: absolute; left: 110px; top: 0; width: 960px; height: 1080px; display: flex; flex-direction: column; justify-content: center; }
+    #choice-q { font-size: 64px; font-weight: 600; color: #111111; letter-spacing: -0.03em; line-height: 1.3; word-break: keep-all; }
+    .option { font-size: 38px; font-weight: 500; color: #5c5c5c; letter-spacing: -0.02em; line-height: 1.3; padding-left: 28px; border-left: 4px solid #1f7f7c; }
+    #choice-a { margin-top: 64px; }
+    #choice-b { margin-top: 28px; }
+    #choice-split { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+    .branch { position: absolute; top: 120px; width: 600px; height: 800px; overflow: hidden; }
+    .branch img { position: absolute; left: 0; top: 0; width: 600px; height: 800px; object-fit: cover; }
+    #choice-branch-a { left: 340px; }
+    #choice-branch-b { left: 980px; }
+    #choice-result { position: absolute; left: 340px; top: 948px; width: 1240px; font-size: 40px; font-weight: 600; color: #111111; letter-spacing: -0.02em; line-height: 1.2; }
+  </style>
+  <div id="root" data-composition-id="choice" data-width="1920" data-height="1080" data-duration="6">
+    <div id="choice-panel">
+      <img id="choice-hold" class="clip" data-start="0" data-duration="3.3" data-track-index="0" src="assets/art/tuvalu-hold.jpg" alt="시오네" />
+    </div>
+    <div id="choice-ask" class="clip" data-start="0" data-duration="3.3" data-track-index="1">
+      <h2 id="choice-q">당신이라면 어떤 선택을 하시겠습니까?</h2>
+      <p id="choice-a" class="option">40분을 걸어 시험을 보러 간다</p>
+      <p id="choice-b" class="option">집에 남아 엄마와 짐을 옮긴다</p>
+    </div>
+    <div id="choice-split">
+      <div id="choice-branch-a" class="branch">
+        <img id="choice-img-a" class="clip" data-start="3.1" data-duration="2.9" data-track-index="0" src="assets/art/tuvalu-noon-a.jpg" alt="낮 A" />
+      </div>
+      <div id="choice-branch-b" class="branch">
+        <img id="choice-img-b" class="clip" data-start="3.1" data-duration="2.9" data-track-index="0" src="assets/art/tuvalu-noon-b.jpg" alt="낮 B" />
+      </div>
+    </div>
+    <p id="choice-result" class="clip" data-start="3.1" data-duration="2.9" data-track-index="1">선택에 따라 하루가 달라집니다.</p>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#choice-panel", { opacity: 1 }, { opacity: 0.28, duration: 0.6, ease: "power2.inOut" }, 0);
+    tl.fromTo("#choice-q", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.05);
+    tl.fromTo("#choice-a", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.4);
+    tl.fromTo("#choice-b", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.8);
+    tl.to(["#choice-a", "#choice-b"], { color: "#111111", duration: 0.25, ease: "power2.out" }, 2.6);
+    tl.to(["#choice-q", "#choice-a", "#choice-b", "#choice-panel"], { opacity: 0, duration: 0.2, ease: "power2.in" }, 3.0);
+    tl.fromTo("#choice-branch-a", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.5, ease: "expo.out" }, 3.15);
+    tl.fromTo("#choice-branch-b", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.5, ease: "expo.out" }, 3.15);
+    tl.fromTo("#choice-result", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 3.3);
+    tl.to(["#choice-branch-a", "#choice-branch-b", "#choice-result"], { opacity: 0, duration: 0.25, ease: "power2.in" }, 5.72);
+    window.__timelines["choice"] = tl;
+  </script>
+</template>

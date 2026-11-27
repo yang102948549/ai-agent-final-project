@@ -222,6 +222,8 @@
 
 ## 8. Remotion 코드 구조 (`video/`)
 
+> **2026-11-27 제작 도구 변경:** 초안 v1은 Remotion 대신 **HyperFrames**로 만들었다. 프로젝트는 [`video/trailer/`](trailer/), 검토 기록은 [`trailer/REVIEW.md`](trailer/REVIEW.md)에 있다. 글꼴은 사용자 지시에 따라 Pretendard 하나로 통일했다. 아래 구조는 처음 계획한 Remotion 안이다.
+
 ```text
 video/
 ├── TRAILER-PLAN.md

@@ -1,0 +1,24 @@
+<template>
+  <style>
+    @font-face { font-family: "Pretendard"; src: url("assets/fonts/PretendardVariable.woff2") format("woff2"); font-weight: 100 900; }
+    #root { position: absolute; inset: 0; background: #f4f3ef; font-family: "Pretendard", sans-serif; overflow: hidden; }
+    #opening-dark { position: absolute; inset: 0; background: #111111; }
+    #opening-copy { position: absolute; left: 110px; top: 0; width: 1700px; height: 1080px; display: flex; flex-direction: column; justify-content: center; }
+    .line { font-size: 64px; font-weight: 500; color: #f4f3ef; letter-spacing: -0.03em; line-height: 1.4; }
+  </style>
+  <div id="root" data-composition-id="opening" data-width="1920" data-height="1080" data-duration="4">
+    <div id="opening-dark"></div>
+    <div id="opening-copy" class="clip" data-start="0" data-duration="4" data-track-index="1">
+      <p id="opening-l1" class="line">오늘,</p>
+      <p id="opening-l2" class="line">나와 다른 하루를 사는 사람들이 있습니다.</p>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#opening-l1", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.33);
+    tl.fromTo("#opening-l2", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.83);
+    tl.to(["#opening-l1", "#opening-l2"], { opacity: 0, duration: 0.2, ease: "power2.in" }, 3.5);
+    tl.fromTo("#opening-dark", { opacity: 1 }, { opacity: 0, duration: 0.3, ease: "power2.inOut" }, 3.68);
+    window.__timelines["opening"] = tl;
+  </script>
+</template>

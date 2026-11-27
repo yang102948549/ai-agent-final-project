@@ -1,0 +1,5 @@
+# 원본에서 다시 만들 수 있는 무거운 클립과 작업 산출물은 Git에서 뺀다 (tools/prepare-assets.sh로 재생성)
+assets/clips/
+.hyperframes/
+renders/
+node_modules/

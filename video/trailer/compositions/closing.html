@@ -1,0 +1,23 @@
+<template>
+  <style>
+    @font-face { font-family: "Pretendard"; src: url("assets/fonts/PretendardVariable.woff2") format("woff2"); font-weight: 100 900; }
+    #root { position: absolute; inset: 0; background: transparent; font-family: "Pretendard", sans-serif; overflow: hidden; }
+    #closing-dark { position: absolute; inset: 0; background: #111111; }
+    #closing-copy { position: absolute; left: 110px; top: 0; width: 1700px; height: 1080px; display: flex; flex-direction: column; justify-content: center; }
+    .line { font-size: 64px; font-weight: 500; color: #f4f3ef; letter-spacing: -0.03em; line-height: 1.4; }
+  </style>
+  <div id="root" data-composition-id="closing" data-width="1920" data-height="1080" data-duration="3.5">
+    <div id="closing-dark"></div>
+    <div id="closing-copy" class="clip" data-start="0" data-duration="3.5" data-track-index="1">
+      <p id="closing-l1" class="line">내일,</p>
+      <p id="closing-l2" class="line">우리들의 하루는 어떻게 될까요?</p>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#closing-dark", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 0);
+    tl.fromTo("#closing-l1", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.5);
+    tl.fromTo("#closing-l2", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.8);
+    window.__timelines["closing"] = tl;
+  </script>
+</template>
