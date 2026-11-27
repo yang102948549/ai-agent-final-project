@@ -1319,3 +1319,13 @@
 - 검증 — 문서 전용 수정으로 앱 화면 전후 촬영 비대상.
 - 대화 캡처 — 이 세션은 격리 데스크톱(`exebox-*`) 환경이므로 Paseo 창 직접 촬영은 불가하며, 위 실제 요청 발췌로 기록하고 캡처 대기 상태를 유지한다.
 - 변경 파일 — `video/PROCESS-PLAN.md`, `PROMPTS.md`.
+
+## 2026-11-27-kofi-clip
+
+- 실제 요청 — “코피 클립을 제작해줘 그럼”
+- 기준 이미지 — `local-assets/photoreal-characters/diversity-20261126/ghana.png`를 직접 열어 확인했다. 카카오 나무 앞에서 황토색 셔츠를 입고 검은 가방끈을 잡으며 공책과 연필을 든 코피다. 이미지의 얼굴·옷·소품을 유지한다.
+- 제작 명세 — 기존 클립과 맞춰 세로 9:16, 8초, 무음. 코피가 가방끈을 가볍게 잡고 나무 사이를 잠시 바라본 뒤 공책으로 시선을 옮긴다. 대사·입 모양 연기·위험한 노동은 넣지 않는다. 트레일러에서 3:4로 잘라도 얼굴과 공책이 남도록 구성한다.
+- 생성 프롬프트 — Use the supplied character image as the identity and first-frame reference. Preserve this exact Ghanaian schoolboy, face, short hair, ochre shirt, black backpack, notebook and pencil, and the cocoa trees. A single continuous 8-second photorealistic shot. He gently holds his backpack strap, his initial smile softly settles into a thoughtful closed-mouth expression, he briefly looks toward the cocoa grove, then lowers his gaze to his notebook. Subtle natural breathing and leaves moving in a light breeze. Very slow camera push-in, no cuts. Keep face and notebook within the central 3:4 safe area of a vertical 9:16 frame. No speech, no lip-sync, no audio, no added text, no new people, no tools or dangerous labor. Preserve natural anatomy and the original clothing and props.
+- 실행 결과 — 기존 Google Flow 브라우저 접근은 Computer Use native pipe 연결 실패로 진행 불가. 대안으로 연결된 Weave에서 Veo 3.1 Fast를 조회했지만 Figma–Weave 계정 미연결 응답을 받았다. 생성 요청은 제출되지 않았으며 새 MP4는 없다. 완료로 처리하지 않는다.
+- 남은 작업 — Flow 브라우저 제어 연결 복구 또는 영상 생성 서비스 연결 후 생성·다운로드, 기존 클립과 재생 비교, 얼굴·손·공책의 일관성·무음·해상도 검수. 예정 저장 경로는 `local-assets/video/clips/07-ghana.mp4`이며 아직 존재하지 않는다.
+- 검증·기록 — 참조 이미지 직접 확인. 앱 변경이 없어 앱 전후 촬영 비대상. 대화 캡처는 이번 실행에서 확보하지 못해 대기로 남긴다. 변경 파일은 PROMPTS.md뿐이며 콘티와 체크리스트에 제작 완료를 기재하지 않는다.
