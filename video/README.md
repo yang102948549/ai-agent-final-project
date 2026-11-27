@@ -18,7 +18,7 @@
 ```text
 video/
 ├── README.md                 # 폴더 구성, 미리보기·렌더링 명령 안내
-├── TRAILER-PLAN.md           # 트레일러 영상(30~60초) 제작 PRD
+├── TRAILER-PLAN.md           # 트레일러 영상(59초) 제작 PRD — 12명의 하루
 ├── PROCESS-PLAN.md           # 과정 소개 영상(2~3분) 초안 틀 (기획·스토리보드)
 ├── package.json              # Remotion 의존성 및 render:trailer / render:process 스크립트
 ├── package-lock.json         # 의존성 잠금 파일
@@ -32,9 +32,8 @@ video/
 │   ├── trailer/              # 트레일러 씬 컴포넌트와 대본·데이터
 │   └── process/              # 과정 소개 영상 씬 컴포넌트와 전/후 비교·프롬프트 데이터
 └── public/                   # Remotion 렌더링에 직접 쓰는 선별된 경량 정적 에셋
-    ├── screenshots/          # 앱 화면 선별 PNG (홈, 분기 장면, 돌아보기, 결과물, 갤러리 등)
+    ├── screenshots/          # 과정 소개 영상용 앱 화면 선별 PNG
     ├── art/                  # 실사 캐릭터·장면 WebP (필요한 대표 컷만 복사)
-    ├── qr/                   # 배포 주소(onischool.net/anotherday/) QR 이미지
     └── audio/                # 라이선스 확인된 BGM·효과음(사용 시 출처 기록)
 ```
 
