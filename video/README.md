@@ -44,3 +44,31 @@ video/
 - `local-assets/screenshots/`, `local-assets/conversations/` — 고해상도 원본 캡처 전체 보관소
 
 완성 후 두 편의 재생·다운로드 링크와 패들렛 제출 기록을 루트 [README.md](../README.md)에도 남긴다.
+
+## 영상 제작 작업 기록
+
+영상 제작도 앱 개발과 같은 방식으로 기록한다. 작업마다 실제 요청, 바꾼 것, 이유, 검증 결과를 루트 [PROMPTS.md](../PROMPTS.md) 끝에 작업 ID 제목으로 쌓는다. 영상 관련 기록만 모아 보려면 아래 목차를 따라간다. 새 영상 작업을 기록하면 이 표에도 한 줄을 더한다.
+
+| 날짜 | 작업 ID | 한 일 |
+|---|---|---|
+| 2026-11-26 | [padlet-rubric-and-trailer-prd](../PROMPTS.md#2026-11-26-padlet-rubric-and-trailer-prd) | 채점 기준 확인, 첫 트레일러 PRD 작성 |
+| 2026-11-26 | [process-video-plan](../PROMPTS.md#2026-11-26-process-video-plan) | 과정 소개 영상 초안 틀([PROCESS-PLAN.md](PROCESS-PLAN.md)) |
+| 2026-11-27 | [trailer-prd-day](../PROMPTS.md#2026-11-27-trailer-prd-day) | 트레일러를 앱 화면 소개에서 '12명의 하루를 대신 사는' 구성으로 전환 |
+| 2026-11-27 | [trailer-video-clips-plan](../PROMPTS.md#2026-11-27-trailer-video-clips-plan) | 인물 6명 5초 영상 클립 계획과 프롬프트 |
+| 2026-11-27 | [trailer-conti-question](../PROMPTS.md#2026-11-27-trailer-conti-question) | 질문으로 열고 닫는 콘티 |
+| 2026-11-27 | [trailer-open-close-line](../PROMPTS.md#2026-11-27-trailer-open-close-line) | 여는 문장 "오늘, 나와 다른 하루를 사는 사람들이 있습니다." / 닫는 질문 "내일, 우리들의 하루는 어떻게 될까요?" |
+| 2026-11-27 | [trailer-mid-question](../PROMPTS.md#2026-11-27-trailer-mid-question) | 가운데 질문 "당신이라면 어떤 선택을 하시겠습니까?" |
+| 2026-11-27 | [trailer-clips-gen](../PROMPTS.md#2026-11-27-trailer-clips-gen) | 인물 영상 클립 1차 생성 |
+| 2026-11-27 | [trailer-clips-veo-flow](../PROMPTS.md#2026-11-27-trailer-clips-veo-flow) | 버벅이는 클립을 Google Flow(Veo 3.1 Fast)로 다시 생성 |
+| 2026-11-27 | [trailer-worklog](../PROMPTS.md#2026-11-27-trailer-worklog) | "선택에 따라 하루가 달라집니다." 문구, 이 목차 신설 |
+
+### 기록과 자료가 놓이는 곳
+
+| 무엇 | 어디 | Git |
+|---|---|---|
+| 기획(PRD·콘티) | [TRAILER-PLAN.md](TRAILER-PLAN.md), [PROCESS-PLAN.md](PROCESS-PLAN.md) | 커밋 |
+| 작업 기록(요청·결정·검증) | [PROMPTS.md](../PROMPTS.md) — 위 목차 | 커밋 |
+| 결정 장면 대화 캡처(공개 선별본) | `screenshots/conversations/<작업ID>/`, 설명은 [conversations/README.md](../conversations/README.md) | 커밋 |
+| 대화 캡처 원본 | `local-assets/conversations/<작업ID>/` | 제외 |
+| 인물 영상 클립 원본 | `local-assets/video/clips/` | 제외 |
+| 렌더링한 MP4 | `local-assets/video/` | 제외 |
