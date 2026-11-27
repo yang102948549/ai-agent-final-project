@@ -69,6 +69,7 @@ video/
 | 2026-11-27 | [trailer-conti-v3](../PROMPTS.md#2026-11-27-trailer-conti-v3) | v2를 보고 콘티 v3: 2분 이내, 앱 녹화 2배 해상도와 확대, 상황 → A/B → 실제 선택, 세 가지 글 모두 |
 | 2026-11-27 | [trailer-conti-v3-1](../PROMPTS.md#2026-11-27-trailer-conti-v3-1) | 12명을 사진 썸네일(이름·나라·상황)로, 닫는 질문은 웃는 시오네와 함께, 끝은 12명 + 타이틀 + 페이드아웃 |
 | 2026-11-27 | [video-checklist](../PROMPTS.md#2026-11-27-video-checklist) | 영상 수정 체크리스트 [CHECKLIST.md](CHECKLIST.md) 신설, 트레일러 수정 22건 정리 |
+| 2026-11-27 | [trailer-conti-v4](../PROMPTS.md#2026-11-27-trailer-conti-v4) | 콘티 v4: 81.8초, 돌아보기는 아시프로, 다양한 사람들 장면·AI 조사 장면 추가, 타이틀 위 "도덕 · 인권 수업용" |
 
 ### 기록과 자료가 놓이는 곳
 
