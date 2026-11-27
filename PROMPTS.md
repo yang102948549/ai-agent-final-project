@@ -1461,6 +1461,17 @@
 - 검증 — 문서 전용 수정으로 앱 화면 전후 촬영 비대상. `git diff --check` 통과, `video/CHECKLIST.md` 표 구문 및 작업 ID 링크 대조 완료. 대화 캡처는 격리 환경이어서 대기 상태를 유지한다.
 - 남은 항목 — `record-app.mjs` 브라우저 자체 확대 녹화 구현, `build-scenes.mjs` S11 전체 화면·S13 히어로 크기 반영, 스냅숏 확인 후 v3.1 재렌더링.
 - 변경 파일 — `video/TRAILER-PLAN-KOFI.md`, `video/TRAILER-PLAN.md`, `video/CHECKLIST.md`, `video/README.md`, `PROMPTS.md`.
+- 후속 요청 — “수정된 md를 근거로 트레일러 영상 만들어줘”
+- 구현 및 렌더링 (v3.1)
+  - **`video/trailer/tools/record-app.mjs`**: `1440px` 데스크톱 레이아웃을 고정한 채 브라우저 네이티브 `CSS zoom(1.5~1.55)` + `scrollTo`로 확대하며 `2880×1800` PNG 무손실 → CRF 10 MP4로 `REC-K1~K4`를 재녹화했다(`REC-K1` 12.8s, `REC-K2` 12.2s, `REC-K3` 10.4s, `REC-K4` 11.6s — 1차 녹화에서 `#ask-panel` 스크롤 위치를 확인해 바로 보정 재녹화). `REC-K5~K7`은 이미 2880×1800 전체 화면이므로 재사용.
+  - **`video/trailer/tools/build-scenes.mjs` & `compositions/*`**: `app-scene`, `app-choice`, `app-reflect`, `app-ask`에서 CSS `transform: scale()`을 제거해 `scale: 1` 1:1 픽셀 매핑으로 변경하고, `app-docs`(S11)도 `scale: 1` 전체 화면(`1392×870`)으로 왼쪽 인물 이름·초상과 오른쪽 문서를 모두 노출했다. `finale`(S13)는 앱 히어로 섹션 원래 3:4 큰 사진 카드(`330×440`, 양끝 7% 투명 마스크, 하단 캡션)로 페이드인 → 타이틀 → 1.1초 검은 화면 페이드아웃을 구현했다. 라마(`gaza`)·아시프(`pakistan`) 썸네일(`assets/cast/`)도 최신 미디엄 샷으로 동기화.
+  - **렌더링**: `--fps 30 --quality delivery --video-bitrate 16M --max-bitrate 24M --video-frame-format png --resolution 1080p`로 `local-assets/video/trailer-v3-kofi.mp4` 재생성.
+- 검증
+  - `hyperframes check --json`: 전 항목(`lint` · `runtime` · `layout` · `contrast` · `craft` · `audio`) 오류 0건, `dead_stretch` 경고 0건 통과.
+  - `ffprobe` 실측: `1920×1080`, `30fps`, `h264`, `yuv420p`, **`82.70s`** (2,481f), **`124.1 MB`** (`130,103,226 B`), 평균 비트레이트 **`12.59 Mbps`** (`12,585 kbps`).
+  - 육안 검수: 재녹화 `REC-K1~K4` 4편, v3.1 스냅숏 13장, 최종 MP4 추출 100% 프레임 5장(`20s` AI 대화 확대, `53.5s` AI 조사 확대, `63s` 신문 기사 전체 화면, `80.5s` 히어로 타이틀, `82.65s` 검은 화면)을 직접 열어 확대 구간 글자 번짐 없음·S11 왼쪽 인물 이름 노출·S13 히어로 크기 페이드아웃을 확인 완료. 앱 소스 변경이 없는 영상 작업이므로 앱 전후 촬영 비대상, 대화 캡처는 격리 환경으로 대기 유지.
+- 남은 항목 — B안 5절 오디오(Gemini TTS 나레이션 대본 확정 + HeyGen 배경음악 적용), 패들렛 업로드 용량 확인(`124.1 MB`).
+- 후속 변경 파일 — `video/trailer/tools/record-app.mjs`, `video/trailer/tools/build-scenes.mjs`, `video/trailer/compositions/*`, `video/trailer/assets/cast/gaza.jpg`, `video/trailer/assets/cast/pakistan.jpg`, `video/trailer/REVIEW.md`, `video/CHECKLIST.md`, `video/README.md`, `PROMPTS.md` (완성 MP4는 Git 제외 `local-assets/video/trailer-v3-kofi.mp4`).
 
 
 ## 2026-11-28-portrait-framing-balance

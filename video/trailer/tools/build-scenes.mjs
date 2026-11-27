@@ -163,27 +163,21 @@ const CARD_CSS = `    .wrap { position: absolute; left: 110px; top: 0; width: 17
   writeFileSync(join(DIR, "options.html"), file("options", dur, CARD_CSS, body, tw));
 }
 
-// ── 앱 장면 공통 (S4, S7, S8, S9, S11): 위 문장 + 아래 1392×870 앱 틀 ──
+// ── 앱 장면 공통 (S4, S7, S8, S9, S11): 위 문장 + 아래 1392×870 앱 틀 (scale: 1 1:1 매핑) ──
 const APP_CSS = `    .frame { position: absolute; left: 264px; top: 170px; width: 1392px; height: 870px; overflow: hidden; background: #ffffff; outline: 1px solid #dcdad3; box-shadow: 0 12px 32px rgba(17, 17, 17, 0.08); }
     .layer { position: absolute; inset: 0; }
-    .zoom { position: absolute; inset: 0; transform-origin: 50% 50%; }
     .rec { position: absolute; left: 0; top: 0; width: 1392px; height: 870px; object-fit: cover; }
     .cap { position: absolute; left: 264px; top: 82px; width: 1392px; font-size: 44px; font-weight: 600; color: #111111; letter-spacing: -0.03em; line-height: 1.2; white-space: nowrap; }`;
 
-// zooms: [{ start, dur, scale, x, y }] (from previous state; initial state can be set via init)
+// REC-K1~K4는 record-app.mjs에서 HTML/브라우저 자체를 확대하며 2880×1800 PNG로 녹화했으므로
+// HyperFrames에서는 CSS transform scale 없이 1:1 픽셀 매핑으로 재생해 글자 선명도를 100% 유지한다.
 const APPS = [
   // S4. 장면과 대화 (14.8–21.8초, 7.0초)
   {
     id: "app-scene",
     dur: 7.0,
     frameIn: 0.3,
-    recs: [{
-      src: "REC-K1", mediaStart: 1.5, start: 0, dur: 7.0,
-      zooms: [
-        { at: 0.6, dur: 0.8, scale: 1.55, x: -175, y: 155 }, // 장면 제목·본문 확대
-        { at: 3.5, dur: 0.8, scale: 1.55, x: -175, y: -40 }, // 학생 말·아빠 AI 대답 확대
-      ],
-    }],
+    recs: [{ src: "REC-K1", mediaStart: 2.5, start: 0, dur: 7.0 }],
     caps: [{ text: "그 사람이 되어 장면을 읽고, 주변 사람과 AI로 대화합니다.", in: 0.4, out: 6.75 }],
   },
   // S7. 웹앱에서 고르기 (36.0–43.0초, 7.0초)
@@ -191,13 +185,7 @@ const APPS = [
     id: "app-choice",
     dur: 7.0,
     frameIn: 0.3,
-    recs: [{
-      src: "REC-K2", mediaStart: 0.4, start: 0, dur: 7.0,
-      zooms: [
-        { at: 0.5, dur: 0.8, scale: 1.65, x: -195, y: -235 }, // A/B 선택 버튼 확대 → B 클릭
-        { at: 3.6, dur: 0.8, scale: 1.55, x: -175, y: 20 },   // 결과 화면(잘 본 시험과 다친 아빠) 확대
-      ],
-    }],
+    recs: [{ src: "REC-K2", mediaStart: 2.0, start: 0, dur: 7.0 }],
     caps: [
       { text: "웹앱에서는 이렇게 고릅니다.", in: 0.3, out: 3.35 },
       { text: "선택에 따라 하루가 달라집니다.", in: 3.6, out: 6.75 },
@@ -208,12 +196,7 @@ const APPS = [
     id: "app-reflect",
     dur: 6.0,
     frameIn: 0.3,
-    recs: [{
-      src: "REC-K3", mediaStart: 1.0, start: 0, dur: 6.0,
-      zooms: [
-        { at: 0.5, dur: 0.8, scale: 1.55, x: -175, y: -70 }, // 돌아보기 질문·입력 칸 확대
-      ],
-    }],
+    recs: [{ src: "REC-K3", mediaStart: 3.5, start: 0, dur: 6.0 }],
     caps: [{ text: "무엇을 골라도 바뀌지 않은 어려움을 찾습니다.", in: 0.3, out: 5.75 }],
   },
   // S9. 질문과 AI 조사 (49.0–55.5초, 6.5초)
@@ -221,23 +204,18 @@ const APPS = [
     id: "app-ask",
     dur: 6.5,
     frameIn: 0.3,
-    recs: [{
-      src: "REC-K4", mediaStart: 1.2, start: 0, dur: 6.5,
-      zooms: [
-        { at: 0.5, dur: 0.8, scale: 1.55, x: -175, y: 40 }, // 질문·AI 조사 답·원문 자료 확대
-      ],
-    }],
+    recs: [{ src: "REC-K4", mediaStart: 3.0, start: 0, dur: 6.5 }],
     caps: [{ text: "궁금한 것을 물으면, AI가 자료를 찾아 답합니다.", in: 0.3, out: 6.25 }],
   },
-  // S11. 세 가지 글 (61.5–71.7초, 10.2초 = 각 3.4초)
+  // S11. 세 가지 글 (61.5–71.7초, 10.2초 = 각 3.4초, 확대 없는 전체 화면)
   {
     id: "app-docs",
     dur: 10.2,
     frameIn: 0.3,
     recs: [
-      { src: "REC-K5", mediaStart: 0.4, start: 0, dur: 3.7, init: { scale: 1.26, x: -125, y: 112 } },
-      { src: "REC-K6", mediaStart: 0.4, start: 3.4, dur: 3.7, init: { scale: 1.26, x: -125, y: 112 } },
-      { src: "REC-K7", mediaStart: 0.4, start: 6.8, dur: 3.4, init: { scale: 1.26, x: -125, y: 100 } },
+      { src: "REC-K5", mediaStart: 0.4, start: 0, dur: 3.7 },
+      { src: "REC-K6", mediaStart: 0.4, start: 3.4, dur: 3.7 },
+      { src: "REC-K7", mediaStart: 0.4, start: 6.8, dur: 3.4 },
     ],
     caps: [
       { text: "신문 기사로 알리고,", in: 0.3, out: 3.2 },
@@ -252,19 +230,9 @@ for (const a of APPS) {
   body.push(`    <div id="${a.id}-frame" class="frame">`);
   a.recs.forEach((rc, i) => {
     body.push(`      <div id="${a.id}-w${i}" class="layer" style="z-index:${i + 1}">
-        <div id="${a.id}-z${i}" class="zoom" data-layout-allow-overflow>
-          <video id="${a.id}-rec${i}" class="clip rec" data-start="${rc.start}" data-duration="${rc.dur}" data-media-start="${rc.mediaStart}" data-track-index="0" src="assets/app/${rc.src}.mp4" muted playsinline></video>
-        </div>
+        <video id="${a.id}-rec${i}" class="clip rec" data-start="${rc.start}" data-duration="${rc.dur}" data-media-start="${rc.mediaStart}" data-track-index="0" src="assets/app/${rc.src}.mp4" muted playsinline></video>
       </div>`);
     if (i > 0) tw.push(`tl.fromTo("#${a.id}-w${i}", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.inOut" }, ${rc.start});`);
-    if (rc.init) {
-      tw.push(`tl.set("#${a.id}-z${i}", { scale: ${rc.init.scale}, x: ${rc.init.x}, y: ${rc.init.y} }, ${rc.start});`);
-    }
-    if (rc.zooms) {
-      for (const z of rc.zooms) {
-        tw.push(`tl.to("#${a.id}-z${i}", { scale: ${z.scale}, x: ${z.x}, y: ${z.y}, duration: ${z.dur}, ease: "power2.inOut" }, ${z.at});`);
-      }
-    }
   });
   body.push(`    </div>`);
   a.caps.forEach((c, i) => {
@@ -345,33 +313,42 @@ ${cols}
   writeFileSync(join(DIR, "sione-close.html"), file("sione-close", dur, PERSON_CSS, body, tw));
 }
 
-// ── S13. 12명과 타이틀 (77.2–82.7초, 5.5초) → 1.1초 검은 화면 페이드아웃 ──
+// ── S13. 앱 히어로 섹션 원래 이미지 크기 + 타이틀 (77.2–82.7초, 5.5초) → 페이드인 후 1.1초 검은 화면 페이드아웃 ──
 {
   const dur = 5.5;
-  const CSS = `    .grid { position: absolute; left: 312px; top: 76px; width: 1296px; display: grid; grid-template-columns: repeat(6, 196px); column-gap: 24px; row-gap: 20px; }
-    .tile { width: 196px; }
-    .thumb { width: 196px; height: 224px; object-fit: cover; object-position: 50% 15%; display: block; background: #e6e4de; }
-    .bar { height: 4px; width: 100%; }
-    .title-box { position: absolute; left: 110px; top: 616px; width: 1700px; text-align: center; }
+  // 앱 히어로 앨범 첫 순서(app/design/hero-album.md): 루파·코피·시오네·라마·…
+  const HERO_IDS = ["bangladesh", "ghana", "tuvalu", "gaza", "sudan", "congo", "afghanistan", "pakistan", "somalia", "haiti", "rohingya", "qatar"];
+  const HERO = HERO_IDS.map((id) => CAST.find((c) => c.id === id));
+  const CSS = `    .hero-window { position: absolute; left: 0; top: 84px; width: 1920px; height: 440px; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
+    .hero-track { display: flex; gap: 16px; padding-left: 60px; width: max-content; height: 440px; }
+    .hero-photo { position: relative; flex: none; width: 330px; height: 440px; overflow: hidden; background: #e6e4de; }
+    .hero-photo img { width: 330px; height: 440px; object-fit: cover; object-position: 50% 15%; display: block; }
+    .hero-cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 44px 16px 14px; background: linear-gradient(transparent, rgba(0, 0, 0, 0.65)); color: #ffffff; display: flex; flex-direction: column; gap: 2px; }
+    .hero-cap strong { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.25; }
+    .hero-cap span { font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.88); }
+    .title-box { position: absolute; left: 110px; top: 604px; width: 1700px; text-align: center; }
     .sub { font-size: 36px; font-weight: 500; color: #5c5c5c; letter-spacing: -0.01em; line-height: 1.3; }
     .main { margin-top: 16px; font-size: 112px; font-weight: 700; color: #111111; letter-spacing: -0.04em; line-height: 1.1; }
     .fadeout { position: absolute; inset: 0; background: #000000; opacity: 0; pointer-events: none; z-index: 90; }`;
-  const tiles = CAST.map((c, i) => `      <div id="fin-t${i}" class="tile">
-        <img class="thumb" src="assets/cast/${c.id}.jpg" alt="${c.name}" />
-        <div class="bar" style="background:${c.color}"></div>
-      </div>`).join("\n");
-  const body = `    <div id="fin-grid" class="clip grid" data-start="0" data-duration="${dur}" data-track-index="0">
-${tiles}
+  const photos = HERO.map((c) => `        <figure class="hero-photo">
+          <img src="assets/cast/${c.id}.jpg" alt="${c.name}" />
+          <figcaption class="hero-cap"><strong>${c.name}</strong><span>${c.country}</span></figcaption>
+        </figure>`).join("\n");
+  const body = `    <div id="fin-hero" class="clip hero-window" data-hold data-start="0" data-duration="${dur}" data-track-index="0">
+      <div id="fin-track" class="hero-track" data-layout-allow-overflow>
+${photos}
+      </div>
     </div>
-    <div id="fin-title" class="clip title-box" data-start="0" data-duration="${dur}" data-track-index="1">
+    <div id="fin-title" class="clip title-box" data-hold data-start="0" data-duration="${dur}" data-track-index="1">
       <p id="fin-sub" class="sub">도덕 · 인권 수업용</p>
       <h1 id="fin-main" class="main">다른 곳의 하루</h1>
     </div>
     <div id="fin-black" class="fadeout"></div>`;
   const tw = [
-    ...CAST.map((_, i) => `tl.fromTo("#fin-t${i}", { opacity: 0 }, { opacity: 1, duration: 0.24, ease: "power2.out" }, ${r(i * 0.08)});`),
-    IN("#fin-sub", 1.4),
-    IN("#fin-main", 1.4),
+    `tl.fromTo("#fin-hero", { opacity: 0 }, { opacity: 1, duration: 0.7, ease: "power2.out" }, 0);`,
+    `tl.fromTo("#fin-track", { x: 0 }, { x: -140, duration: ${dur}, ease: "none" }, 0);`,
+    IN("#fin-sub", 1.0),
+    IN("#fin-main", 1.0),
     `tl.fromTo("#fin-black", { opacity: 0 }, { opacity: 1, duration: 1.1, ease: "power2.inOut" }, 4.4);`,
   ];
   writeFileSync(join(DIR, "finale.html"), file("finale", dur, CSS, body, tw));

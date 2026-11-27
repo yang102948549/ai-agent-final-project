@@ -1,8 +1,9 @@
-// 트레일러 B안(코피) 앱 화면 고화질 녹화: REC-K1~K4, REC-K5~K7 (video/TRAILER-PLAN-KOFI.md · TRAILER-PLAN.md 3.1절/7.2절).
-// 배포 사이트(https://onischool.net/anotherday/)를 실제로 조작하며 CDP screencast(PNG 2880×1800, 2x DPR)를 받아
-// 30fps H.264 High CRF 10 MP4로 만든다. AI 응답 대기 시간은 녹화를 일시정지해 빈 시간을 뺀다.
+// 트레일러 B안(코피) v3.1 앱 화면 고화질 녹화: REC-K1~K4(브라우저 자체 확대 녹화), REC-K5~K7(전체 화면)
+// video/TRAILER-PLAN-KOFI.md · TRAILER-PLAN.md 3.1절/7.2절 규격.
+// 배포 사이트(https://onischool.net/anotherday/)를 1440×900 × 2x DPR (2880×1800 PNG 무손실)로 녹화한다.
+// 확대 구간(REC-K1~K4)은 1440px 데스크톱 레이아웃을 고정한 채 브라우저 CSS zoom + scrollTo로
+// 벡터 폰트를 확대 크기 그대로 네이티브 재래스터화하며 녹화해 HyperFrames에서는 scale: 1로 1:1 출력한다.
 // 사용(저장소 루트): node video/trailer/tools/record-app.mjs [REC-K1 REC-K2 ...]
-// 출력: local-assets/video/app-recordings/REC-K*.mp4 (원본) → video/trailer/assets/app/REC-K*.mp4 (복사본)
 import { createRequire } from 'node:module';
 import { mkdirSync, writeFileSync, rmSync, copyFileSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
@@ -25,14 +26,21 @@ function findFfmpeg() {
 }
 const FFMPEG = findFfmpeg();
 
-const CURSOR = `
+const INIT_SCRIPT = `
 addEventListener('DOMContentLoaded', () => {
+  const st = document.createElement('style');
+  st.textContent = 'html, body { scrollbar-width: none !important; } html::-webkit-scrollbar, body::-webkit-scrollbar { display: none !important; }';
+  document.head.appendChild(st);
   const c = document.createElement('div');
   c.id = '__rec_cursor';
   c.style.cssText = 'position:fixed;left:0;top:0;width:28px;height:28px;z-index:2147483647;pointer-events:none;transform:translate(-200px,-200px)';
   c.innerHTML = '<svg viewBox="0 0 26 26" width="28" height="28" style="transition:transform .12s;transform-origin:4px 3px"><path d="M4 3 L4 21 L9 16.5 L12.5 24 L15.5 22.6 L12 15.3 L19 15.3 Z" fill="#111" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>';
   document.body.appendChild(c);
-  addEventListener('mousemove', e => { c.style.transform = 'translate(' + e.clientX + 'px,' + e.clientY + 'px)'; }, true);
+  addEventListener('mousemove', e => {
+    const z = parseFloat(document.body.style.zoom || '1') || 1;
+    c.style.transform = 'translate(' + (e.clientX / z) + 'px,' + (e.clientY / z) + 'px) scale(' + (1 / z) + ')';
+    c.style.transformOrigin = '0 0';
+  }, true);
   addEventListener('mousedown', () => { c.firstChild.style.transform = 'scale(.82)'; }, true);
   addEventListener('mouseup', () => { c.firstChild.style.transform = ''; }, true);
 });`;
@@ -43,8 +51,10 @@ const ease = t => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
 function recorder(page) {
   let cdp, frames = [], paused = false, pauseAt = 0, shift = 0, last = null;
   const pos = { x: 1220, y: 760 };
+  const view = { z: 1, sx: 0, sy: 0 };
   return {
     pos,
+    view,
     async start({ cursor = true } = {}) {
       cdp = await page.context().newCDPSession(page);
       cdp.on('Page.screencastFrame', async ({ data, metadata, sessionId }) => {
@@ -66,6 +76,27 @@ function recorder(page) {
       shift += Date.now() / 1000 - pauseAt;
       paused = false;
       if (last) frames.push({ data: last.data, t: Date.now() / 1000 - shift });
+    },
+    // 데스크톱 1440px 레이아웃을 고정한 채 브라우저 네이티브 CSS zoom + scrollTo로 부드럽게 확대
+    async zoomTo(targetZ, targetSx, targetSy, ms = 800) {
+      const from = { ...view };
+      const steps = Math.max(2, Math.round(ms / 20));
+      await page.evaluate(() => {
+        document.body.style.width = '1440px';
+        document.body.style.minWidth = '1440px';
+      });
+      for (let i = 1; i <= steps; i++) {
+        const k = ease(i / steps);
+        const z = from.z + (targetZ - from.z) * k;
+        const sx = from.sx + (targetSx - from.sx) * k;
+        const sy = from.sy + (targetSy - from.sy) * k;
+        await page.evaluate(([zz, x, y]) => {
+          document.body.style.zoom = String(zz);
+          window.scrollTo(x, y);
+        }, [z, sx, sy]);
+        await sleep(ms / steps);
+      }
+      view.z = targetZ; view.sx = targetSx; view.sy = targetSy;
     },
     async glide(x, y, ms = 900) {
       const from = { ...pos }, n = Math.max(2, Math.round(ms / 16));
@@ -127,7 +158,7 @@ async function session(name, { state, routes } = {}, body) {
     locale: 'ko-KR',
   });
   const page = await ctx.newPage();
-  await page.addInitScript(CURSOR);
+  await page.addInitScript(INIT_SCRIPT);
   if (state) {
     await page.addInitScript(([k, v]) => {
       if (!sessionStorage.getItem('rec')) {
@@ -195,22 +226,25 @@ const LETTER_KOFI = {
 };
 
 const JOBS = {
-  // S4 장면과 대화: 코피 아침 「“오늘 하루만 같이 가자”」 → 첫 답 칩 클릭 → 아빠의 실제 AI 대답
+  // S4 장면과 대화: 코피 아침 → 브라우저 자체 확대(본문) → 답 칩 클릭 → 아빠 실제 AI 대답(대화 쪽 확대)
   'REC-K1': () => session('REC-K1', {
     state: run('ghana', 0, [null, null, null], 'chat'),
   }, async (page, rec) => {
     await page.goto(URL, { waitUntil: 'networkidle' });
     await page.locator('#resume').click();
     await page.locator('[data-chip]').first().waitFor({ timeout: 20000 });
-    await page.waitForTimeout(1200);
+    await page.waitForTimeout(1000);
     await rec.start();
-    await sleep(2200); // 본문이 충분히 보이는 구간
+    await sleep(600);
+    await rec.zoomTo(1.5, 510, 85, 800); // 본문·제목 쪽 네이티브 확대
+    await sleep(1100);
+    await rec.zoomTo(1.5, 510, 390, 600); // 답 칩 영역으로 이동
     const chip = page.locator('[data-chip]').first();
     const before = await chip.innerText();
-    await rec.glideTo(chip, 1100);
-    await sleep(300);
+    await rec.glideTo(chip, 800);
+    await sleep(250);
     await rec.click();
-    await sleep(700);
+    await sleep(500);
     rec.pause();
     await page.waitForFunction(
       t => {
@@ -222,13 +256,12 @@ const JOBS = {
     );
     await page.waitForTimeout(400);
     rec.resume();
-    const say = page.locator('.say, .bubble, [class*=say]').last();
-    if (await say.count()) await say.scrollIntoViewIfNeeded().catch(() => {});
-    await rec.glide(1240, 820, 900);
+    await rec.zoomTo(1.5, 510, 260, 700); // 학생 말·아빠 AI 대답이 한눈에 보이게
+    await rec.glide(1260, 820, 600);
     await sleep(3200);
   }),
 
-  // S7 웹앱에서 고르기: 코피 아침 선택 화면 → B(“학교에 갈게요…”) 클릭 → 결과 화면
+  // S7 웹앱에서 고르기: 코피 아침 선택 화면 → 브라우저 자체 확대(A/B 버튼) → B 클릭 → 결과 화면 확대
   'REC-K2': () => session('REC-K2', {
     state: run('ghana', 0, [null, null, null], 'chat'),
     routes: p => p.route('**/api/chat', r => r.fulfill({ status: 200, contentType: 'application/json', body: '{"configured":false}' })),
@@ -237,17 +270,20 @@ const JOBS = {
     await page.locator('#resume').click();
     const b = page.locator('button', { hasText: '학교에 갈게요' }).first();
     await b.waitFor({ timeout: 15000 });
-    await b.scrollIntoViewIfNeeded();
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(900);
     await rec.start();
-    await sleep(1600);
-    await rec.glideTo(b, 1300);
+    await sleep(500);
+    await rec.zoomTo(1.55, 520, 480, 800); // A/B 버튼 쪽 네이티브 확대
     await sleep(400);
+    await rec.glideTo(b, 1100);
+    await sleep(350);
     await rec.click();
-    await sleep(3800);
+    await sleep(500);
+    await rec.zoomTo(1.5, 510, 160, 800); // 결과 화면(잘 본 시험과 다친 아빠) 확대
+    await sleep(3200);
   }),
 
-  // S8 돌아보기: 코피 돌아보기 화면 → “무엇을 골라도 그대로였던 어려움” 입력
+  // S8 돌아보기: 코피 돌아보기 → 브라우저 자체 확대(질문·입력 칸) → 타이핑
   'REC-K3': () => session('REC-K3', {
     state: run('ghana', 2, [1, 0, 0], 'reflect', {
       fields: { feeling: '시험과 아빠의 밭일 사이에서 어느 쪽을 골라도 마음이 무거웠다.' },
@@ -256,20 +292,19 @@ const JOBS = {
     await page.goto(URL, { waitUntil: 'networkidle' });
     await page.locator('#resume').click();
     await page.locator('#reflection-form').waitFor({ timeout: 15000 });
-    const box = page.locator('#reflection-form textarea').nth(1);
-    await box.scrollIntoViewIfNeeded();
-    await page.mouse.wheel(0, 260);
     await page.waitForTimeout(900);
     await rec.start();
-    await sleep(700);
-    await rec.glideTo(box, 1000);
+    await sleep(500);
+    await rec.zoomTo(1.5, 510, 560, 800); // 질문 제목과 입력 칸 네이티브 확대
+    const box = page.locator('#reflection-form textarea').nth(1);
+    await rec.glideTo(box, 800);
     await rec.click();
-    await sleep(250);
-    await page.keyboard.type('어느 쪽을 골라도 일꾼을 쓸 돈이 없는 건 그대로였다.', { delay: 65 });
-    await sleep(2800);
+    await sleep(200);
+    await page.keyboard.type('어느 쪽을 골라도 일꾼을 쓸 돈이 없는 건 그대로였다.', { delay: 60 });
+    await sleep(2600);
   }),
 
-  // S9 질문과 AI 조사: 코피 질문·조사 화면 → 실제 AI 조사 도우미에게 질문 → 답과 원문 자료 표시
+  // S9 질문과 AI 조사: 코피 질문·조사 → 브라우저 자체 확대 → 질문 전송 → 실제 AI 조사 도우미 답과 원문 자료
   'REC-K4': () => session('REC-K4', {
     state: run('ghana', 2, [1, 0, 0], 'lab', {
       fields: {
@@ -283,18 +318,21 @@ const JOBS = {
     await page.locator('#resume').click();
     const ask = page.locator('#ask');
     await ask.waitFor({ timeout: 15000 });
-    await ask.scrollIntoViewIfNeeded();
-    await page.mouse.wheel(0, 120);
-    await page.waitForTimeout(1000);
     await ask.fill('카카오 농가 아이들은 왜 학교 대신 밭에 갈까?');
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(700);
     await rec.start();
-    await sleep(1100);
+    await sleep(400);
+    const askTop = await page.evaluate(() => {
+      const el = document.querySelector('#ask-panel') || document.querySelector('#ask-form');
+      return Math.max(0, Math.round(el.getBoundingClientRect().top + window.scrollY - 120));
+    });
+    await rec.zoomTo(1.5, 510, Math.round(askTop * 1.5), 750); // 질문 입력·묻기 버튼 네이티브 확대
     const submit = page.locator('#ask-form button[type=submit]');
-    await rec.glideTo(submit, 1000);
-    await sleep(300);
-    await rec.click();
-    await sleep(700);
+    await sleep(200);
+    await rec.glideTo(submit, 800);
+    await sleep(250);
+    await submit.click();
+    await sleep(500);
     rec.pause();
     await page.waitForFunction(() => {
       const panel = document.querySelector('#ask-panel');
@@ -302,15 +340,20 @@ const JOBS = {
       const bubbles = panel.querySelectorAll('.msg, .bubble, .say, .ai, [class*=reply], [class*=answer], p');
       const text = panel.innerText || '';
       return bubbles.length >= 2 && text.length > 80 && !text.includes('찾고 있') && !text.includes('답을 준비');
-    }, { timeout: 60000 });
-    await page.waitForTimeout(600);
+    }, null, { timeout: 60000 });
+    await page.waitForTimeout(500);
     rec.resume();
-    await page.locator('#ask-panel').scrollIntoViewIfNeeded().catch(() => {});
-    await rec.glide(1260, 820, 800);
-    await sleep(3800);
+    const ansTop = await page.evaluate(() => {
+      const el = document.querySelector('#ask-panel');
+      const z = parseFloat(document.body.style.zoom || '1') || 1;
+      return Math.max(0, Math.round((el.getBoundingClientRect().top * z) + window.scrollY - 80));
+    });
+    await rec.zoomTo(1.5, 510, ansTop, 600); // AI 답 + 원문 자료가 정중앙에 오게
+    await rec.glide(1260, 820, 600);
+    await sleep(3600);
   }),
 
-  // S11 세 가지 글 ① 신문 기사 (시오네)
+  // S11 세 가지 글 ① 신문 기사 (시오네, 전체 화면)
   'REC-K5': () => session('REC-K5', {
     state: {
       ...run('tuvalu', 2, [0, 0, 0], 'report', { fields: ARTICLE_SIONE, finishedAt: '2026-11-27T05:00:00.000Z' }),
@@ -329,7 +372,7 @@ const JOBS = {
     await sleep(2200);
   }),
 
-  // S11 세 가지 글 ② 정책 제안서 (마리암)
+  // S11 세 가지 글 ② 정책 제안서 (마리암, 전체 화면)
   'REC-K6': () => session('REC-K6', {
     state: {
       ...run('afghanistan', 2, [1, 0, 1], 'report', { fields: POLICY_MARIAM, finishedAt: '2026-11-27T05:00:00.000Z' }),
@@ -348,7 +391,7 @@ const JOBS = {
     await sleep(2200);
   }),
 
-  // S11 세 가지 글 ③ 편지 (코피)
+  // S11 세 가지 글 ③ 편지 (코피, 전체 화면)
   'REC-K7': () => session('REC-K7', {
     state: {
       ...run('ghana', 2, [1, 0, 0], 'report', { fields: LETTER_KOFI, finishedAt: '2026-11-27T05:00:00.000Z' }),
