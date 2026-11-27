@@ -1,0 +1,583 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Pretendard";
+      src: url("assets/fonts/PretendardVariable.woff2") format("woff2");
+      font-weight: 100 900;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    #root {
+      position: absolute;
+      inset: 0;
+      background: #111111;
+      font-family: "Pretendard", sans-serif;
+      color: #111111;
+      overflow: hidden;
+    }
+
+    /* ============ 전체화면 REC 컷인 레이어 ============ */
+    .rec-layer {
+      position: absolute;
+      inset: 0;
+      background: #111111;
+      overflow: hidden;
+      opacity: 0;
+      z-index: 30;
+    }
+    .rec-img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1920px;
+      height: 1080px;
+      object-fit: cover;
+      transform-origin: center center;
+    }
+    .rec-pill {
+      position: absolute;
+      left: 72px;
+      top: 52px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: rgba(17, 17, 17, 0.88);
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+      z-index: 5;
+    }
+    .rec-dot {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: #e03e3e;
+      box-shadow: 0 0 10px rgba(224, 62, 62, 0.75);
+    }
+    .rec-text {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .rec-sep {
+      width: 1px;
+      height: 18px;
+      background: rgba(255, 255, 255, 0.3);
+    }
+    .rec-meta {
+      font-size: 20px;
+      font-weight: 500;
+      color: #d7d5ce;
+    }
+    .rec-caption {
+      position: absolute;
+      left: 72px;
+      bottom: 56px;
+      background: rgba(17, 17, 17, 0.88);
+      color: #ffffff;
+      padding: 16px 28px;
+      border-radius: 12px;
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      word-break: keep-all;
+      border-left: 5px solid #1f7f7c;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+      z-index: 5;
+    }
+
+    /* ============ 에이전트 데스크탑 워크스페이스 레이어 ============ */
+    .workspace-layer {
+      position: absolute;
+      inset: 0;
+      background: #f4f3ef;
+      opacity: 0;
+      z-index: 10;
+    }
+    .topbar {
+      position: absolute;
+      left: 96px;
+      top: 28px;
+      width: 1728px;
+      height: 36px;
+    }
+    .topbar-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .step-label {
+      font-size: 20px;
+      font-weight: 600;
+      color: #4a4a4a;
+      letter-spacing: -0.02em;
+    }
+    .step-label strong {
+      color: #111111;
+      margin-right: 10px;
+    }
+    .step-stat {
+      font-size: 18px;
+      font-weight: 600;
+      color: #176a67;
+      letter-spacing: -0.01em;
+    }
+    .progress-track {
+      position: relative;
+      width: 100%;
+      height: 3px;
+      background: #e1ded6;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: #176a67;
+      transform-origin: left center;
+    }
+
+    .desktop-win {
+      position: absolute;
+      left: 96px;
+      top: 76px;
+      width: 1728px;
+      height: 944px;
+      background: #ffffff;
+      border: 1px solid #d8d5cc;
+      border-radius: 16px;
+      box-shadow: 0 14px 36px rgba(17, 17, 17, 0.07);
+      overflow: hidden;
+    }
+    .win-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1728px;
+      height: 48px;
+      background: #faf9f6;
+      border-bottom: 1px solid #eceae3;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 22px;
+    }
+    .win-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .dots { display: flex; gap: 7px; }
+    .dot { width: 11px; height: 11px; border-radius: 50%; background: #d5d2c9; }
+    .win-title { font-size: 17px; font-weight: 600; color: #2b2b2b; letter-spacing: -0.02em; }
+    .win-env {
+      font-size: 15px;
+      font-weight: 500;
+      color: #555555;
+      background: #efede7;
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    /* 왼쪽 대화창 */
+    .chat-pane {
+      position: absolute;
+      left: 0;
+      top: 48px;
+      width: 560px;
+      height: 896px;
+      background: #fdfcfa;
+      border-right: 1px solid #eceae3;
+    }
+    .chat-thread {
+      position: absolute;
+      left: 24px;
+      top: 24px;
+      width: 512px;
+      height: 690px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .msg-user {
+      align-self: flex-end;
+      max-width: 468px;
+      background: #111111;
+      color: #ffffff;
+      padding: 16px 20px;
+      border-radius: 16px 16px 4px 16px;
+      font-size: 22px;
+      font-weight: 500;
+      line-height: 1.48;
+      letter-spacing: -0.02em;
+      word-break: keep-all;
+      opacity: 0;
+    }
+    .msg-agent {
+      align-self: flex-start;
+      width: 488px;
+      background: #ffffff;
+      border: 1px solid #e4e1d8;
+      border-left: 4px solid #176a67;
+      border-radius: 6px 14px 14px 14px;
+      padding: 15px 18px;
+      opacity: 0;
+    }
+    .agent-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .agent-name { font-size: 15px; font-weight: 700; color: #176a67; }
+    .pass-pill {
+      font-size: 14px;
+      font-weight: 700;
+      color: #14635f;
+      background: #e5f3f2;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+    .agent-lines {
+      font-size: 20px;
+      font-weight: 500;
+      color: #222222;
+      line-height: 1.5;
+      letter-spacing: -0.02em;
+      word-break: keep-all;
+    }
+
+    .prompt-box {
+      position: absolute;
+      left: 24px;
+      bottom: 24px;
+      width: 512px;
+      height: 132px;
+      background: #ffffff;
+      border: 1.5px solid #cbc7bc;
+      border-radius: 14px;
+      padding: 14px 16px;
+      box-shadow: 0 4px 14px rgba(17, 17, 17, 0.04);
+    }
+    .prompt-meta { font-size: 14px; font-weight: 600; color: #5c5c5c; margin-bottom: 8px; }
+    .prompt-text-wrap {
+      width: 428px;
+      height: 74px;
+      font-size: 21px;
+      font-weight: 500;
+      color: #111111;
+      line-height: 1.42;
+      letter-spacing: -0.02em;
+      word-break: keep-all;
+    }
+    .cursor {
+      display: inline-block;
+      width: 2.5px;
+      height: 23px;
+      background: #176a67;
+      vertical-align: -4px;
+      margin-left: 2px;
+    }
+    .send-btn {
+      position: absolute;
+      right: 14px;
+      bottom: 14px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #e5e2da;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 오른쪽: 단일 대형 와이프 미리보기 (1104 x 690) */
+    .preview-pane {
+      position: absolute;
+      left: 560px;
+      top: 48px;
+      width: 1168px;
+      height: 896px;
+      background: #f6f5f0;
+    }
+    .stage-box {
+      position: absolute;
+      left: 32px;
+      top: 26px;
+      width: 1104px;
+      height: 690px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #ffffff;
+      border: 1px solid #d8d5cc;
+      box-shadow: 0 8px 24px rgba(17, 17, 17, 0.06);
+    }
+    .screen-img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1104px;
+      height: 690px;
+      object-fit: cover;
+    }
+    .after-layer {
+      position: absolute;
+      inset: 0;
+      clip-path: inset(0 100% 0 0);
+    }
+    .wipe-line {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 4px;
+      height: 690px;
+      background: #1f7f7c;
+      box-shadow: 0 0 12px rgba(31, 127, 124, 0.45);
+      opacity: 0;
+    }
+    .badge {
+      position: absolute;
+      top: 16px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .badge-before { left: 16px; background: rgba(17, 17, 17, 0.86); color: #ffffff; }
+    .badge-after { right: 16px; background: #176a67; color: #ffffff; opacity: 0; }
+
+    .reason-bar {
+      position: absolute;
+      left: 32px;
+      bottom: 24px;
+      width: 1104px;
+      height: 120px;
+      background: #ffffff;
+      border: 1px solid #d8d5cc;
+      border-radius: 12px;
+      padding: 20px 26px;
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      opacity: 0;
+    }
+    .reason-pill {
+      flex-shrink: 0;
+      background: #e5f3f2;
+      color: #14635f;
+      font-size: 18px;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 8px;
+    }
+    .reason-text {
+      font-size: 24px;
+      font-weight: 600;
+      color: #111111;
+      line-height: 1.45;
+      letter-spacing: -0.02em;
+      word-break: keep-all;
+    }
+  </style>
+
+  <div id="root" data-composition-id="proto-v2" data-width="1920" data-height="1080" data-duration="15">
+    <!-- 1) 전체화면 REC 컷인 #1: Codex 데스크탑 (과제 분석 & MD 규칙 정리) -->
+    <div id="v2-rec1" class="clip rec-layer" data-start="0" data-duration="3.1" data-track-index="0" data-layout-allow-overlap="true">
+      <img id="v2-rec1-a" class="rec-img" src="assets/conv/10-assignment.png" alt="Codex 과제 분석" />
+      <img id="v2-rec1-b" class="rec-img" src="assets/conv/12-recording-rules.png" alt="Codex MD 가이드라인 정리" style="opacity:0" />
+      <div class="rec-pill">
+        <span id="v2-dot1" class="rec-dot"></span>
+        <span class="rec-text">REC · 실제 작업 화면</span>
+        <span class="rec-sep"></span>
+        <span class="rec-meta">Codex Desktop · 2026-11-25</span>
+      </div>
+      <div class="rec-caption">과제 안내 영상을 분석하고, 채점 기준과 기록·검증 규칙을 MD로 정리</div>
+    </div>
+
+    <!-- 2) 에이전트 데스크탑 대화창 + 단일 대형 와이프 비교 (2.8s ~ 12.6s) -->
+    <div id="v2-work" class="clip workspace-layer" data-start="2.6" data-duration="10.2" data-track-index="1" data-layout-allow-overlap="true">
+      <div class="topbar">
+        <div class="topbar-row">
+          <div class="step-label"><strong>작업 과정 프로토타입</strong>대화하며 개선 · 단일 대형 Before / After 비교</div>
+          <div class="step-stat">Codex Desktop · Paseo · HyperFrames</div>
+        </div>
+        <div class="progress-track"><div id="v2-prog" class="progress-fill"></div></div>
+      </div>
+
+      <div class="desktop-win">
+        <div class="win-bar">
+          <div class="win-left">
+            <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+            <div class="win-title">다른 곳의 하루 · Agent Workspace</div>
+          </div>
+          <div class="win-env">실제 프롬프트 기반 재구성</div>
+        </div>
+
+        <!-- 왼쪽 대화창 -->
+        <div class="chat-pane">
+          <div class="chat-thread">
+            <div id="v2-u1" class="msg-user">“선택에 따른 다른 장면들이 각각 등장하도록 시나리오를 세분화하자.”</div>
+            <div id="v2-a1" class="msg-agent">
+              <div class="agent-head">
+                <span class="agent-name">Agent</span>
+                <span class="pass-pill">96경로 PASS</span>
+              </div>
+              <div class="agent-lines">
+                · 아침 선택에 따라 낮 2갈래 · 저녁 4갈래 분기<br />
+                · 8명·47장면 확장 및 자동 검증 통과
+              </div>
+            </div>
+
+            <div id="v2-u2" class="msg-user">“각 캐릭터 상황을 반영한 35mm 다큐 실사풍과 12명 앨범으로 바꾸자.”</div>
+            <div id="v2-a2" class="msg-agent">
+              <div class="agent-head">
+                <span class="agent-name">Agent</span>
+                <span class="pass-pill">44.6% 경량화</span>
+              </div>
+              <div class="agent-lines">
+                · 2D 삽화 → 35mm 다큐 실사 47장 전면 교체<br />
+                · 12명 가로 순환 히어로 앨범 높이 정렬 완료
+              </div>
+            </div>
+          </div>
+
+          <div class="prompt-box">
+            <div class="prompt-meta">실제 AI 요청 · 프롬프트 입력</div>
+            <div class="prompt-text-wrap"><span id="v2-typed"></span><span id="v2-cursor" class="cursor"></span></div>
+            <div id="v2-send" class="send-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 19V5M5 12l7-7 7 7" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- 오른쪽: 단일 대형 와이프 Stage 1 & Stage 2 -->
+        <div class="preview-pane">
+          <!-- Stage 1: 투발루 낮 B 분기 와이프 -->
+          <div id="v2-stage1" class="stage-box" data-layout-allow-overlap="true">
+            <img class="screen-img" src="assets/screens/before-desktop-tuvalu-noon-b.png" alt="수정 전 고정 장면" />
+            <div id="v2-after1" class="after-layer">
+              <img class="screen-img" src="assets/screens/after-desktop-tuvalu-noon-b.png" alt="수정 후 분기 장면" />
+            </div>
+            <div id="v2-line1" class="wipe-line"></div>
+            <div id="v2-b1" class="badge badge-before">BEFORE · 고정 장면 「떠날까, 남을까」</div>
+            <div id="v2-af1" class="badge badge-after">AFTER · 분기 장면 「보충 시험과 모래주머니」</div>
+          </div>
+
+          <!-- Stage 2: 2D 삽화 -> 35mm 실사 12명 히어로 앨범 와이프 -->
+          <div id="v2-stage2" class="stage-box" style="opacity:0" data-layout-allow-overlap="true">
+            <img class="screen-img" src="assets/screens/before-desktop-home-2d.png" alt="수정 전 2D 삽화 홈" />
+            <div id="v2-after2" class="after-layer">
+              <img class="screen-img" src="assets/screens/after-desktop-home-album.png" alt="수정 후 35mm 실사 12명 앨범" />
+            </div>
+            <div id="v2-line2" class="wipe-line"></div>
+            <div id="v2-b2" class="badge badge-before">BEFORE · 2D 삽화 4명 모자이크</div>
+            <div id="v2-af2" class="badge badge-after">AFTER · 35mm 다큐 실사 · 12명 히어로 앨범</div>
+          </div>
+
+          <!-- 하단 바꾼 이유 -->
+          <div id="v2-reason1" class="reason-bar" data-layout-allow-overlap="true">
+            <div class="reason-pill">바꾼 이유</div>
+            <div class="reason-text">내 선택이 하루를 실제로 바꾼다고 느껴야 다른 길을 상상하고 구조적 제약을 비교할 수 있습니다.</div>
+          </div>
+          <div id="v2-reason2" class="reason-bar" data-layout-allow-overlap="true">
+            <div class="reason-pill">바꾼 이유</div>
+            <div class="reason-text">인물의 생활환경을 생생하게 전달하면서, 59장 WebP를 44.6% 경량화해 빠르게 열리게 했습니다.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3) 전체화면 REC 컷인 #2: Paseo 3분할 멀티 에이전트 (12.4s ~ 15.0s) -->
+    <div id="v2-rec2" class="clip rec-layer" data-start="12.3" data-duration="2.7" data-track-index="2" data-layout-allow-overlap="true">
+      <img id="v2-rec2-img" class="rec-img" src="assets/conv/paseo-workflow-redacted.png" alt="Paseo 3분할 멀티 에이전트 작업 화면" />
+      <div class="rec-pill">
+        <span id="v2-dot2" class="rec-dot"></span>
+        <span class="rec-text">REC · 실제 작업 화면</span>
+        <span class="rec-sep"></span>
+        <span class="rec-meta">Paseo 3분할 멀티 에이전트 · 2026-11-26</span>
+      </div>
+      <div class="rec-caption">Codex · Claude Code · Antigravity 병렬 협업과 자동 검증으로 계속 다듬기</div>
+    </div>
+  </div>
+
+  <script>
+    const typedEl = document.getElementById("v2-typed");
+    const t1 = "선택에 따른 다른 장면들이 각각 등장하도록 시나리오를 세분화하자.";
+    const t2 = "각 캐릭터 상황을 반영한 35mm 다큐 실사풍과 12명 앨범으로 바꾸자.";
+
+    function syncTyping() {
+      const t = tl.time();
+      if (t >= 3.1 && t < 4.95) {
+        const p = Math.max(0, Math.min(1, (t - 3.1) / 1.6));
+        typedEl.textContent = t1.slice(0, Math.round(p * t1.length));
+      } else if (t >= 8.1 && t < 9.95) {
+        const p = Math.max(0, Math.min(1, (t - 8.1) / 1.6));
+        typedEl.textContent = t2.slice(0, Math.round(p * t2.length));
+      } else {
+        typedEl.textContent = "";
+      }
+    }
+
+    const tl = gsap.timeline({ paused: true, onUpdate: syncTyping });
+
+    /* === 0.0 ~ 2.9s: 전체화면 REC 컷인 #1 (Codex 과제 분석 -> MD 규칙 정리) === */
+    tl.set("#v2-rec1", { opacity: 1 }, 0);
+    tl.fromTo("#v2-rec1-a", { scale: 1.0 }, { scale: 1.02, duration: 1.5, ease: "none" }, 0);
+    tl.to("#v2-rec1-b", { opacity: 1, duration: 0.25, ease: "power1.inOut" }, 1.35);
+    tl.fromTo("#v2-rec1-b", { scale: 1.0 }, { scale: 1.02, duration: 1.6, ease: "none" }, 1.35);
+    tl.to("#v2-dot1", { opacity: 0.2, duration: 0.4, repeat: 6, yoyo: true, ease: "steps(1)" }, 0);
+    tl.to("#v2-rec1", { opacity: 0, duration: 0.28, ease: "power2.inOut" }, 2.75);
+
+    /* === 2.75 ~ 12.6s: 에이전트 데스크탑 워크스페이스 === */
+    tl.to("#v2-work", { opacity: 1, duration: 0.28, ease: "power2.out" }, 2.72);
+    tl.fromTo("#v2-prog", { scaleX: 0.15 }, { scaleX: 0.85, duration: 9.8, ease: "none" }, 2.8);
+    tl.to("#v2-cursor", { opacity: 0, duration: 0.35, repeat: 28, yoyo: true, ease: "steps(1)" }, 2.8);
+
+    // 1차 전송 & 응답 & 와이프 1 (4.7 ~ 7.9s)
+    tl.to("#v2-send", { backgroundColor: "#176a67", scale: 0.9, duration: 0.12 }, 4.72);
+    tl.to("#v2-send", { backgroundColor: "#e5e2da", scale: 1, duration: 0.15 }, 4.86);
+    tl.fromTo("#v2-u1", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.24, ease: "power2.out" }, 4.95);
+    tl.fromTo("#v2-a1", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" }, 5.3);
+
+    tl.to("#v2-line1", { opacity: 1, duration: 0.1 }, 5.5);
+    tl.fromTo("#v2-after1", { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 1.0, ease: "power2.inOut" }, 5.55);
+    tl.fromTo("#v2-line1", { x: 0 }, { x: 1104, duration: 1.0, ease: "power2.inOut" }, 5.55);
+    tl.to("#v2-line1", { opacity: 0, duration: 0.12 }, 6.55);
+    tl.to("#v2-b1", { opacity: 0, duration: 0.18 }, 6.15);
+    tl.fromTo("#v2-af1", { opacity: 0, y: -6 }, { opacity: 1, y: 0, duration: 0.22 }, 6.25);
+    tl.fromTo("#v2-reason1", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.25 }, 6.35);
+
+    // 2차 전송 & 응답 & 와이프 2 (9.7 ~ 12.4s)
+    tl.to("#v2-send", { backgroundColor: "#176a67", scale: 0.9, duration: 0.12 }, 9.72);
+    tl.to("#v2-send", { backgroundColor: "#e5e2da", scale: 1, duration: 0.15 }, 9.86);
+    tl.fromTo("#v2-u2", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.24, ease: "power2.out" }, 9.95);
+    tl.fromTo("#v2-a2", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" }, 10.25);
+
+    tl.to("#v2-stage1", { opacity: 0, duration: 0.22 }, 10.2);
+    tl.to("#v2-stage2", { opacity: 1, duration: 0.22 }, 10.22);
+    tl.to("#v2-reason1", { opacity: 0, duration: 0.2 }, 10.2);
+
+    tl.to("#v2-line2", { opacity: 1, duration: 0.1 }, 10.55);
+    tl.fromTo("#v2-after2", { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 1.0, ease: "power2.inOut" }, 10.6);
+    tl.fromTo("#v2-line2", { x: 0 }, { x: 1104, duration: 1.0, ease: "power2.inOut" }, 10.6);
+    tl.to("#v2-line2", { opacity: 0, duration: 0.12 }, 11.6);
+    tl.to("#v2-b2", { opacity: 0, duration: 0.18 }, 11.2);
+    tl.fromTo("#v2-af2", { opacity: 0, y: -6 }, { opacity: 1, y: 0, duration: 0.22 }, 11.3);
+    tl.fromTo("#v2-reason2", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.25 }, 11.35);
+
+    /* === 12.4 ~ 15.0s: 전체화면 REC 컷인 #2 (Paseo 3분할 멀티 에이전트) === */
+    tl.to("#v2-rec2", { opacity: 1, duration: 0.26, ease: "power2.out" }, 12.4);
+    tl.fromTo("#v2-rec2-img", { scale: 1.0 }, { scale: 1.02, duration: 2.6, ease: "none" }, 12.4);
+    tl.to("#v2-dot2", { opacity: 0.2, duration: 0.4, repeat: 5, yoyo: true, ease: "steps(1)" }, 12.4);
+
+    window.__timelines["proto-v2"] = tl;
+  </script>
+</template>

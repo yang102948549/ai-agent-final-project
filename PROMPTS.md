@@ -1354,3 +1354,18 @@
   - 선택지 버튼 문구와 질문·조사 화면은 녹화 때 배포 화면과 대조할 항목으로 남겼다.
 - 대화 캡처 — 찍지 않았다(캡처 대기). 위 실제 요청 발췌로 대신한다.
 - 변경 파일 — `video/TRAILER-PLAN-KOFI.md`(새로), `video/TRAILER-PLAN.md`, `video/CHECKLIST.md`, `video/README.md`, `PROMPTS.md`
+
+
+## 2026-11-27-process-proto-v2-delivery
+
+- 실제 요청 — “아직 프로그램을 완성한게 아니기 때문에 첫 수정화면 즉 코덱스 데스크탑 앱에서 영상을 읽고 채점기준 및 작성방법을 md로 정리해달라는 것부터 시작해서 간단한 몇가지 수정사항을 다룬 프로토타입 영상으로 제시해줘 시간은 15초만 있어도 돼. 지금은 어떤방식으로 되어가는지를 보는거니까”
+- 변경 이유와 한 일 — `video/process/compositions/proto-v2-flow.html`과 `video/process/index.html`에 **15초 전체 흐름 프로토타입 v2**를 구현하고, `PROCESS-PLAN.md` 2.4~2.5절 기준대로 **`--quality delivery`**로 렌더링했다.
+  - `0:00–0:02.9`: 전체화면 `● REC · 실제 작업 화면`(Codex Desktop 과제 분석 `10-assignment.png` → MD 규칙 정리 `12-recording-rules.png`, 빨간 점 점멸)
+  - `0:02.9–0:12.4`: 에이전트 데스크탑 대화창 2턴(시나리오 분기 + 35mm 실사·12명 앨범) + `1104×690px` 단일 대형 가로 와이프 비교
+  - `0:12.4–0:15.0`: 전체화면 `● REC · 실제 작업 화면`(Paseo 3분할 멀티 에이전트 `paseo-workflow-redacted.png`)
+- 검증
+  - `hyperframes check --json` 오류 0건 통과.
+  - `ffprobe` 실측: `1920×1080` · `30fps` · `15.0s` · **`6,803 kbps`** (`12.2 MB`, 이전 `draft` `405 kbps` 대비 약 **16.8배** 화질 향상).
+  - `local-assets/video/process-proto-v2.mp4` 전 구간(00:00~00:14) 직접 열어 육안 검수 완료. 앱 소스 변경이 없는 영상 프로토타입 작업이므로 앱 화면 전후 촬영 비대상.
+- 대화 캡처 — 이 세션은 격리 데스크톱(`exebox-*`) 환경이므로 Paseo 창 직접 촬영은 불가하며, 위 실제 요청 발췌로 기록하고 캡처 대기 상태를 유지한다.
+- 변경 파일 — `video/process/index.html`, `video/process/compositions/proto-v2-flow.html`, `PROMPTS.md` (완성 MP4는 Git 제외 `local-assets/video/process-proto-v2.mp4`).
