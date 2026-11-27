@@ -18,7 +18,8 @@
 ```text
 video/
 ├── README.md                 # 폴더 구성, 미리보기·렌더링 명령 안내
-├── TRAILER-PLAN.md           # 트레일러 영상(59초) 제작 PRD — 12명의 하루
+├── TRAILER-PLAN.md           # 트레일러 PRD A안(아시프)
+├── TRAILER-PLAN-KOFI.md      # 트레일러 PRD B안(코피, 학생 시점)
 ├── PROCESS-PLAN.md           # 과정 소개 영상(2~3분) 초안 틀 (기획·스토리보드)
 ├── package.json              # Remotion 의존성 및 render:trailer / render:process 스크립트
 ├── package-lock.json         # 의존성 잠금 파일
@@ -70,6 +71,7 @@ video/
 | 2026-11-27 | [trailer-conti-v3-1](../PROMPTS.md#2026-11-27-trailer-conti-v3-1) | 12명을 사진 썸네일(이름·나라·상황)로, 닫는 질문은 웃는 시오네와 함께, 끝은 12명 + 타이틀 + 페이드아웃 |
 | 2026-11-27 | [video-checklist](../PROMPTS.md#2026-11-27-video-checklist) | 영상 수정 체크리스트 [CHECKLIST.md](CHECKLIST.md) 신설, 트레일러 수정 22건 정리 |
 | 2026-11-27 | [trailer-conti-v4](../PROMPTS.md#2026-11-27-trailer-conti-v4) | 콘티 v4: 81.8초, 돌아보기는 아시프로, 다양한 사람들 장면·AI 조사 장면 추가, 타이틀 위 "도덕 · 인권 수업용" |
+| 2026-11-27 | [trailer-plan-kofi](../PROMPTS.md#2026-11-27-trailer-plan-kofi) | 코피(13살 학생) 시점 B안 PRD [TRAILER-PLAN-KOFI.md](TRAILER-PLAN-KOFI.md) 작성 |
 
 ### 기록과 자료가 놓이는 곳
 
