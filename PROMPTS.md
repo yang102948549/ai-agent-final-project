@@ -1238,3 +1238,13 @@
   - `CLAUDE.md`와 `AGENTS.md`에 "영상을 고치면 `video/CHECKLIST.md`에 한 줄씩 추가, 루트 CHECKLIST.md에는 영상 행을 만들지 않음" 규칙을 더했다.
 - 검증 — 문서 전용 변경이라 앱 화면 촬영은 비대상이다. 22건의 작업 ID가 PROMPTS.md 제목과 일치하는지 대조했다.
 - 변경 파일 — `video/CHECKLIST.md`(새로), `video/README.md`, `CLAUDE.md`, `AGENTS.md`, `PROMPTS.md`
+
+## 2026-11-27-paseo-worklog-review
+
+- 실제 요청 — “현재 이 paseo창들 내에 작업기록들을 체크해주고 이 대화창도 캡쳐를 통해 작업영상에 만들 수 있는 소스가 될 수 있도록 하자”
+- 확인 — Paseo 3분할의 왼쪽은 과정 영상 대화형 프로토타입 제작과 검증 진행, 가운데는 영상 수정 체크리스트 22건 정리 보고, 오른쪽은 기존 기록 지침 개선 완료와 이번 캡처 요청이다. 화면에 보인 보고는 PROMPTS.md의 process-plan-agent-chat-ui·video-checklist 기록 및 f7ec4e2·8d15e89 커밋과 대조했다. 왼쪽 프로토타입은 실행 중이므로 완성·렌더 검증 완료로 판단하지 않았다.
+- 캡처 — 2026-11-27 22:28 KST 화면 시계 기준. `local-assets/conversations/2026-11-27-paseo-worklog-review/monitor-2.png`(1920×1080)에 Paseo가 있는 모니터 한 장을 저장했다. 이 대화의 요청과 직전 기록 개선 결과가 읽힌다. `monitor-1.png`(1707×1067)는 다른 모니터의 GitHub 기록 화면이며 DPI 영향이 있는 보조 캡처로, 원본 해상도 증거 및 영상 선별본에서 제외한다. 두 파일은 각각 직접 열어 확인했다.
+- 도구와 한계 — Computer Use 및 CUA의 native pipe 연결이 실패했다. 화면 입력·스크롤 없이 PowerShell CopyFromScreen으로 현재 모니터별 PNG를 저장했다. 보이는 작업 내용만 확인했으며 각 창의 과거 대화 전체를 검토한 것은 아니다.
+- 영상 활용 — monitor-2.png는 세 도구의 병행 작업을 보여 주는 실제 증거 컷으로 사용 가능하다. 3분할 전체는 작업 환경 소개에 사용하고, 이 대화는 오른쪽 패널을 편집 단계에서 확대해 요청·결정 부분을 보여 준다. 사용자 경로·터미널 하단 정보가 있으므로 공개 전에 해당 영역을 제외하거나 가림 처리하고 가독성을 재검수해야 한다. 현재는 로컬 원본만 보존하며 screenshots/ 공개 선별본은 만들지 않았다. 앞선 worklog-guidance의 대화 캡처 대기는 이 후속 장면으로 보충하되 당시 결정 순간의 캡처로 취급하지 않는다.
+- 변경 파일 — PROMPTS.md, conversations/README.md. PNG 두 장은 Git 제외 local-assets에 보관한다. 다른 세션의 paseo.json 및 video/process/는 변경하거나 커밋하지 않는다.
+- 검증 — 저장 PNG 2장 재열람 완료, 최근 작업기록·커밋 대조 완료. 문서와 증거 수집 작업이므로 앱 전후 화면 검증은 비대상. 공개용 가림·선별과 영상 삽입은 남은 작업이다.

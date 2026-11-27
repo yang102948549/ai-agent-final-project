@@ -56,3 +56,7 @@ Paseo의 대화·코드 작업·실행 결과가 함께 보이는 실제 창을 
   - `local-assets/conversations/2026-11-27-trailer-worklog/full-screen-01.png`(4480×1080, 두 모니터)와 Paseo 모니터만 잘라 낸 `paseo-monitor-01.png`(1920×1080)
   - 두 번째 캡처의 Paseo 창에는 다른 세션이 Google Flow로 Veo 인물 클립 6개를 만들어 검수하는 장면이 담겼다.
   - 콘티 결정 발화 자체는 화면에 없고, 로컬 사용자 경로가 보여 공개 선별본은 만들지 않았다.
+
+## 개선 판단·영상 제작 — 2026-11-27-paseo-worklog-review
+
+[PROMPTS.md의 확인 기록](../PROMPTS.md#2026-11-27-paseo-worklog-review). Paseo 3분할에서 과정 영상 프로토타입 제작, 영상 체크리스트 정리, 기록 지침 개선 대화를 함께 확인했다. 로컬 영상 소스는 `local-assets/conversations/2026-11-27-paseo-worklog-review/monitor-2.png`(1920×1080, 2026-11-27 22:28 KST). 오른쪽 패널에 이번 요청과 기록 개선 결과가 보인다. 공개 전 사용자 경로 가림 및 확대 가독성 검수가 필요해 공개 이미지는 선별하지 않았다.
