@@ -62,6 +62,7 @@ video/
 | 2026-11-27 | [trailer-clips-veo-flow](../PROMPTS.md#2026-11-27-trailer-clips-veo-flow) | 버벅이는 클립을 Google Flow(Veo 3.1 Fast)로 다시 생성 |
 | 2026-11-27 | [trailer-worklog](../PROMPTS.md#2026-11-27-trailer-worklog) | "선택에 따라 하루가 달라집니다." 문구, 이 목차 신설 |
 | 2026-11-27 | [trailer-hyperframes-v1](../PROMPTS.md#2026-11-27-trailer-hyperframes-v1) | HyperFrames로 트레일러 초안 v1 제작([trailer/](trailer/), 검토 [trailer/REVIEW.md](trailer/REVIEW.md)) |
+| 2026-11-27 | [trailer-conti-v2](../PROMPTS.md#2026-11-27-trailer-conti-v2) | v1을 보고 콘티를 다시 짬: 세 사람의 하루 + 앱 이용 장면 + 웃는 시오네와 앱 첫 화면 |
 
 ### 기록과 자료가 놓이는 곳
 
