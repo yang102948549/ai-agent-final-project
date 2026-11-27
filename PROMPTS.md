@@ -1263,3 +1263,13 @@
   - `hyperframes snapshot --at 1.8,4.9,6.5,8.8,13.5` 6장 및 렌더링된 `local-assets/video/process-proto-p04.mp4`(794.8 KB, 16.0s, 1920×1080, 30fps) 전 구간 직접 열어 육안 확인 완료. 앱 소스 변경이 없는 영상 프로토타입·문서 작업이므로 앱 화면 전후 촬영은 비대상이다.
 - 대화 캡처 — 이 세션은 격리 데스크톱(`exebox-*`) 환경이므로 Paseo 창 직접 촬영은 불가하며, 위 실제 요청 발췌로 기록하고 캡처 대기 상태를 유지한다.
 - 변경 파일 — `video/PROCESS-PLAN.md`, `video/process/index.html`, `video/process/package.json`, `video/process/hyperframes.json`, `video/process/.gitignore`, `video/process/compositions/p04-round1-branch.html`, `PROMPTS.md`.
+
+
+## 2026-11-27-process-resolution-guide
+
+- 실제 요청 — “그리고 해상도가 현저히 떨어져. 이를 위한 개선방안을 검토한 뒤 md 작업 지침에 해상도에 관한 내용을 넣어줘”
+- 원인 진단 (`ffprobe` 실측) — 프로토타입 `process-proto-p04.mp4`는 `--quality draft`로 렌더링되어 `1920×1080`이지만 비트레이트가 **`405 kbps`**(`trailer-v2.mp4`의 `3,423 kbps` 대비 약 1/8.5)에 불과했고, Stage 2 2분할 카드(`540×338px`, 37.5%)와 우측 하단 Codex 증거 카드(`392×174px`, 20%)의 과도한 축소가 겹쳐 UI·터미널 글자가 뭉개졌다.
+- 변경 이유와 한 일 — [video/PROCESS-PLAN.md](video/PROCESS-PLAN.md)에 **2.5절 해상도·선명도 확보 지침**을 추가해 ① 검토용 `--quality looks`(CRF 16) / 최종 `--quality delivery` 필수 사용 및 `ffprobe` 확인 ② 앱 비교는 폭 `1080px` 이상 단일 대형 화면(와이프·순차 교체) 기본, 2분할 시 핵심 영역 확대 크롭 ③ Codex·Paseo 실제 캡처는 작은 썸네일 대신 전용 풀프레임 컷(`1440~1728px`) 또는 발화 확대 크롭 ④ `local-assets/` 고해상도 원본·2x DPR 캡처 및 `22~28px`·고대비 서체 기준을 명문화했다.
+- 검증 — `ffprobe`로 `process-proto-p04.mp4`(405 kbps)와 `trailer-v2.mp4`(3,423 kbps) 실측 비교 및 `hyperframes render --help`의 `--quality looks`/`delivery` 옵션 확인. 문서 전용 수정으로 앱 화면 전후 촬영 비대상.
+- 대화 캡처 — 이 세션은 격리 데스크톱(`exebox-*`) 환경이므로 Paseo 창 직접 촬영은 불가하며, 위 실제 요청 발췌로 기록하고 캡처 대기 상태를 유지한다.
+- 변경 파일 — `video/PROCESS-PLAN.md`, `PROMPTS.md`.
