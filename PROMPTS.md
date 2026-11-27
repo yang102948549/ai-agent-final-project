@@ -1427,3 +1427,23 @@
   - 육안 검수: 녹화 원본 `REC-K1~K7` 7편, 스냅숏 19장 + S11 보정 3장, 최종 MP4 추출 100% 프레임 3장(`20s` AI 대화, `53.5s` AI 조사, `82.65s` 마지막 검은 화면) 직접 열어 본문·버튼·ILO 자료 글자 선명도와 마지막 검은 화면 확인 완료. 앱 소스 변경이 없는 영상 제작 작업이므로 앱 전후 촬영은 비대상이며, 대화 캡처는 격리 환경이어서 대기 상태를 유지한다.
 - 남은 항목 — 배경 음악·클릭 효과음(현재 무음), 패들렛 파일 크기 제한 확인(초과 시 `8M` 업로드본 별도 생성), 최종 길이(82.7초 vs 30~60초) 확인.
 - 변경 파일 — `video/trailer/index.html`, `video/trailer/tools/build-scenes.mjs`, `video/trailer/tools/record-app.mjs`, `video/trailer/tools/prepare-assets.sh`, `video/trailer/compositions/*` (B안 12개 생성·구 v2 8개 삭제), `video/trailer/assets/cast/*.jpg` (12장), `video/trailer/REVIEW.md`, `video/CHECKLIST.md`, `video/README.md`, `PROMPTS.md` (완성 MP4는 Git 제외 `local-assets/video/trailer-v3-kofi.mp4`).
+
+## 2026-11-28-trailer-audio-plan
+
+- 실제 요청
+  - “/local-assets/video/trailer-v3-kofi.mp4로 만들었는데 배경음악과 나레이션을 넣어야 하는데 어떤 방식으로 하면 좋을까 검토를 먼저해줘”
+  - “일단 내용 정리후 커밋해줘”
+  - “나레이션은 tts 활용 음원은 heygen 활용”
+- 확인
+  - `trailer-v3-kofi.mp4`는 82.7초, 1920×1080, 평균 12.4Mbps, 128MB이고 소리 트랙이 없다(`ffprobe`).
+  - HyperFrames 내장 TTS(Kokoro-82M)는 한국어를 지원하지 않는다(`hyperframes tts --help`의 언어 목록).
+  - HyperFrames 오디오 도구는 직접 녹음 파일도 받아 단어 타이밍을 뽑는다(`media-use/references/audio.md`).
+- 변경 — `video/TRAILER-PLAN-KOFI.md`에 **5. 오디오 계획**을 넣고 정할 것을 6절로 옮겼다.
+  - **5절 내용:** 나레이션 목소리 비교, 배경음악 방법, 대본 원칙(화면 글을 그대로 읽지 않고 약 200~250자만), 장면별 대본 초안, 넣는 방식(프로젝트 안 `<audio>` + 다시 렌더), 소리 크기(덕킹, −16~−14 LUFS, −1dBTP).
+  - **결정 반영:** 나레이션은 Gemini TTS(“tts 활용”을 한국어가 되는 TTS로 해석), 배경음악은 HeyGen 음악 목록. 대본은 결정 대기로 남겼다.
+  - **다른 세션 결정 표시:** B안 제작(`6b5de02`)과 코피 클립 생성(`59c18e1`)을 결정 완료로 적었다.
+  - `video/CHECKLIST.md` 32번과 `video/README.md` 목차에 한 줄씩 더했다.
+- 검증 — 문서 전용 변경. 측정값은 위 명령 결과와 대조했다.
+- 남은 항목 — HeyGen 로그인, 대본 확정(S1 “오늘도/오늘” 포함), Gemini TTS 목소리 고르기, 생성 뒤 장면 길이 조정과 소리 측정·청취 확인.
+- 대화 캡처 — 찍지 않았다(캡처 대기). 위 실제 요청 발췌로 대신한다.
+- 변경 파일 — `video/TRAILER-PLAN-KOFI.md`, `video/CHECKLIST.md`, `video/README.md`, `PROMPTS.md`

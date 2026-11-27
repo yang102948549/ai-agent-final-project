@@ -48,6 +48,7 @@
 | 29 | trailer-conti-v4 | 구성 | 80초 안에 모든 앱 화면을 넣으면 장면마다 머무는 시간이 모자람 | 인물 소개 화면·글 형식 고르기·갤러리 장면을 빼고 핵심 흐름만 남김 | v3 예정 |
 | 30 | trailer-plan-kofi | 구성 | 앱 장면의 주인공 아시프(36살 노동자)는 수업에서 쓰는 학생 시청자가 공감하기 어려움 | 13살 학생 코피의 "시험이냐 밭일이냐"로 바꾼 B안 [TRAILER-PLAN-KOFI.md](TRAILER-PLAN-KOFI.md). 뒤의 사람들도 또래(14살)로 맞춤 | v3(B안) |
 | 31 | trailer-render-quality | 화면 | v2가 평균 약 3.4Mbps로 렌더되고 녹화 프레임도 JPEG라 앱 글자가 뭉개질 여지가 큼 | 고화질 규격: 녹화 PNG 2880×1800 → 중간 MP4 CRF 10 → 최종 `--quality delivery --video-bitrate 16M --max-bitrate 24M --video-frame-format png`(실측 12.43Mbps) | v3(B안) |
+| 32 | trailer-audio-plan | 소리 | v3(코피) 영상에 소리 트랙이 없어 화면 글만으로 전달됨 | 배경음악(HeyGen 음악 목록)과 이야기를 잇는 나레이션(Gemini TTS, 약 200자)을 넣기로 함. 대본은 결정 대기 | 콘티(B안 5절) |
 | 32 | trailer-v3-kofi | 화면 | B안 콘티에서 S2 코피가 정지 사진으로 계획되어 다른 인물 영상과 질감 차이가 남 | Google Flow Veo 3.1 Fast로 생성한 코피 무음 클립(`07-ghana-silent.mp4`)을 3:4 CRF 12로 가공해 S2 인물 영상으로 반영 | v3(B안) |
 | 33 | trailer-v3-kofi | 화면 | S11 세 가지 글 확대(`scale 1.32, y 40`) 시 신문 기사·정책 제안서 상단 제목이 틀 윗선에 살짝 잘림 | `scale 1.26, x -125, y 112`(편지 `y 100`)로 조정해 문서 제목과 본문이 잘림 없이 중앙에 오게 보정 | v3(B안) |
 
