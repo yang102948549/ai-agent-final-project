@@ -1,0 +1,41 @@
+<template>
+  <style>
+    @font-face { font-family: "Pretendard"; src: url("assets/fonts/PretendardVariable.woff2") format("woff2"); font-weight: 100 900; }
+    #root { position: absolute; inset: 0; background: #f4f3ef; font-family: "Pretendard", sans-serif; overflow: hidden; }
+    .panel { position: absolute; left: 1110px; top: 0; width: 810px; height: 1080px; overflow: hidden; }
+    .kb { position: absolute; left: 0; top: 0; width: 810px; height: 1080px; transform-origin: 50% 40%; }
+    .media { position: absolute; left: 0; top: 0; width: 810px; height: 1080px; object-fit: cover; }
+    .text { position: absolute; left: 110px; top: 0; width: 900px; height: 1080px; display: flex; flex-direction: column; justify-content: center; }
+    .place { font-size: 32px; font-weight: 500; color: #5c5c5c; letter-spacing: -0.01em; line-height: 1.3; }
+    .line { font-size: 50px; font-weight: 600; color: #111111; letter-spacing: -0.03em; line-height: 1.36; margin-top: 28px; word-break: keep-all; max-width: 840px; }
+    .close-line { font-size: 60px; font-weight: 600; color: #111111; letter-spacing: -0.03em; line-height: 1.34; word-break: keep-all; max-width: 860px; }
+    .close-l1 { margin-top: 28px; }
+    .close-l2 { margin-top: 8px; }
+    .band { display: block; width: 72px; height: 5px; margin-top: 34px; transform-origin: 0 50%; }
+  </style>
+  <div id="root" data-composition-id="sione-close" data-width="1920" data-height="1080" data-duration="5.5">
+    <div id="sn-panel" class="panel">
+      <div id="sn-kb" class="kb" data-layout-allow-overflow>
+        <video id="sn-media" class="clip media" data-start="0" data-duration="4.6" data-track-index="0" src="assets/clips/04-tuvalu-end.mp4" muted playsinline></video>
+        <img id="sn-still" class="clip media" data-start="4.55" data-duration="0.95" data-track-index="0" src="assets/clips/04-tuvalu-last.jpg" alt="시오네" />
+      </div>
+    </div>
+    <div id="sn-text" class="clip text" data-start="0" data-duration="5.5" data-track-index="1">
+      <p id="sn-place" class="place">투발루 바이투푸섬 · 시오네, 13살</p>
+      <p id="sn-l1" class="close-line close-l1">내일,</p>
+      <p id="sn-l2" class="close-line close-l2">우리들의 하루는 어떻게 될까요?</p>
+      <i id="sn-band" class="band" style="background:#1f7f7c"></i>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#sn-panel", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.inOut" }, 0);
+    tl.fromTo("#sn-kb", { scale: 1 }, { scale: 1.02, duration: 5.5, ease: "none" }, 0);
+    tl.fromTo("#sn-place", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.4);
+    tl.fromTo("#sn-l1", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.7);
+    tl.fromTo("#sn-l2", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.9);
+    tl.fromTo("#sn-band", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "expo.out" }, 0.95);
+    tl.to(["#sn-place", "#sn-l1", "#sn-l2", "#sn-band"], { opacity: 0, duration: 0.25, ease: "power2.in" }, 5.2);
+    window.__timelines["sione-close"] = tl;
+  </script>
+</template>

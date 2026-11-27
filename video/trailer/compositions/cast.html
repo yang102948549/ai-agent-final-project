@@ -1,0 +1,149 @@
+<template>
+  <style>
+    @font-face { font-family: "Pretendard"; src: url("assets/fonts/PretendardVariable.woff2") format("woff2"); font-weight: 100 900; }
+    #root { position: absolute; inset: 0; background: #f4f3ef; font-family: "Pretendard", sans-serif; overflow: hidden; }
+    .cap { position: absolute; left: 110px; top: 64px; width: 1700px; font-size: 44px; font-weight: 600; color: #111111; letter-spacing: -0.03em; line-height: 1.2; }
+    .grid { position: absolute; left: 110px; top: 148px; width: 1700px; display: grid; grid-template-columns: repeat(6, 266px); column-gap: 20px; row-gap: 28px; }
+    .card { width: 266px; }
+    .thumb-wrap { position: relative; width: 266px; height: 260px; overflow: hidden; background: #e6e4de; }
+    .thumb-wrap.is-kofi { box-sizing: border-box; }
+    .thumb { width: 266px; height: 260px; object-fit: cover; object-position: 50% 15%; display: block; }
+    .kofi-ring { position: absolute; inset: 0; border: 3px solid #86552a; pointer-events: none; opacity: 0; }
+    .bar { height: 4px; width: 100%; }
+    .who { margin-top: 10px; font-size: 22px; font-weight: 600; color: #111111; letter-spacing: -0.02em; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sit { margin-top: 4px; font-size: 20px; font-weight: 400; color: #5c5c5c; letter-spacing: -0.015em; line-height: 1.3; word-break: keep-all; }
+  </style>
+  <div id="root" data-composition-id="cast" data-width="1920" data-height="1080" data-duration="5.5">
+    <p id="cast-cap" class="clip cap" data-hold data-start="0" data-duration="5.5" data-track-index="1">우리는 오늘 누군가의 하루를 대신 살아 봅니다.</p>
+    <div id="cast-grid" class="clip grid" data-hold data-start="0" data-duration="5.5" data-track-index="0">
+      <div id="cast-c0" class="card other-card">
+        <div class="thumb-wrap">
+          <img class="thumb" src="assets/cast/tuvalu.jpg" alt="시오네" />
+          
+        </div>
+        <div class="bar" style="background:#1f7f7c"></div>
+        <p class="who">시오네 · 투발루</p>
+        <p class="sit">바다가 가까워진 우리 집</p>
+      </div>
+      <div id="cast-c1" class="card other-card">
+        <div class="thumb-wrap">
+          <img class="thumb" src="assets/cast/pakistan.jpg" alt="아시프" />
+          
+        </div>
+        <div class="bar" style="background:#2d6b63"></div>
+        <p class="who">아시프 · 파키스탄</p>
+        <p class="sit">쉴 수 없는 더운 하루</p>
+      </div>
+      <div id="cast-c2" class="card other-card">
+        <div class="thumb-wrap">
+          <img class="thumb" src="assets/cast/bangladesh.jpg" alt="루파" />
+          
+        </div>
+        <div class="bar" style="background:#3e6399"></div>
+        <p class="who">루파 · 방글라데시</p>
+        <p class="sit">물은 있지만 마실 수 없다</p>
+      </div>
+      <div id="cast-c3" class="card other-card">
+        <div class="thumb-wrap">
+          <img class="thumb" src="assets/cast/somalia.jpg" alt="호단" />
+          
+        </div>
+        <div class="bar" style="background:#b06d12"></div>
+        <p class="who">호단 · 소말리아</p>
+        <p class="sit">비를 기다리는 가족</p>
+      </div>
+      <div id="cast-c4" class="card other-card">
+        <div class="thumb-wrap">
+          <img class="thumb" src="assets/cast/gaza.jpg" alt="라마" />
+          
+        </div>
+        <div class="bar" style="background:#3f74a8"></div>
+        <p class="who">라마 · 팔레스타인</p>
+        <p class="sit">급수 소식을 기다리는 하루</p>
+      </div>
+      <div id="cast-c5" class="card other-card">
+        <div class="thumb-wrap">
+          <img class="thumb" src="assets/cast/haiti.jpg" alt="나데주" />
+          
+        </div>
+        <div class="bar" style="background:#a86a14"></div>
+        <p class="who">나데주 · 아이티</p>
+        <p class="sit">집을 떠난 뒤의 식탁</p>
+      </div>
+      <div id="cast-c6" class="card kofi-card">
+        <div class="thumb-wrap is-kofi">
+          <img class="thumb" src="assets/cast/ghana.jpg" alt="코피" />
+          <div id="cast-kofi-ring" class="kofi-ring"></div>
+        </div>
+        <div class="bar" style="background:#86552a"></div>
+        <p class="who">코피 · 가나</p>
+        <p class="sit">카카오 밭과 교실 사이</p>
+      </div>
+      <div id="cast-c7" class="card other-card">
+        <div class="thumb-wrap">
+          <img class="thumb" src="assets/cast/sudan.jpg" alt="암나" />
+          
+        </div>
+        <div class="bar" style="background:#76589f"></div>
+        <p class="who">암나 · 수단 → 차드</p>
+        <p class="sit">국경을 넘은 뒤에도</p>
+      </div>
+      <div id="cast-c8" class="card other-card">
+        <div class="thumb-wrap">
+          <img class="thumb" src="assets/cast/rohingya.jpg" alt="누르" />
+          
+        </div>
+        <div class="bar" style="background:#71519c"></div>
+        <p class="who">누르 · 미얀마 → 방글라데시</p>
+        <p class="sit">학교의 문이 닫힌 아침</p>
+      </div>
+      <div id="cast-c9" class="card other-card">
+        <div class="thumb-wrap">
+          <img class="thumb" src="assets/cast/afghanistan.jpg" alt="마리암" />
+          
+        </div>
+        <div class="bar" style="background:#a3303d"></div>
+        <p class="who">마리암 · 아프가니스탄</p>
+        <p class="sit">배우고 싶은 다음 학년</p>
+      </div>
+      <div id="cast-c10" class="card other-card">
+        <div class="thumb-wrap">
+          <img class="thumb" src="assets/cast/congo.jpg" alt="그라스" />
+          
+        </div>
+        <div class="bar" style="background:#ad2843"></div>
+        <p class="who">그라스 · 콩고민주공화국</p>
+        <p class="sit">배터리 뒤에 있는 우리 집</p>
+      </div>
+      <div id="cast-c11" class="card other-card">
+        <div class="thumb-wrap">
+          <img class="thumb" src="assets/cast/qatar.jpg" alt="람" />
+          
+        </div>
+        <div class="bar" style="background:#66750f"></div>
+        <p class="who">람 · 카타르</p>
+        <p class="sit">일한 만큼 받을 수 있을까</p>
+      </div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#cast-cap", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.4);
+    tl.fromTo("#cast-c0", { opacity: 0 }, { opacity: 1, duration: 0.24, ease: "power2.out" }, 0.4);
+    tl.fromTo("#cast-c1", { opacity: 0 }, { opacity: 1, duration: 0.24, ease: "power2.out" }, 0.48);
+    tl.fromTo("#cast-c2", { opacity: 0 }, { opacity: 1, duration: 0.24, ease: "power2.out" }, 0.56);
+    tl.fromTo("#cast-c3", { opacity: 0 }, { opacity: 1, duration: 0.24, ease: "power2.out" }, 0.64);
+    tl.fromTo("#cast-c4", { opacity: 0 }, { opacity: 1, duration: 0.24, ease: "power2.out" }, 0.72);
+    tl.fromTo("#cast-c5", { opacity: 0 }, { opacity: 1, duration: 0.24, ease: "power2.out" }, 0.8);
+    tl.fromTo("#cast-c6", { opacity: 0 }, { opacity: 1, duration: 0.24, ease: "power2.out" }, 0.88);
+    tl.fromTo("#cast-c7", { opacity: 0 }, { opacity: 1, duration: 0.24, ease: "power2.out" }, 0.96);
+    tl.fromTo("#cast-c8", { opacity: 0 }, { opacity: 1, duration: 0.24, ease: "power2.out" }, 1.04);
+    tl.fromTo("#cast-c9", { opacity: 0 }, { opacity: 1, duration: 0.24, ease: "power2.out" }, 1.12);
+    tl.fromTo("#cast-c10", { opacity: 0 }, { opacity: 1, duration: 0.24, ease: "power2.out" }, 1.2);
+    tl.fromTo("#cast-c11", { opacity: 0 }, { opacity: 1, duration: 0.24, ease: "power2.out" }, 1.28);
+    tl.to(".other-card", { opacity: 0.28, duration: 0.5, ease: "power2.inOut" }, 4.7);
+    tl.to("#cast-kofi-ring", { opacity: 1, duration: 0.4, ease: "power2.out" }, 4.7);
+    tl.to("#cast-cap", { opacity: 0, duration: 0.2, ease: "power2.in" }, 5.25);
+    window.__timelines["cast"] = tl;
+  </script>
+</template>

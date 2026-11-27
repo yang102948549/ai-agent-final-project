@@ -1410,3 +1410,20 @@
 - 검증 — 삭제 후 잔존 Paseo 캡처 4종(`1920×1080`) 육안 선명도 확인 완료. 문서·에셋 정리 작업으로 앱 화면 전후 촬영 비대상.
 - 대화 캡처 — 이 세션은 격리 데스크톱(`exebox-*`) 환경이므로 Paseo 창 직접 촬영은 불가하며, 위 실제 요청 발췌로 기록하고 캡처 대기 상태를 유지한다.
 - 변경 파일 — `screenshots/conversations/2026-11-26-paseo-workflow/paseo-workflow-redacted.png`(삭제), `video/PROCESS-PLAN.md`, `PROMPTS.md`.
+
+
+## 2026-11-27-trailer-v3-kofi
+
+- 실제 요청 — “b안으로 트레일러 다시 만들자.”
+- 변경 이유와 한 일 — [video/TRAILER-PLAN-KOFI.md](video/TRAILER-PLAN-KOFI.md) B안(13살 학생 코피 시점, 82.7초 · 2,481f @ 30fps)과 [video/TRAILER-PLAN.md](video/TRAILER-PLAN.md) 3.1절 고화질 규격에 맞춰 `video/trailer/` 프로젝트를 전면 개편하고 본편을 렌더링했다.
+  - **고화질 앱 녹화 7편 (`video/trailer/tools/record-app.mjs`)**: 배포 사이트(`https://onischool.net/anotherday/`)를 `1440×900` × `deviceScaleFactor: 2` (`2880×1800` PNG 무손실 CDP screencast) → `30fps` H.264 High **CRF 10**으로 `REC-K1~K7` 녹화(`REC-K1` 코피 아침 본문·답 칩·실제 배포 아빠 AI 대답, `REC-K2` 선택지 B 클릭·결과 화면[선택지 즉시 노출용 `/api/chat` 모의], `REC-K3` 돌아보기 입력, `REC-K4` 질문·실제 배포 AI 조사 도우미 답과 ILO 원문 자료, `REC-K5~K7` 완성 신문 기사·정책 제안서·코피 편지, 학생 이름은 `김*늘`·`이*아`·`박*준`으로 가림).
+  - **인물 클립·썸네일 준비 (`video/trailer/tools/prepare-assets.sh`)**: 방금 생성한 코피 무음 클립(`07-ghana-silent.mp4`)과 라마·암나·그라스·시오네(끝 4.6초 + 끝 정지 프레임 `04-tuvalu-last.jpg`)를 3:4 `810×1080` CRF 12로 가공하고, 12명 썸네일(`video/trailer/assets/cast/*.jpg`, `600×800` JPG 95)을 생성했다.
+  - **13개 장면 구현 (`video/trailer/tools/build-scenes.mjs`, `video/trailer/index.html`)**: S1 `opening` ~ S13 `finale`(82.7초) 구성, 구 v2 장면 파일 8개 정리.
+  - **스냅숏 검수 후 보정**: 19장 스냅숏 육안 검수에서 S11 세 가지 글 상단 제목이 살짝 잘리는 것을 확인해 `scale: 1.26, x: -125, y: 112`(편지 `y: 100`)로 보정하고, S3·S5·S6 의도적 정지 구간에 `data-hold`를 추가했다.
+  - **고화질 렌더링**: `--fps 30 --quality delivery --video-bitrate 16M --max-bitrate 24M --video-frame-format png --resolution 1080p`로 `local-assets/video/trailer-v3-kofi.mp4` 생성.
+- 검증
+  - `hyperframes check --json`: `lint` · `runtime` · `layout` · `contrast` · `craft` · `audio` 전 항목 오류 0건 통과.
+  - `ffprobe` 실측: `1920×1080`, `30fps`, `h264`, `yuv420p`, `82.70s`, `128,487,541 B` (`122.5 MB`), 평균 비트레이트 **`12.43 Mbps`** (목표 16M의 77.7%, v2 `3.4 Mbps` 대비 3.6배).
+  - 육안 검수: 녹화 원본 `REC-K1~K7` 7편, 스냅숏 19장 + S11 보정 3장, 최종 MP4 추출 100% 프레임 3장(`20s` AI 대화, `53.5s` AI 조사, `82.65s` 마지막 검은 화면) 직접 열어 본문·버튼·ILO 자료 글자 선명도와 마지막 검은 화면 확인 완료. 앱 소스 변경이 없는 영상 제작 작업이므로 앱 전후 촬영은 비대상이며, 대화 캡처는 격리 환경이어서 대기 상태를 유지한다.
+- 남은 항목 — 배경 음악·클릭 효과음(현재 무음), 패들렛 파일 크기 제한 확인(초과 시 `8M` 업로드본 별도 생성), 최종 길이(82.7초 vs 30~60초) 확인.
+- 변경 파일 — `video/trailer/index.html`, `video/trailer/tools/build-scenes.mjs`, `video/trailer/tools/record-app.mjs`, `video/trailer/tools/prepare-assets.sh`, `video/trailer/compositions/*` (B안 12개 생성·구 v2 8개 삭제), `video/trailer/assets/cast/*.jpg` (12장), `video/trailer/REVIEW.md`, `video/CHECKLIST.md`, `video/README.md`, `PROMPTS.md` (완성 MP4는 Git 제외 `local-assets/video/trailer-v3-kofi.mp4`).

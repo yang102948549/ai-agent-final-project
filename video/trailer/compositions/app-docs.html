@@ -1,0 +1,49 @@
+<template>
+  <style>
+    @font-face { font-family: "Pretendard"; src: url("assets/fonts/PretendardVariable.woff2") format("woff2"); font-weight: 100 900; }
+    #root { position: absolute; inset: 0; background: #f4f3ef; font-family: "Pretendard", sans-serif; overflow: hidden; }
+    .frame { position: absolute; left: 264px; top: 170px; width: 1392px; height: 870px; overflow: hidden; background: #ffffff; outline: 1px solid #dcdad3; box-shadow: 0 12px 32px rgba(17, 17, 17, 0.08); }
+    .layer { position: absolute; inset: 0; }
+    .zoom { position: absolute; inset: 0; transform-origin: 50% 50%; }
+    .rec { position: absolute; left: 0; top: 0; width: 1392px; height: 870px; object-fit: cover; }
+    .cap { position: absolute; left: 264px; top: 82px; width: 1392px; font-size: 44px; font-weight: 600; color: #111111; letter-spacing: -0.03em; line-height: 1.2; white-space: nowrap; }
+  </style>
+  <div id="root" data-composition-id="app-docs" data-width="1920" data-height="1080" data-duration="10.2">
+    <div id="app-docs-frame" class="frame">
+      <div id="app-docs-w0" class="layer" style="z-index:1">
+        <div id="app-docs-z0" class="zoom" data-layout-allow-overflow>
+          <video id="app-docs-rec0" class="clip rec" data-start="0" data-duration="3.7" data-media-start="0.4" data-track-index="0" src="assets/app/REC-K5.mp4" muted playsinline></video>
+        </div>
+      </div>
+      <div id="app-docs-w1" class="layer" style="z-index:2">
+        <div id="app-docs-z1" class="zoom" data-layout-allow-overflow>
+          <video id="app-docs-rec1" class="clip rec" data-start="3.4" data-duration="3.7" data-media-start="0.4" data-track-index="0" src="assets/app/REC-K6.mp4" muted playsinline></video>
+        </div>
+      </div>
+      <div id="app-docs-w2" class="layer" style="z-index:3">
+        <div id="app-docs-z2" class="zoom" data-layout-allow-overflow>
+          <video id="app-docs-rec2" class="clip rec" data-start="6.8" data-duration="3.4" data-media-start="0.4" data-track-index="0" src="assets/app/REC-K7.mp4" muted playsinline></video>
+        </div>
+      </div>
+    </div>
+    <p id="app-docs-cap0" class="clip cap" data-start="0" data-duration="10.2" data-track-index="1">신문 기사로 알리고,</p>
+    <p id="app-docs-cap1" class="clip cap" data-start="0" data-duration="10.2" data-track-index="1">정책 제안서로 바꿀 길을 내고,</p>
+    <p id="app-docs-cap2" class="clip cap" data-start="0" data-duration="10.2" data-track-index="1">편지로 마음을 전합니다.</p>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#app-docs-frame", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.inOut" }, 0);
+    tl.set("#app-docs-z0", { scale: 1.26, x: -125, y: 112 }, 0);
+    tl.fromTo("#app-docs-w1", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.inOut" }, 3.4);
+    tl.set("#app-docs-z1", { scale: 1.26, x: -125, y: 112 }, 3.4);
+    tl.fromTo("#app-docs-w2", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.inOut" }, 6.8);
+    tl.set("#app-docs-z2", { scale: 1.26, x: -125, y: 100 }, 6.8);
+    tl.fromTo("#app-docs-cap0", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.3);
+    tl.to("#app-docs-cap0", { opacity: 0, duration: 0.2, ease: "power2.in" }, 3.2);
+    tl.fromTo("#app-docs-cap1", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 3.6);
+    tl.to("#app-docs-cap1", { opacity: 0, duration: 0.2, ease: "power2.in" }, 6.6);
+    tl.fromTo("#app-docs-cap2", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 7);
+    tl.to("#app-docs-cap2", { opacity: 0, duration: 0.2, ease: "power2.in" }, 9.95);
+    window.__timelines["app-docs"] = tl;
+  </script>
+</template>

@@ -46,8 +46,10 @@
 | 27 | trailer-conti-v4 | 구성 | AI가 대화 상대로만 보이고 조사 도우미 기능이 빠짐 | 질문을 보내면 AI가 자료를 찾아 답하는 장면을 넣음 | v3 예정 |
 | 28 | trailer-conti-v4 | 문구 | 누구를 위한 앱인지 드러나지 않음 | 마지막 타이틀 「다른 곳의 하루」 위에 소제목 "도덕 · 인권 수업용" | v3 예정 |
 | 29 | trailer-conti-v4 | 구성 | 80초 안에 모든 앱 화면을 넣으면 장면마다 머무는 시간이 모자람 | 인물 소개 화면·글 형식 고르기·갤러리 장면을 빼고 핵심 흐름만 남김 | v3 예정 |
-| 30 | trailer-plan-kofi | 구성 | 앱 장면의 주인공 아시프(36살 노동자)는 수업에서 쓰는 학생 시청자가 공감하기 어려움 | 13살 학생 코피의 "시험이냐 밭일이냐"로 바꾼 B안 [TRAILER-PLAN-KOFI.md](TRAILER-PLAN-KOFI.md). 뒤의 사람들도 또래(14살)로 맞춤 | 콘티(B안, 선택 대기) |
-| 31 | trailer-render-quality | 화면 | v2가 평균 약 3.4Mbps로 렌더되고 녹화 프레임도 JPEG라 앱 글자가 뭉개질 여지가 큼 | 고화질 규격: 녹화 PNG 2880×1800 → 중간 MP4 CRF 10 → 최종 `--quality delivery --video-bitrate 16M --max-bitrate 24M --video-frame-format png`(선택: 1440p 24M 보관본) | 콘티(A·B안) |
+| 30 | trailer-plan-kofi | 구성 | 앱 장면의 주인공 아시프(36살 노동자)는 수업에서 쓰는 학생 시청자가 공감하기 어려움 | 13살 학생 코피의 "시험이냐 밭일이냐"로 바꾼 B안 [TRAILER-PLAN-KOFI.md](TRAILER-PLAN-KOFI.md). 뒤의 사람들도 또래(14살)로 맞춤 | v3(B안) |
+| 31 | trailer-render-quality | 화면 | v2가 평균 약 3.4Mbps로 렌더되고 녹화 프레임도 JPEG라 앱 글자가 뭉개질 여지가 큼 | 고화질 규격: 녹화 PNG 2880×1800 → 중간 MP4 CRF 10 → 최종 `--quality delivery --video-bitrate 16M --max-bitrate 24M --video-frame-format png`(실측 12.43Mbps) | v3(B안) |
+| 32 | trailer-v3-kofi | 화면 | B안 콘티에서 S2 코피가 정지 사진으로 계획되어 다른 인물 영상과 질감 차이가 남 | Google Flow Veo 3.1 Fast로 생성한 코피 무음 클립(`07-ghana-silent.mp4`)을 3:4 CRF 12로 가공해 S2 인물 영상으로 반영 | v3(B안) |
+| 33 | trailer-v3-kofi | 화면 | S11 세 가지 글 확대(`scale 1.32, y 40`) 시 신문 기사·정책 제안서 상단 제목이 틀 윗선에 살짝 잘림 | `scale 1.26, x -125, y 112`(편지 `y 100`)로 조정해 문서 제목과 본문이 잘림 없이 중앙에 오게 보정 | v3(B안) |
 
 ### 버전별 영상
 
@@ -55,7 +57,7 @@
 |---|---|---|---|
 | v1 | `local-assets/video/trailer-v1.mp4` | 59.5초 | 12명 시간대 구성. 장면 제목만 이어짐 |
 | v2 | `local-assets/video/trailer-v2.mp4` | 59.5초 | 세 사람 + 앱 녹화 6개 + 시오네. 앱 화면이 흐리고 짧음 |
-| v3 | `local-assets/video/trailer-v3.mp4` (제작 예정) | 81.8초 | 콘티 v4 |
+| v3 (B안) | `local-assets/video/trailer-v3-kofi.mp4` | 82.7초 | 코피(13살) B안 콘티 + 코피 영상 클립 + 2배 PNG 녹화·16M 고화질 렌더(실측 12.43Mbps, 122.5MB) |
 
 ## 과정 소개 영상 (`Process`)
 
