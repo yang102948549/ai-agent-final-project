@@ -1369,3 +1369,20 @@
   - `local-assets/video/process-proto-v2.mp4` 전 구간(00:00~00:14) 직접 열어 육안 검수 완료. 앱 소스 변경이 없는 영상 프로토타입 작업이므로 앱 화면 전후 촬영 비대상.
 - 대화 캡처 — 이 세션은 격리 데스크톱(`exebox-*`) 환경이므로 Paseo 창 직접 촬영은 불가하며, 위 실제 요청 발췌로 기록하고 캡처 대기 상태를 유지한다.
 - 변경 파일 — `video/process/index.html`, `video/process/compositions/proto-v2-flow.html`, `PROMPTS.md` (완성 MP4는 Git 제외 `local-assets/video/process-proto-v2.mp4`).
+
+## 2026-11-27-trailer-render-quality
+
+- 실제 요청 — “이 떄 영상 제작 md에 비트레이트 즉 고화질 렌더링을 위한 내용도 포함되어 있어야 해” (B안 작성 중에 받은 요청)
+- 판단 — v2 렌더 결과(`local-assets/video/trailer-v2.mp4`)는 59.5초에 25.5MB, 평균 약 3.4Mbps였다. 앱 녹화 프레임도 JPEG(품질 95)로 받았다. HyperFrames `render --help`에서 `--crf`, `--video-bitrate`, `--max-bitrate`, `--video-frame-format png`(화면 녹화용 원본 프레임 추출), `--resolution 1440p/4k`를 확인했다.
+- 변경 — `video/TRAILER-PLAN.md`에 **3.1 고화질 렌더링 규격**을 추가했다.
+  - **녹화 원본:** PNG 2880×1800
+  - **중간 MP4:** 앱 녹화 CRF 10, 인물 영상 CRF 12, 썸네일 PNG 또는 JPG 95
+  - **최종 제출본:** `--quality delivery --video-bitrate 16M --max-bitrate 24M --video-frame-format png --resolution 1080p`
+  - **선택 보관본:** 1440p 24Mbps
+  - **예상 크기:** 82초 기준 1080p 약 164MB, 1440p 약 246MB. 제출처 파일 크기 제한을 먼저 확인하고, 넘으면 업로드본(8M)을 따로 만든다.
+  - **렌더 후 확인:** `ffprobe` 평균 비트레이트와 100% 크기 프레임을 본다.
+  - 녹화 규격 줄과 검수 기준 3번, 제작 순서 4번도 맞췄다.
+  - `video/TRAILER-PLAN-KOFI.md`(B안)는 이 규격을 따른다고 적고 출력 줄에 렌더 규격을 더했다.
+  - `video/CHECKLIST.md` 31번과 `video/README.md` 목차에 한 줄씩 더했다.
+- 검증 — 문서 전용 변경. 옵션 이름은 설치된 HyperFrames 0.9.102의 `render --help` 출력과 대조했다. 예상 크기는 82초 × 비트레이트로 계산했다. 실제 화질은 v3 렌더 뒤 확인할 항목이다.
+- 변경 파일 — `video/TRAILER-PLAN.md`, `video/TRAILER-PLAN-KOFI.md`, `video/CHECKLIST.md`, `video/README.md`, `PROMPTS.md`

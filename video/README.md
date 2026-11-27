@@ -72,6 +72,7 @@ video/
 | 2026-11-27 | [video-checklist](../PROMPTS.md#2026-11-27-video-checklist) | 영상 수정 체크리스트 [CHECKLIST.md](CHECKLIST.md) 신설, 트레일러 수정 22건 정리 |
 | 2026-11-27 | [trailer-conti-v4](../PROMPTS.md#2026-11-27-trailer-conti-v4) | 콘티 v4: 81.8초, 돌아보기는 아시프로, 다양한 사람들 장면·AI 조사 장면 추가, 타이틀 위 "도덕 · 인권 수업용" |
 | 2026-11-27 | [trailer-plan-kofi](../PROMPTS.md#2026-11-27-trailer-plan-kofi) | 코피(13살 학생) 시점 B안 PRD [TRAILER-PLAN-KOFI.md](TRAILER-PLAN-KOFI.md) 작성 |
+| 2026-11-27 | [trailer-render-quality](../PROMPTS.md#2026-11-27-trailer-render-quality) | 트레일러 PRD에 고화질 렌더링 규격(비트레이트·녹화 PNG·중간 파일 CRF) 추가 |
 
 ### 기록과 자료가 놓이는 곳
 

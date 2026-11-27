@@ -47,6 +47,7 @@
 | 28 | trailer-conti-v4 | 문구 | 누구를 위한 앱인지 드러나지 않음 | 마지막 타이틀 「다른 곳의 하루」 위에 소제목 "도덕 · 인권 수업용" | v3 예정 |
 | 29 | trailer-conti-v4 | 구성 | 80초 안에 모든 앱 화면을 넣으면 장면마다 머무는 시간이 모자람 | 인물 소개 화면·글 형식 고르기·갤러리 장면을 빼고 핵심 흐름만 남김 | v3 예정 |
 | 30 | trailer-plan-kofi | 구성 | 앱 장면의 주인공 아시프(36살 노동자)는 수업에서 쓰는 학생 시청자가 공감하기 어려움 | 13살 학생 코피의 "시험이냐 밭일이냐"로 바꾼 B안 [TRAILER-PLAN-KOFI.md](TRAILER-PLAN-KOFI.md). 뒤의 사람들도 또래(14살)로 맞춤 | 콘티(B안, 선택 대기) |
+| 31 | trailer-render-quality | 화면 | v2가 평균 약 3.4Mbps로 렌더되고 녹화 프레임도 JPEG라 앱 글자가 뭉개질 여지가 큼 | 고화질 규격: 녹화 PNG 2880×1800 → 중간 MP4 CRF 10 → 최종 `--quality delivery --video-bitrate 16M --max-bitrate 24M --video-frame-format png`(선택: 1440p 24M 보관본) | 콘티(A·B안) |
 
 ### 버전별 영상
 
